@@ -241,6 +241,28 @@
   .lk-list .a{color:var(--mute);font-size:12px;font-variant-numeric:tabular-nums;padding-top:1px}
   .lk-list .w{display:block;font-size:12px;color:var(--mute)}
   .bignum{font-size:34px;font-weight:900;letter-spacing:-.04em;line-height:1;margin:0 0 6px}
+  /* 다른 출발의 아이 */
+  .twin{margin-top:18px;border:1.5px dashed var(--rule2);border-radius:16px;padding:14px 16px;background:color-mix(in srgb,var(--cmp) 5%,transparent)}
+  .tw-h{display:flex;gap:10px;align-items:flex-start}
+  .tw-h b{display:block;font-size:14px;letter-spacing:-.01em}
+  .tw-h span{display:block;font-size:12.5px;color:var(--mute);line-height:1.45}
+  .tw-badge{flex:none;width:30px;height:30px;border-radius:10px;background:var(--cmp);display:grid!important;place-items:center;font-size:15px}
+  .tw-l{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+  .tw-l li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;background:var(--card);border:1px solid var(--rule)}
+  .tw-l li i{font-style:normal;flex:none;width:18px;text-align:center;color:var(--up)}
+  .tw-l li.lk{opacity:.7}.tw-l li.lk i{color:var(--mute)}
+  .tw-l small{display:block;font-weight:500;font-size:12px;color:var(--mute)}
+  .tw-l em{display:table;font-style:normal;font-size:11.5px;font-weight:800;margin-top:4px;padding:2px 8px;border-radius:7px;line-height:1.4}
+  .tw-l li.open{opacity:1;border-color:var(--cmp)}.tw-l li.open em{background:var(--cmp);color:var(--card)}
+  .tw-l li.shut em{background:var(--dn);color:#fff}
+  .tw-none{margin:10px 0 0;font-size:13px;color:var(--ink2)}
+  .tw-who b{display:block;font-size:17px;font-weight:900;letter-spacing:-.02em}.tw-who span{font-size:12.5px;color:var(--mute)}
+  .vs{display:grid;gap:8px;margin-top:12px}
+  .vs>div{display:grid;grid-template-columns:minmax(0,1fr) 70px 22px;gap:8px;align-items:center;font-size:12.5px}
+  .vs span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink2)}
+  .vs i{height:8px;background:var(--bg2);border-radius:99px;overflow:hidden}.vs u{display:block;height:100%;background:var(--brand);border-radius:99px}.vs u.t{background:var(--cmp)}
+  .vs b{text-align:right;font-variant-numeric:tabular-nums}
+  .mock.tw{border-color:var(--cmp);color:var(--cmp)}
   /* 기록 */
   .log{list-style:none;margin:0;padding:0;max-height:420px;overflow:auto;overscroll-behavior:contain}
   .log li{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--rule);font-size:14px;line-height:1.5}
@@ -785,7 +807,20 @@ Object.assign(UI,{
  choose_k:["선택","Your choice","選択","选择"],
  result_k:["결과","What happened","結果","结果"],
  end_k:["이 사람의 일생","This person's life","この人の一生","这个人的一生"],
- menu_lang:["언어","Language","言語","语言"]
+ menu_lang:["언어","Language","言語","语言"],
+ tw_h:["같은 날 태어난 다른 아이","Another child born the same day","同じ日に生まれた別の子","同一天出生的另一个孩子"],
+ tw_p:["같은 선택을 해도 출발이 다르면 열리는 문이 달라요.","Same choices, different start, different doors.","同じ選択でも、出発点が違えば開く扉が違います。","同样的选择，不同的起点，打开的门也不同。"],
+ tw_ev:["같은 나이, {name}에게는","Same age, for {name}","同じ年齢、{name}には","同样的年纪，对{name}来说"],
+ tw_none:["이 일은 {name}에게는 일어나지 않았을 거예요.","This would not have happened to {name}.","この出来事は{name}には起きなかったでしょう。","这件事不会发生在{name}身上。"],
+ tw_open:["당신에게는 잠겼지만 이 아이에게는 열려 있어요","Locked for you, open for them","あなたには閉ざされ、この子には開いている","对你关着，对他们开着"],
+ tw_shut:["당신에게는 열렸지만 이 아이에게는 잠겨 있어요","Open for you, locked for them","あなたには開き、この子には閉ざされている","对你开着，对他们关着"],
+ tw_same:["당신과 같은 선택지를 봐요.","They see the same options as you.","あなたと同じ選択肢が見えます。","他们看到的选项和你一样。"],
+ tw_born:["같은 날, {place}의 {tier}에서 {name}도 태어났어요. 이 아이와 나란히 살아 봅니다.","On the same day, {name} was born into {tier} in {place}. You'll live alongside them.","同じ日、{place}の{tier}に{name}も生まれました。この子と並んで生きていきます。","同一天，{name}也出生在{place}，{tier}。你们将并肩走过一生。"],
+ tw_doors:["닫힌 문","Closed doors","閉ざされた扉","被关上的门"],
+ you:["나","You","わたし","你"],
+ tw_end:["{name}였다면 닫힌 문은 {m}개였어요. 당신은 {n}개였어요.","As {name}, {m} doors would have closed. For you, it was {n}.","{name}なら閉ざされた扉は{m}個。あなたは{n}個でした。","如果是{name}，会有{m}扇门被关上。你是{n}扇。"],
+ tw_feat_h:["옆에서 함께 사는 다른 아이","A second child, living alongside you","隣で一緒に生きるもう一人","在你身旁一起生活的另一个孩子"],
+ tw_feat_p:["같은 날 정반대 형편에서 태어난 아이가 함께 나이 들어요. 매번 그 아이에게는 어떤 문이 열리는지 나란히 보여 드려요.","A child born the same day into the opposite circumstances grows up with you. At every choice you see which doors open for them.","同じ日に正反対の境遇で生まれた子が一緒に年を重ねます。選ぶたびに、その子にはどの扉が開くかを並べて見せます。","一个同一天出生、境遇完全相反的孩子与你一起长大。每次选择时，都会并排显示哪些门为他们打开。"]
 });
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
 const LOGO=`<svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--ink)"/><circle cx="16" cy="15" r="6" fill="var(--brand)"/><path d="M3 24c4.5-3.6 8.5-4.4 13-2.6s8.6 1.4 13-2.2V29H3z" fill="var(--bg)"/></svg>`;
@@ -1013,12 +1048,12 @@ function weightedBirth(){
   for(const c of COUNTRIES){ x-=c[5]; if(x<=0) return c; }
   return COUNTRIES[0];
 }
-function newLife(seed){
+function newLife(seed,force){
   rnd=seed?mulberry(seed):Math.random;
-  const c=weightedBirth();
+  const c=force&&force.c||weightedBirth();
   const inc=c[4], le=c[6], imr=c[7];
-  const sex=rnd()<0.512?"m":"f";
-  const fam=clamp(Math.round([14,30,50,72][inc]+randn()*17));
+  let sex=rnd()<0.512?"m":"f"; if(force&&force.sex) sex=force.sex;
+  let fam=clamp(Math.round([14,30,50,72][inc]+randn()*17)); if(force&&force.fam!=null) fam=force.fam;
   const famTier=fam<25?0:fam<48?1:fam<70?2:3;
   const imrP=(imr==null?[45,25,12,4][inc]:imr)/1000;
   let lifespan;
@@ -1042,6 +1077,49 @@ function newLife(seed){
   g.name=makeName(g.c,g.sex,rnd);
   rnd=Math.random;
   return g;
+}
+/* 같은 날 정반대 형편에서 태어난 아이: 내가 고른 만큼 같이 변하고, 출발만 달라요 */
+function makeTwin(g){
+  const r=mulberry(Math.abs(hashStr(g.name+g.c[0]+g.seed))+11);
+  const up=g.c[4]<=1||g.famTier<=1;
+  const pool=COUNTRIES.filter(c=>c[0]!==g.c[0]&&(up?c[4]===3:c[4]===0));
+  let x=r()*pool.reduce((a,c)=>a+c[5],0), c=pool[0];
+  for(const k of pool){x-=k[5];if(x<=0){c=k;break}}
+  const t=newLife(Math.floor(r()*1e9)+1,{c,sex:g.sex,fam:up?Math.round(78+r()*15):Math.round(6+r()*14)});
+  t.urban=up; t.s0={...t.s}; t.locked=0;
+  return t;
+}
+function syncTwin(){
+  const T=G.twin; if(!T) return null;
+  const g0=G.hist[0];
+  for(const k of STATKEYS) T.s[k]=clamp(T.s0[k]+(G.s[k]-g0[k]));
+  T.age=G.age; T.stageIdx=G.stageIdx; T.job=G.job;
+  return T;
+}
+function twinHTML(){
+  const T=syncTwin(); if(!T) return "";
+  const e=cur.e, nm=esc(T.name);
+  const head=`<div class="tw-h"><span class="tw-badge">🔀</span><div><b>${ui("tw_ev",{name:nm})}</b><span>${place(T.c)} · ${UI.tiers[T.famTier][LI]}</span></div></div>`;
+  if(e.ok&&!e.jobs&&!e.ok(T)) return `<div class="twin">${head}<p class="tw-none">${ui("tw_none",{name:nm})}</p></div>`;
+  if(!cur.tch) cur.tch=e.jobs?jobChoices(T,e):e.ch;
+  const mine=new Map(cur.ch.map(c=>[c.l,!(c.req&&!c.req(G))]));
+  let diff=0;
+  const rows=cur.tch.map(c=>{
+    const open=!(c.req&&!c.req(T)), lab=tr(c.l,T), me=mine.get(c.l);
+    const flag=me===false&&open?"open":me===true&&!open?"shut":"";
+    if(flag) diff++;
+    return `<li class="${open?"":"lk"} ${flag}"><i>${open?"✓":"🔒"}</i><span>${lab}${!open?`<small>${tr(c.why,T)}</small>`:""}${flag?`<em>${UI[flag==="open"?"tw_open":"tw_shut"][LI]}</em>`:""}</span></li>`;
+  }).join("");
+  if(!cur.twLogged){cur.twLogged=true;T.locked+=cur.tch.filter(c=>c.req&&!c.req(T)).length}
+  return `<div class="twin">${head}<ul class="tw-l">${rows}</ul>${diff?"":`<p class="tw-none">${UI.tw_same[LI]}</p>`}</div>`;
+}
+function twinBox(){
+  const T=syncTwin(); if(!T) return "";
+  const n=G.locked.length, m=T.locked, mx=Math.max(1,n,m);
+  return `<div class="box twbox"><div class="box-h"><h3>🔀 ${UI.tw_h[LI]}</h3></div>
+    <div class="tw-who"><b>${esc(T.name)}</b><span>${place(T.c)} · ${UI.tiers[T.famTier][LI]} · ${UI.hh_place[LI][T.urban?0:1]}</span></div>
+    <div class="vs"><div><span>${UI.you[LI]} · ${place(G.c)}</span><i><u style="width:${n/mx*100}%"></u></i><b>${n}</b></div><div><span>${esc(T.name.split(" ")[0])} · ${place(T.c)}</span><i><u class="t" style="width:${m/mx*100}%"></u></i><b>${m}</b></div></div>
+    <p class="cap">${UI.tw_doors[LI]} · ${UI.tw_p[LI]}</p></div>`;
 }
 function fxDeltas(fx){
   if(!fx) return "";
@@ -1124,7 +1202,7 @@ function renderStart(){
    <section class="sec">
     <div class="sec-h"><h2>${UI.diff_h[LI]}</h2></div>
     <div class="feats">
-      <div class="box feat"><div class="vis"><div class="mock"><i>1</i>${UI.f1_b[LI]}</div><div class="mock lk"><i>🔒</i>${UI.f1_a[LI]}</div></div><h3>${UI.f1_h[LI]}</h3><p>${UI.f1_p[LI]}</p></div>
+      <div class="box feat"><div class="vis"><div class="mock"><i>✓</i>${UI.f1_b[LI]}</div><div class="mock lk"><i>🔒</i>${UI.f1_a[LI]}</div><div class="mock tw"><i>🔀</i>${UI.tw_open[LI]}</div></div><h3>${UI.tw_feat_h[LI]}</h3><p>${UI.tw_feat_p[LI]}</p></div>
       <div class="box feat"><div class="vis"><div class="suns"><span>🌅</span><span>☀️</span><span>🌇</span><span>🌙</span></div><div class="daybar"></div><div class="ages"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div></div><h3>${UI.f2_h[LI]}</h3><p>${UI.f2_p[LI]}</p></div>
       <div class="box feat"><div class="vis"><div class="paper"><b>${UI.f3_t[LI]}</b>${UI.f3_l[LI].split("|").join("<br>")}</div></div><h3>${UI.f3_h[LI]}</h3><p>${UI.f3_p[LI]}</p></div>
     </div>
@@ -1148,7 +1226,7 @@ function renderStart(){
 function buildDash(){
   MODE="play";
   app.innerHTML=`<div class="page"><div class="dash">
-    <div class="col ca"><div id="pReg"></div><div id="pStats"></div><div id="pLock"></div></div>
+    <div class="col ca"><div id="pReg"></div><div id="pStats"></div><div id="pTwin"></div><div id="pLock"></div></div>
     <div class="col cb"><div class="scene-card"><div class="scn" id="pScene"></div><span class="scene-tag" id="pTag"></span></div><div class="evc" id="pEv"></div><div id="pLog"></div></div>
     <div class="col cc"><div id="pCtry"></div><div id="pCurve"></div><div id="pMap"></div></div>
   </div><div class="mset only-m">${styleBtn()}${langSel()}</div></div>`;
@@ -1214,7 +1292,7 @@ function logBox(full){
   return `<div class="box"><div class="box-h"><h3>${UI.log_h[LI]}</h3><span>${UI.log_new[LI]}</span></div><ul class="log${full?" full":""}">${items.map((x,i)=>`<li class="${i===0&&!full?"fresh":""}"><span class="a">${ui("age_n",{n:x.a})}</span><span>${x.f()}</span></li>`).join("")}</ul></div>`;
 }
 function fillSides(prev){
-  $("pReg").innerHTML=regHTML(); $("pStats").innerHTML=statsBox(prev); $("pLock").innerHTML=lockBox();
+  $("pReg").innerHTML=regHTML(); $("pStats").innerHTML=statsBox(prev); $("pLock").innerHTML=lockBox(); $("pTwin").innerHTML=twinBox();
   $("pCtry").innerHTML=ctryBox(); $("pCurve").innerHTML=curveBox(); $("pMap").innerHTML=mapBox();
   $("pLog").innerHTML=G.log.length?logBox():"";
   $("pTag").textContent=`${STAGE_ICON[G.stageIdx]} ${UI.stages[G.stageIdx][LI]} · ${place(G.c)} · ${UI.hh_place[LI][G.urban?0:1]}`;
@@ -1241,9 +1319,11 @@ function renderBirth(){
     setTimeout(()=>{clearInterval(rollTimer);G.rolled=true;if(view===renderBirth)renderBirth()},1500);
     return;
   }
+  if(!G.twin) G.twin=makeTwin(G);
   G.shownAge=0; ensureDash(true);
   setEv(`<p class="kick">👶 ${UI.born_kick[LI]}</p><h2 class="born-h">${UI.born_h[LI]}</h2>
     <p class="born-p">${ui("born_share",{p:shareOf(G.c),le:G.c[6].toFixed(1)})}</p>
+    <div class="twin" style="margin:0 0 18px"><div class="tw-h"><span class="tw-badge">🔀</span><div><b>${UI.tw_h[LI]}</b><span>${ui("tw_born",{place:place(G.twin.c),tier:UI.tiers[G.twin.famTier][LI],name:esc(G.twin.name)})}</span></div></div></div>
     <label class="flab" for="nm">${UI.name_h[LI]}</label>
     <input id="nm" class="nm" maxlength="24" value="${esc(G.name)}">
     <p class="fnote">${UI.name_p[LI]}</p>
@@ -1348,8 +1428,9 @@ function evQuestion(){
         return `<button class="ch locked" disabled><span class="n">🔒</span><span>${tr(c.l,G)}<span class="why">${tr(c.why,G)}</span></span></button>`;
       }
       return `<button class="ch" data-i="${i}"><span class="n">${i+1}</span><span>${tr(c.l,G)}</span></button>`;
-    }).join("")}</div>`);
+    }).join("")}</div>${twinHTML()}`);
   if(!cur.logged){cur.logged=true;$("pLock").innerHTML=lockBox()}
+  $("pTwin").innerHTML=twinBox();
   app.querySelectorAll("button[data-i]").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
   autoStep();
 }
@@ -1379,7 +1460,7 @@ function choose(i){
   view=()=>{ensureDash(true);evRes()};
   topPlay(); hudAge(G.age);
   $("pStats").innerHTML=statsBox(prevS); animateStats();
-  $("pReg").innerHTML=regHTML(); $("pLog").innerHTML=logBox(); $("pCurve").innerHTML=curveBox();
+  $("pReg").innerHTML=regHTML(); $("pLog").innerHTML=logBox(); $("pCurve").innerHTML=curveBox(); $("pTwin").innerHTML=twinBox();
   if(ch.job) drawMain(G.age);
   evRes();
 }
@@ -1463,6 +1544,7 @@ function renderEnding(){
     </div>
     <div class="col cc">
       ${regHTML()}
+      ${G.twin?twinBox().replace('<p class="cap">',`<p style="margin:12px 0 0;font-size:14px;font-weight:600">${ui("tw_end",{name:esc(G.twin.name),m:G.twin.locked,n:G.locked.length})}</p><p class="cap">`):""}
       ${lockBox(true)}
       <div class="box"><div class="box-h"><h3>${ui("ctry_h",{place:place(G.c)})}</h3></div>${indRows(G.c)}</div>
       <div class="box"><div class="box-h"><h3>${UI.src_h[LI]}</h3></div><p style="margin:0;font-size:13px;color:var(--ink2)">${srcP()}</p></div>
