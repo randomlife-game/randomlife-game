@@ -5,12 +5,12 @@
 <meta name="theme-color" content="#f3eee4">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>랜덤인생게임 · Random Life</title>
-<meta name="description" content="80억 명 중 한 명으로 무작위로 태어나 일생을 살아 보는 게임 · Be born as one of 8 billion and live a whole life · 80億人の中の一人として生まれ、一生を生きるゲーム · 成为80亿人中的一个，过完一生">
+<meta name="description" content="같은 날 정반대 형편에서 태어난 두 아이의 일생을 나란히 살아 보는 게임 · Live two lives side by side: children born the same day at opposite ends · 同じ日に正反対の境遇で生まれた二人の一生を並べて生きるゲーム · 并肩过完同一天出生、境遇相反的两个孩子的一生">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="랜덤인생게임">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:title" content="랜덤인생게임 · 80억 명 중 당신은 누가 될까요?">
-<meta property="og:description" content="지구에 태어나는 아기 한 명이 되어 일생을 살아 보세요. 같은 날 정반대 형편에서 태어난 아이와 나란히 살아요. 무료 · 가입 없음">
+<meta property="og:title" content="랜덤인생게임 · 같은 날 태어나도 문이 달라요">
+<meta property="og:description" content="같은 날 정반대 형편에서 태어난 두 아이의 일생을 5분 동안 나란히 살아 보세요. 무료 · 가입 없음">
 <meta property="og:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
 <meta property="og:url" content="https://randomlife-game.github.io/randomlife-game/">
 <meta name="twitter:card" content="summary_large_image">
@@ -398,6 +398,18 @@
   @keyframes bob{50%{transform:translateY(-3px)}}
   .rise{animation:rise .35s ease both}
   @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}.cl{stroke-dashoffset:0}}
+  /* 첫 화면: 같은 날 태어난 두 아이, 아기 100명 */
+  .pair{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:stretch;margin-top:8px}
+  .pair .pr{background:var(--bg);border-radius:14px;padding:12px 14px;min-width:0;display:flex;flex-direction:column}
+  .pair .pr small{font-size:11.5px;color:var(--brand);font-weight:700}
+  .pair .pn{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:3px 0 2px;overflow-wrap:anywhere}
+  .pair .pm{font-size:12.5px;color:var(--ink2);margin-bottom:8px;word-break:keep-all}
+  .pair .vs{align-self:center;font-size:11px;color:var(--mute);writing-mode:vertical-rl;letter-spacing:.2em}
+  .pk{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--mute);padding-top:4px;margin-top:auto}.pk+.pk{margin-top:0}.pk b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .pair-q{font-size:13.5px;color:var(--ink2);margin:12px 0 4px;word-break:keep-all}
+  .hgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:8px auto 16px;max-width:300px}.hgrid i{aspect-ratio:1;border-radius:50%;display:block}
+  .hkey{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px}.hkey span{display:flex;align-items:center;gap:6px}.hkey i{width:10px;height:10px;border-radius:50%;display:inline-block}
+  @media (max-width:520px){.pair{grid-template-columns:minmax(0,1fr)}.pair .vs{writing-mode:horizontal-tb;text-align:center}}
 </style>
 </head>
 <body>
@@ -430,7 +442,7 @@ const tr=(x,G)=>{const a=typeof x==="function"?x(G):x;return Array.isArray(a)?a[
 const sub=(s,p)=>s.replace(/\{(\w+)\}/g,(m,k)=>p&&k in p?p[k]:m);
 const UI={
  title:["랜덤인생게임","Random Life","ランダム人生","随机人生"],
- tagline:["지구에 태어나는 아기 한 명이 되어, 그 사람의 일생을 살아 봅니다.","Be born as one baby on Earth, and live that person's whole life.","地球に生まれる赤ちゃん一人になって、その人の一生を生きてみよう。","成为地球上诞生的一个婴儿，去过完他的一生。"],
+ tagline:["오늘 지구 어딘가에서 두 아이가 태어나요. 한 명은 당신, 한 명은 정반대 형편의 아이예요.","Today, somewhere on Earth, two children are born. One is you. The other starts life at the opposite end.","今日、地球のどこかで二人の子が生まれます。一人はあなた、もう一人は正反対の境遇の子です。","今天，地球某处有两个孩子出生。一个是你，另一个出生在截然相反的境遇。"],
  how_h:["어떻게 정해지나요","How it works","どう決まる？","如何决定"],
  how_p:["출생지는 세계은행 통계로 계산한 <b>국가별 연간 출생 수</b>에 비례해 뽑힙니다. 아이가 많이 태어나는 나라일수록 당첨 확률이 높습니다. 성별과 가정 형편은 무작위로 정해지고, 이후 나이대마다 선택을 하며 인생이 흘러갑니다. 형편에 따라 열리지 않는 선택지도 있습니다.",
   "Your birthplace is drawn in proportion to each country's <b>annual number of births</b>, estimated from World Bank statistics. Countries with more babies are more likely to be picked. Sex and family wealth are random, then you make choices at each stage of life. Some choices stay closed to you, depending on where and how you were born.",
@@ -487,7 +499,7 @@ const UI={
  copied:["복사했어요","Copied","コピーしました","已复制"],
  share_h:["친구에게 알리기","Tell your friends","友だちに知らせる","告诉朋友"],
  share_p:["링크를 받은 친구는 당신이 살아 본 인생을 먼저 보고 시작해요.","Friends who open your link first see the life you lived.","リンクを開いた友だちは、あなたが生きた人生を見てから始めます。","打开链接的朋友会先看到你活过的人生。"],
- share_text:["나는 {place}에서 태어나 {age}세까지 살았어요: “{title}”. 80억 명 중 당신은 누가 될까요?","I was born in {place} and lived to {age}: “{title}”. Out of 8 billion people, who will you be?","{place}に生まれて{age}歳まで生きました：「{title}」。80億人の中で、あなたは誰になる？","我出生在{place}，活到了{age}岁：“{title}”。80亿人里，你会成为谁？"],
+ share_text:["나는 {place}에서 태어나 {age}세까지 살았어요: “{title}”. 같은 날 다른 곳에서 태어났다면 어땠을까요?","I was born in {place} and lived to {age}: “{title}”. What if you had been born somewhere else that same day?","{place}に生まれて{age}歳まで生きました：「{title}」。同じ日に別の場所で生まれていたら？","我出生在{place}，活到了{age}岁：“{title}”。如果同一天出生在别处，会怎样？"],
  share_tags:["랜덤인생게임","RandomLife","ランダム人生","随机人生"],
  share_native:["공유하기","Share","共有","分享"],
  locked_h:["닫혀 있던 문 {n}개","{n} closed doors","閉ざされていた扉 {n}個","被关上的门 {n}扇"],
@@ -496,7 +508,7 @@ const UI={
  path_h:["걸어온 길","Your path","歩んだ道","走过的路"],
  died:["생을 마쳤다","Died","生涯を終えた","生命终结"],
  again:["다시 태어나기","Be born again","もう一度生まれる","再次出生"],
- again_p:["같은 버튼으로 80억 명 중 또 다른 한 명이 됩니다.","Press it to become another one of the 8 billion.","ボタン一つで、80億人の中のまた別の一人になれます。","再按一次，就会成为80亿人中的另一个人。"],
+ again_p:["같은 버튼으로 또 다른 두 아이가 태어나요.","Press it and two more children are born.","ボタン一つで、また別の二人が生まれます。","再按一次，又会有两个孩子出生。"],
  curve_h:["내 인생의 다섯 줄기","The five strands of your life","わたしの人生の五本の流れ","我人生的五条脉络"],
  map_caption:["지금도 매년 태어나는 사람들 — 점이 클수록 많이 태어나는 곳","Where people are born every year — bigger dots mean more births","今も毎年生まれる人々 — 点が大きいほど出生が多い場所","每年出生的人们 — 圆点越大，出生越多"],
  rolling:["당신이 태어날 곳을 뽑는 중…","Drawing your birthplace…","生まれる場所を抽選中…","正在抽取你的出生地…"],
@@ -534,15 +546,15 @@ const UI={
  top_p:["연간 출생 수 기준이에요. 아이가 많이 태어나는 나라일수록 뽑힐 확률이 높아요.","Based on yearly births. The more babies a country has, the likelier it is to be drawn.","年間の出生数が基準です。赤ちゃんが多い国ほど選ばれやすくなります。","以每年出生人数为准，出生人数越多的国家越容易被抽中。"],
  top_rest:["나머지 {n}개 나라·지역","The other {n} countries","残り{n}の国と地域","其余{n}个国家和地区"],
  sm_h:["이런 삶이 시작될 수 있어요","Lives that could begin","こんな人生が始まるかも","可能开始的人生"],
- sm_p:["무작위로 뽑은 가상의 아기 세 명이에요. 이름은 지어낸 것이고 실제 사람이 아니에요.","Three made-up babies drawn at random. The names are invented, not real people.","ランダムに選んだ架空の赤ちゃん3人です。名前は創作で、実在の人物ではありません。","随机抽取的三个虚构婴儿，名字是编的，并非真实人物。"],
+ sm_p:["무작위로 뽑은 가상의 두 아이예요. 이름은 지어낸 것이고 실제 사람이 아니에요.","Two made-up children drawn at random. The names are invented, not real people.","ランダムに選んだ架空の二人です。名前は創作で、実在の人物ではありません。","随机抽取的两个虚构孩子，名字是编的，并非真实人物。"],
  sm_re:["다른 아기 보기","Draw three more","別の赤ちゃんを見る","换三个看看"],
  bs1:["의 아기가 저소득·중하위소득 나라에서 태어나요","of babies are born in low and lower-middle income countries","の赤ちゃんが低所得・低中所得国で生まれます","的婴儿出生在低收入和中低收入国家"],
  bs2:["의 아기가 기대수명 65세 미만인 나라에서 태어나요","of babies are born where life expectancy is under 65","の赤ちゃんが平均寿命65歳未満の国で生まれます","的婴儿出生在预期寿命不足65岁的国家"],
  bs3:["명 — 태어난 1000명 중 첫 돌을 못 넘기는 아기(추정)","per 1,000 babies don't reach their first birthday (est.)","人 — 生まれた1000人のうち1歳前に亡くなる赤ちゃん（推定）","人 — 每1000名新生儿中活不过一岁的人数（估算）"],
- trust:[["무료","회원가입 없음","서버에 저장 안 함","4개 언어"],["Free","No sign-up","Nothing stored on a server","4 languages"],["無料","登録不要","サーバーに保存しない","4言語"],["免费","无需注册","不上传服务器","四种语言"]].map(a=>a),
+ trust:[["무료","회원가입 없음","개인 정보 저장 안 함","4개 언어"],["Free","No sign-up","No personal data stored","4 languages"],["無料","登録不要","個人情報は保存しない","4言語"],["免费","无需注册","不保存个人信息","四种语言"]].map(a=>a),
  faq_h:["자주 묻는 질문","FAQ","よくある質問","常见问题"],
  faq:[[["진짜 통계인가요?","Is the data real?","データは本物？","数据是真的吗？"],["나라별 출생 수, 기대수명, 영아사망률, 소득은 세계은행 공개 데이터예요. 이야기와 선택지는 게임을 위해 만든 허구예요.","Country birth counts, life expectancy, infant mortality and income come from World Bank open data. The stories and choices are fiction made for the game.","国別の出生数・平均寿命・乳児死亡率・所得は世界銀行のオープンデータです。出来事と選択肢はゲーム用の創作です。","各国出生人数、预期寿命、婴儿死亡率和收入来自世界银行开放数据，故事与选项是为游戏编写的虚构内容。"]],
-  [["제 기록이 저장되나요?","Is my play saved?","プレイは保存される？","我的记录会被保存吗？"],["이 브라우저에만 언어·속도 같은 설정이 저장되고, 서버로 보내는 정보는 없어요.","Only settings like language and speed stay in this browser. Nothing is sent to a server.","言語や速度などの設定がこのブラウザにだけ残り、サーバーへは何も送りません。","语言、速度等设置只保存在本浏览器中，不会发送到服务器。"]],
+  [["제 기록이 저장되나요?","Is my play saved?","プレイは保存される？","我的记录会被保存吗？"],["언어·속도 같은 설정과 지난 삶 기록은 이 브라우저에만 저장돼요. 서버에는 한 판을 끝냈다는 숫자 하나만 보내고, 누가 했는지는 보내지 않아요.","Settings and your past lives stay in this browser. The server only receives a count that a life was finished, never who played.","設定や過去の人生はこのブラウザにだけ残ります。サーバーには最後まで生きたという数だけを送り、誰が遊んだかは送りません。","设置和过去的人生记录只保存在本浏览器中。服务器只会收到“一局已结束”的计数，不会知道是谁玩的。"]],
   [["얼마나 걸리나요?","How long does it take?","どのくらいかかる？","要玩多久？"],["보통 5~10분이에요. ⏩ 속도 버튼이나 ▶ 자동으로 더 빨리 끝까지 볼 수도 있어요.","Usually 5 to 10 minutes. Use the ⏩ speed button or ▶ auto to see the whole life faster.","たいてい5〜10分です。⏩速度や▶自動でもっと早く最後まで見られます。","通常 5 到 10 分钟，也可以用 ⏩ 速度或 ▶ 自动更快看完。"]]],
  pass_h:["시간이 흘러가요","Time passes","時が流れます","时间流逝"],
  fact_label:["통계 한 줄","A statistic","統計ひとこと","一条统计"],
@@ -560,9 +572,9 @@ const ST=()=>UI.stats.map(x=>x[LI]);
 /* 통계 확장에 쓰는 문구 [ko,en,ja,zh] */
 Object.assign(UI,{
  era_h:["언제 태어날까요?","When will you be born?","いつ生まれる？","你会生在哪个年代？"],
- eras:[["지금","Now","いま","现在"],["지난 세상","The past","過ぎた世界","过去"],["다가올 세상","The future","これからの世界","未来"]],
+ eras:[["지금","Now","いま","现在"],["예전 어느 해","A year gone by","昔のある年","过去某一年"],["앞으로 어느 해","A year to come","未来のある年","未来某一年"]],
  era_sub:[["2025년","2025","2025年","2025年"],["1950–2005년","1950–2005","1950–2005年","1950–2005年"],["2030–2100년","2030–2100","2030–2100年","2030–2100年"]],
- era_note:["지난 세상과 다가올 세상은 그해 출생 수에 비례해 태어날 해를 뽑아요.","For the past and the future, your birth year is drawn in proportion to that year's births.","過ぎた世界とこれからの世界では、その年の出生数に比例して生まれる年を選びます。","选择过去或未来时，出生年份按当年的出生人数比例抽取。"],
+ era_note:["예전이나 앞으로를 고르면 그해 출생 수에 비례해 태어날 해를 뽑아요.","If you pick a year gone by or a year to come, your birth year is drawn in proportion to that year's births.","昔や未来を選ぶと、その年の出生数に比例して生まれる年を選びます。","选择过去或未来时，出生年份按当年的出生人数比例抽取。"],
  when_h:["언제 태어나느냐도 운이에요","When you're born is luck, too","いつ生まれるかも運です","生在哪一年，也是运气"],
  when_p:["같은 지구라도 1950년, 지금, 2100년에 태어나는 삶은 달라요. UN 세계인구전망 2024로 계산한 세계 평균이에요(2025년 이후는 전망).","The same planet offers very different lives in 1950, today and 2100. World averages from UN World Population Prospects 2024 (projections after 2025).","同じ地球でも、1950年・いま・2100年に生まれる人生は違います。国連「世界人口推計2024」による世界平均です（2025年以降は推計）。","同一个地球，1950年、现在和2100年出生的人生大不相同。数据为联合国《世界人口展望2024》的全球平均（2025年后为预测）。"],
  when_b:["한 해에 태어나는 아기","Babies born per year","1年に生まれる赤ちゃん","每年出生婴儿"],
@@ -635,7 +647,7 @@ Object.assign(UI,{
  when2_p:["{place}에서 태어난 {sex}의 기대수명(추정): 1950년생 {a}세 · {y}년생 {b}세 · 2100년생 {c}세","Expected lifespan of a {sex} born in {place} (est.): born 1950 {a} · born {y} {b} · born 2100 {c}","{place}生まれの{sex}の期待寿命（推定）：1950年生まれ{a}歳・{y}年生まれ{b}歳・2100年生まれ{c}歳","出生在{place}的{sex}预期寿命（估算）：1950年生{a}岁 · {y}年生{b}岁 · 2100年生{c}岁"],
  war_cap:["색 띠: 이 나라에 무력 분쟁이 있었던 해(UCDP)","Shaded: years of armed conflict here (UCDP)","色の帯：この国で武力紛争があった年（UCDP）","色带：该国发生武装冲突的年份（UCDP）"],
  src_intro:["이 게임의 통계는 아래 공개 자료를 내려받아 우리가 직접 계산하고 가공한 거예요. 사건과 선택지는 이 게임을 위해 지어낸 이야기지만, 그 확률과 문장 속 숫자는 이 통계를 따라요.","The statistics in this game come from the public datasets below, downloaded and processed by us. The events and choices are fiction written for this game, but their odds and the numbers in them follow these statistics.","このゲームの統計は、以下の公開データを私たちが直接ダウンロードして計算・加工したものです。出来事と選択肢はこのゲームのための創作ですが、その確率と文中の数字はこれらの統計に基づきます。","本游戏的统计数据来自以下公开数据集，由我们自行下载、计算和加工。事件与选项是为本游戏创作的故事，但其概率和文中数字依据这些统计。"],
- src_est:["추정에 대해: 비어 있는 값은 같은 지역·소득 그룹 나라들의 중앙값으로 채웠어요. 지난 세상과 다가올 세상에서 오늘 값만 있는 지표는 아동 사망률의 변화 폭에 맞춰 조정했어요. 사는 동안의 수명은 UN 전망 사망률을 따라가는 추정 모델이에요. 집안 형편이 각 확률을 기울이는 정도는 게임을 위한 가정이에요.","About estimates: missing values are filled with the median of countries in the same region and income group. In the past and future modes, indicators that only exist for today are scaled by the change in child mortality. Lifespans follow an estimated model that tracks UN projected death rates. How much family means tilts each chance is a game assumption.","推定について：欠けている値は同じ地域・所得グループの国々の中央値で補いました。過ぎた世界とこれからの世界では、現在の値しかない指標を子どもの死亡率の変化に合わせて調整しました。生涯の寿命は国連の推計死亡率に沿う推定モデルです。家計が各確率をどれだけ傾けるかはゲーム上の仮定です。","关于估算：缺失值用同一地区、同一收入组国家的中位数填补。在过去和未来模式中，只有当前数值的指标按儿童死亡率的变化幅度调整。一生的寿命采用跟随联合国预测死亡率的估算模型。家境对各项概率的影响程度是游戏设定。"],
+ src_est:["추정에 대해: 비어 있는 값은 같은 지역·소득 그룹 나라들의 중앙값으로 채웠어요. 예전 해와 앞으로의 해에서 오늘 값만 있는 지표는 아동 사망률의 변화 폭에 맞춰 조정했어요. 사는 동안의 수명은 UN 전망 사망률을 따라가는 추정 모델이에요. 집안 형편이 각 확률을 기울이는 정도는 게임을 위한 가정이에요.","About estimates: missing values are filled with the median of countries in the same region and income group. In the past and future modes, indicators that only exist for today are scaled by the change in child mortality. Lifespans follow an estimated model that tracks UN projected death rates. How much family means tilts each chance is a game assumption.","推定について：欠けている値は同じ地域・所得グループの国々の中央値で補いました。昔と未来の年では、現在の値しかない指標を子どもの死亡率の変化に合わせて調整しました。生涯の寿命は国連の推計死亡率に沿う推定モデルです。家計が各確率をどれだけ傾けるかはゲーム上の仮定です。","关于估算：缺失值用同一地区、同一收入组国家的中位数填补。在过去和未来模式中，只有当前数值的指标按儿童死亡率的变化幅度调整。一生的寿命采用跟随联合国预测死亡率的估算模型。家境对各项概率的影响程度是游戏设定。"],
  src_lic:["라이선스: 세계은행·Our World in Data·Maddison Project·UCDP 자료는 CC BY 4.0, UN 세계인구전망과 UNDP 인간개발보고서 자료는 CC BY 3.0 IGO를 따르며, 출처를 밝히고 가공해 썼어요. 세계 지도는 Natural Earth(퍼블릭 도메인)예요.","Licences: World Bank, Our World in Data, Maddison Project and UCDP data are CC BY 4.0; UN World Population Prospects and UNDP Human Development Report data are CC BY 3.0 IGO. All are credited and were processed by us. The world map uses Natural Earth (public domain).","ライセンス：世界銀行・Our World in Data・Maddison Project・UCDPのデータはCC BY 4.0、国連世界人口推計とUNDP人間開発報告書のデータはCC BY 3.0 IGOに従い、出典を明記して加工しています。世界地図はNatural Earth（パブリックドメイン）です。","许可：世界银行、Our World in Data、Maddison Project和UCDP数据采用CC BY 4.0；联合国《世界人口展望》和UNDP《人类发展报告》数据采用CC BY 3.0 IGO。均已注明出处并经我们加工。世界地图使用Natural Earth（公有领域）。"],
  note:["사건과 선택지는 게임을 위해 지어낸 이야기예요. 그 안의 확률과 숫자는 UN·세계은행 등 공개 통계로 계산했고, 일부는 추정이에요. 자세한 출처는 아래 '데이터 출처'에 있어요.","Events and choices are fiction made for the game. Their odds and numbers are computed from public statistics (UN, World Bank and others), some of them estimated. See 'Data sources' for details.","出来事と選択肢はゲームのための創作です。その確率と数字は国連・世界銀行などの公開統計から計算しており、一部は推定です。詳しい出典は「データの出典」にあります。","事件与选项是为游戏创作的故事，其中的概率和数字依据联合国、世界银行等公开统计计算，部分为估算。详细出处见“数据来源”。"]
 });
@@ -646,8 +658,8 @@ const SRC_LIST=[
  ["World Bank, World Development Indicators","https://databank.worldbank.org/source/world-development-indicators","CC BY 4.0",["원 출처 UN IGME·WHO·UNESCO UIS·ILO·UNAIDS·UNODC·UNICEF·FAO: 아동·산모 사망, 흡연, 의료비, 학교, 일자리, HIV, 살인, 교통사고, 조혼, 빈곤, 전기·물, 인터넷","Original sources UN IGME, WHO, UNESCO UIS, ILO, UNAIDS, UNODC, UNICEF, FAO: child & maternal deaths, smoking, health spending, schooling, jobs, HIV, homicide, road deaths, child marriage, poverty, power & water, internet","原出典 UN IGME・WHO・UNESCO UIS・ILO・UNAIDS・UNODC・UNICEF・FAO：子ども・妊産婦の死亡、喫煙、医療費、学校、仕事、HIV、殺人、交通事故、児童婚、貧困、電気・水、インターネット","原始来源 UN IGME、WHO、UNESCO UIS、ILO、UNAIDS、UNODC、UNICEF、FAO：儿童与孕产妇死亡、吸烟、医疗支出、教育、就业、HIV、凶杀、交通事故、童婚、贫困、水电、互联网"]],
  ["UNDP Human Development Report 2023/24","https://hdr.undp.org/data-center","CC BY 3.0 IGO",["인간개발지수, 교육 연수","Human Development Index, years of schooling","人間開発指数、就学年数","人类发展指数、受教育年限"]],
  ["World Happiness Report (via Our World in Data)","https://ourworldindata.org/happiness-and-life-satisfaction","CC BY 4.0",["삶의 만족도","Life satisfaction","生活満足度","生活满意度"]],
- ["Maddison Project Database 2020 (Bolt & van Zanden)","https://www.rug.nl/ggdc/historicaldevelopment/maddison/","CC BY 4.0",["지난 세상의 1인당 소득","Past income per person","過去の一人当たり所得","过去的人均收入"]],
- ["Lee & Lee (2016), Human Capital in the Long Run (via Our World in Data)","https://ourworldindata.org/grapher/mean-years-of-schooling-long-run","CC BY 4.0",["지난 세상의 교육 연수","Past years of schooling","過去の就学年数","过去的受教育年限"]],
+ ["Maddison Project Database 2020 (Bolt & van Zanden)","https://www.rug.nl/ggdc/historicaldevelopment/maddison/","CC BY 4.0",["예전 해의 1인당 소득","Past income per person","過去の一人当たり所得","过去的人均收入"]],
+ ["Lee & Lee (2016), Human Capital in the Long Run (via Our World in Data)","https://ourworldindata.org/grapher/mean-years-of-schooling-long-run","CC BY 4.0",["예전 해의 교육 연수","Past years of schooling","過去の就学年数","过去的受教育年限"]],
  ["UN World Urbanization Prospects & HYDE (via Our World in Data)","https://ourworldindata.org/urbanization","CC BY 4.0",["도시 인구 비율(1950–2050)","Urban share (1950–2050)","都市人口の割合（1950–2050）","城市人口比例（1950–2050）"]],
  ["UCDP/PRIO Armed Conflict Dataset 26.1 (Gleditsch et al. 2002)","https://ucdp.uu.se/downloads/","CC BY 4.0",["무력 분쟁이 있었던 해(1946–2025)","Years of armed conflict (1946–2025)","武力紛争があった年（1946–2025）","发生武装冲突的年份（1946–2025）"]],
  ["Natural Earth","https://www.naturalearthdata.com/","Public domain",["세계 지도","World map","世界地図","世界地图"]]];
@@ -1040,18 +1052,29 @@ const STATKEYS=["h","w","j","r","e"];
 const topEl=document.getElementById("top"), app=document.getElementById("app");
 /* ---------- 새 화면용 문구 ---------- */
 Object.assign(UI,{
- hero_h:["어디서 태어날지는<br><em>고를 수 없어요.</em>","You don't get to<br><em>choose where you're born.</em>","どこに生まれるかは<br><em>選べない。</em>","出生在哪里，<br><em>由不得你选。</em>"],
- hero_p:["나라는 세계은행 출생 통계에 비례해 뽑히고, 집안 형편은 그 나라의 소득 수준을 따라요. 같은 나이라도 태어난 곳에 따라 열리는 문이 달라요.",
-  "Your country is drawn in proportion to World Bank birth data, and your family's means follow that country's income level. At the same age, different doors open depending on where you started.",
-  "国は世界銀行の出生統計に比例して選ばれ、家庭の暮らし向きはその国の所得水準に沿います。同じ年齢でも、生まれた場所によって開く扉が違います。",
-  "国家按世界银行的出生统计比例抽取，家境取决于该国的收入水平。即使年龄相同，出身不同，能打开的门也不同。"],
+ hero_h:["같은 날 태어나도<br><em>문이 달라요.</em>","Born the same day,<br><em>different doors.</em>","同じ日でも、<br><em>扉は違う。</em>","同一天出生，<br><em>门却不同。</em>"],
+ hero_p:["같은 나이에 같은 갈림길 앞에 서도, 두 사람에게 열리는 문은 달라요. 5분 동안 두 일생을 나란히 살아 봐요.","At the same age you both reach the same crossroads, but different doors open for each of you. Live both lives side by side in about five minutes.","同じ年齢で同じ分かれ道に立っても、二人に開く扉は違います。5分ほどで二つの一生を並べて生きてみよう。","同样的年纪站在同样的岔路口，为两人打开的门却不同。用大约五分钟，并排过完两段人生。"],
  per_sec:["1초에 약 {n}명이 태어나요","about {n} babies born every second","1秒に約{n}人が生まれます","每秒约有{n}名婴儿出生"],
- first_day:["누군가의 첫날","Someone's first day","誰かの最初の日","某个人的第一天"],
+ pair_me:["당신이 될 수도 있는 아이","Could be you","あなたかもしれない子","可能是你的孩子"],
+ pair_tw:["정반대 형편의 아이","Born at the opposite end","正反対の境遇の子","境遇截然相反的孩子"],
+ pair_vs:["같은 날","same day","同じ日","同一天"],
+ pair_q:["두 아이는 같은 나이에 같은 갈림길을 만나요. 누구에게 어떤 문이 열릴까요?","Both reach the same crossroads at the same age. Which doors will open for whom?","二人は同じ年齢で同じ分かれ道に出会います。どちらにどの扉が開くでしょう？","两人会在同样的年纪遇到同样的岔路口。哪扇门会为谁打开？"],
+ c2_n:["2명","2","2人","2个"],
+ c2_b:["같은 날 태어난 두 아이","children born the same day","同じ日に生まれた二人","同一天出生的孩子"],
+ c5_n:["약 5분","~5 min","約5分","约5分钟"],
+ c5_b:["한 판이면 두 사람의 일생","for two whole lives","で二人の一生","过完两段人生"],
+ plays_today:["오늘 두 아이의 일생을 끝까지 산 판","lives played to the end today","今日、最後まで生きた回数","今天玩到结局的局数"],
+ plays_total:["지금까지 두 아이의 일생을 끝까지 산 판","lives played to the end so far","これまで最後まで生きた回数","至今玩到结局的局数"],
+ hun_h:["아기 100명이 태어나면","If 100 babies were born","赤ちゃんが100人生まれたら","如果出生100个婴儿"],
+ hun_p:["연간 출생 수 기준이에요. 동그라미 하나가 아기 한 명이에요.","Based on yearly births. Each circle is one baby.","年間の出生数が基準です。丸ひとつが赤ちゃん一人です。","以每年出生人数为准，一个圆点代表一个婴儿。"],
+ hun_n:["{n}명","{n}","{n}人","{n}人"],
+ hun_rest:["나머지 나라","Everywhere else","その他の国","其他国家"],
+ first_day:["오늘 태어난 두 아이","Two children born today","今日生まれた二人","今天出生的两个孩子"],
  next_baby:["다음 아기","Next baby","次の赤ちゃん","下一个婴儿"],
  share_l:["이 나라에서 태어날 확률","Chance of being born here","この国に生まれる確率","出生在这里的概率"],
  gdp_s:["1인당 소득","Income per person","1人当たり所得","人均收入"],
  le_s:["평균 수명","Life expectancy","平均寿命","预期寿命"],
- where_h:["어디서 태어날까요","Where will you be born","どこに生まれる？","你会出生在哪里"],
+ where_h:["해마다 아기가 태어나는 곳","Where babies are born each year","毎年赤ちゃんが生まれる場所","每年婴儿出生的地方"],
  where_p:["점 하나가 한 나라예요. 점이 클수록 해마다 아기가 많이 태어나고, 그만큼 뽑힐 확률도 높아요.","Each dot is a country. Bigger dots mean more births each year, and a higher chance of being drawn.","点ひとつが一つの国です。点が大きいほど毎年多くの赤ちゃんが生まれ、選ばれる確率も高くなります。","每个点代表一个国家。点越大，每年出生的婴儿越多，被抽中的概率也越高。"],
  diff_h:["이 게임만의 세 가지","Three things you'll only find here","このゲームならではの三つ","这款游戏独有的三点"],
  f1_h:["형편이 선택지를 바꿔요","Your start changes your options","境遇が選択肢を変える","出身改变你的选项"],
@@ -1676,10 +1699,11 @@ function paintBaby(){
   const el=document.getElementById("baby"); if(!el) return;
   const g=babyOf(babyK), c=g.c;
   el.querySelector(".scn").innerHTML=sceneSVG(g,0,{t:.1,ar:16/9});
-  el.querySelector(".baby-b").innerHTML=`<div class="baby-top"><b>${UI.first_day[LI]}</b><span>${REGIONS[c[3]][LI]}</span></div>
-    <div class="baby-name">${esc(g.name)}</div>
-    <div class="baby-meta">${place(c)} · ${UI.sex_child[LI][g.sex==="m"?0:1]} · ${UI.tiers[g.famTier][LI]} · ${UI.hh_place[LI][g.urban?0:1]}</div>
-    <div class="kv3"><div><small>${UI.share_l[LI]}</small><b>${shareOf(c)}%</b></div><div><small>${UI.le_s[LI]}</small><b>${ui("unit_yr",{n:c[6].toFixed(0)})}</b></div><div><small>${UI.gdp_s[LI]}</small><b>${c[8]==null?"—":"$"+Math.round(c[8]).toLocaleString()}</b></div></div>
+  const t=makeTwin(g), one=(x,lab)=>`<div class="pr"><small>${lab}</small><b class="pn">${esc(x.name)}</b><span class="pm">${place(x.c)} · ${UI.tiers[x.famTier][LI]} · ${UI.hh_place[LI][x.urban?0:1]}</span>
+      <div class="pk"><span>${UI.le_s[LI]}</span><b>${ui("unit_yr",{n:x.c[6].toFixed(0)})}</b></div><div class="pk"><span>${UI.gdp_s[LI]}</span><b>${x.c[8]==null?"—":"$"+Math.round(x.c[8]).toLocaleString()}</b></div></div>`;
+  el.querySelector(".baby-b").innerHTML=`<div class="baby-top"><b>${UI.first_day[LI]}</b><span>${UI.sex_child[LI][g.sex==="m"?0:1]}</span></div>
+    <div class="pair">${one(g,UI.pair_me[LI])}<div class="vs">${UI.pair_vs[LI]}</div>${one(t,UI.pair_tw[LI])}</div>
+    <p class="pair-q">${UI.pair_q[LI]}</p>
     <div class="baby-f"><div class="dots">${[0,1,2,3,4].map(i=>`<i class="${i===babyK%5?"on":""}"></i>`).join("")}</div><button class="ghost" id="nextBaby">${UI.next_baby[LI]} →</button></div>`;
   el.querySelector(".baby-b").classList.remove("fade"); void el.offsetWidth; el.querySelector(".baby-b").classList.add("fade");
   document.getElementById("nextBaby").onclick=()=>{babyK++;paintBaby();loopBaby()};
@@ -1697,6 +1721,33 @@ function topRows(){
   return rows.map(c=>`<div class="r"><span>${place(c)}</span><i><u style="width:${(c[5]/mx*100).toFixed(1)}%"></u></i><b>${(c[5]/totalBirths*100).toFixed(1)}%</b></div>`).join("")+
     `<div class="r"><span>${ui("top_rest",{n:COUNTRIES.length-10})}</span><i><u class="rest" style="width:100%"></u></i><b>${(rest*100).toFixed(1)}%</b></div>`;
 }
+/* 아기 100명 그림: 출생 수 상위 5개 나라를 동그라미 수로 보여 줘요. 반올림 합이 100이 되게 나머지로 맞춰요. */
+function hundredHTML(){
+  const rows=COUNTRIES.slice().sort((a,b)=>b[5]-a[5]).slice(0,5), cols=["var(--brand)","#d9913f","#7d9a5a","#4f7fa8","#8a6aa8"];
+  const ns=rows.map(c=>Math.round(c[5]/totalBirths*100)), rest=100-ns.reduce((a,b)=>a+b,0);
+  const dot=(col,n)=>`<i style="background:${col}"></i>`.repeat(Math.max(0,n));
+  const key=(col,label,n)=>`<span><i style="background:${col}"></i>${label} <b>${ui("hun_n",{n})}</b></span>`;
+  return `<div class="hgrid" role="img" aria-label="${UI.hun_h[LI]}">${rows.map((c,i)=>dot(cols[i],ns[i])).join("")}${dot("var(--rule)",rest)}</div>
+    <div class="hkey">${rows.map((c,i)=>key(cols[i],place(c),ns[i])).join("")}${key("var(--rule)",UI.hun_rest[LI],rest)}</div>`;
+}
+/* 한 판을 끝낸 수. 서버(counter/)가 세고, 숫자가 작을 땐 나라 수를 대신 보여 줘요. */
+const COUNTER_URL="https://randomlife-plays.kkjlg.workers.dev", PLAY_MIN=100;
+let PLAYS=null;
+function playsHTML(){
+  if(PLAYS&&PLAYS.today>=PLAY_MIN) return `<div class="live"><b>${PLAYS.today.toLocaleString()}</b><span>${UI.plays_today[LI]}</span></div>`;
+  if(PLAYS&&PLAYS.total>=PLAY_MIN) return `<div class="live"><b>${PLAYS.total.toLocaleString()}</b><span>${UI.plays_total[LI]}</span></div>`;
+  return `<b>${COUNTRIES.length}</b><span>${UI.num_c[LI]}</span>`;
+}
+function loadPlays(){
+  if(!COUNTER_URL.startsWith("http")) return;
+  fetch(COUNTER_URL+"/count",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{
+    if(!d) return; PLAYS=d; const el=document.getElementById("plays"); if(el) el.innerHTML=playsHTML();
+  }).catch(()=>{});
+}
+function countPlay(){
+  if(!COUNTER_URL.startsWith("http")) return;
+  fetch(COUNTER_URL+"/done",{method:"POST",keepalive:true}).then(r=>r.ok?r.json():null).then(d=>{if(d)PLAYS=d}).catch(()=>{});
+}
 function renderStart(){
   view=renderStart; G=null; MODE="start"; clearTimeout(autoT); cancelAnimationFrame(skyRaf);
   topStart();
@@ -1713,9 +1764,9 @@ function renderStart(){
       <div class="cta-row"><button class="cta" id="go">${UI.random_go[LI]} →</button>
         <button class="cta2" id="daily">${ui(done?"daily_again":"daily_go")}<small>${done&&prev.text?esc(prev.text[LI]||""):ui("daily_h",{d:todayStr()})}</small></button></div>
       <div class="counters">
-        <div><b>${fmtN(totalBirths)}</b><span>${UI.num_b[LI]}</span></div>
-        <div><b>${COUNTRIES.length}</b><span>${UI.num_c[LI]}</span></div>
-        <div class="live"><b id="tk1">0</b><span>${UI.live_b[LI]}</span></div>
+        <div><b>${UI.c2_n[LI]}</b><span>${UI.c2_b[LI]}</span></div>
+        <div><b>${UI.c5_n[LI]}</b><span>${UI.c5_b[LI]}</span></div>
+        <div id="plays">${playsHTML()}</div>
       </div>
     </div>
     <div><div class="baby" id="baby"><div class="scn"></div><div class="baby-b"></div></div><p class="cap">${UI.sm_p[LI]}</p></div>
@@ -1726,7 +1777,7 @@ function renderStart(){
     <div class="sec-h"><h2>${UI.where_h[LI]}</h2><p>${UI.where_p[LI]}</p></div>
     <div class="where">
       <div class="box">${mapSVG("all")}<p class="cap">${UI.map_caption[LI]}</p></div>
-      <div class="box"><div class="box-h"><h3>${UI.top_h[LI]}</h3></div><div class="bars">${topRows()}</div><p class="cap">${UI.top_p[LI]}</p></div>
+      <div class="box"><div class="box-h"><h3>${UI.hun_h[LI]}</h3></div>${hundredHTML()}<p class="cap">${UI.hun_p[LI]}</p></div>
     </div>
     <div class="tiles"><div class="tile"><b>${Math.round(SHARE_LOW*100)}%</b><span>${UI.bs1[LI]}</span></div><div class="tile"><b>${Math.round(SHARE_SHORT*100)}%</b><span>${UI.bs2[LI]}</span></div><div class="tile"><b>${Math.round(IMR_SUM*1000)}</b><span>${UI.bs3[LI]}</span></div></div>
    </section>
@@ -1747,7 +1798,7 @@ function renderStart(){
    <footer class="foot"><p>${UI.note[LI]}</p><span>© ${new Date().getFullYear()} ${UI.title[LI]}</span></footer>
    <div class="dock m"><button class="cta" id="go2">${UI.random_go[LI]} →</button></div>
   </div>`;
-  bindTicker(); paintBaby(); loopBaby();
+  loadPlays(); paintBaby(); loopBaby();
   app.querySelectorAll("[data-era]").forEach(b=>b.onclick=()=>{ERA=b.dataset.era;store.set("era",ERA);app.querySelectorAll("[data-era]").forEach(x=>x.classList.toggle("on",x===b))});
   const start=()=>{G=newLife(null,{year:pickYear(ERA,Math.random)});skyT=0;renderBirth()};
   document.getElementById("go").onclick=start; document.getElementById("go2").onclick=start;
@@ -2097,7 +2148,7 @@ function ending(){
     if(G.daily) store.set("daily",{date:G.date,text:UI.titles[k].map((t,i)=>`${NAMES[G.c[0]][i]} · ${sub(UI.age_n[i],{n:age})} · ${t}`)});
     if(G.hist[G.hist.length-1].a!==age) G.hist.push({a:age,...G.s});
     if(G.twin) syncTwin();
-    recordAtlas(); keepLife(); clearRun();
+    recordAtlas(); keepLife(); clearRun(); countPlay();
   }
   AUTO=false; clearTimeout(autoT);
   view=renderEnding; renderEnding();

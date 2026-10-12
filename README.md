@@ -1,9 +1,9 @@
 # 랜덤인생게임 · Random Life
 
-80억 명 중 한 명으로 무작위로 태어나 그 사람의 일생을 살아 보는 웹 게임입니다. 한국어·English·日本語·中文을 지원합니다.
+같은 날 정반대 형편에서 태어난 두 아이의 일생을 나란히 살아 보는 웹 게임입니다. 한국어·English·日本語·中文을 지원합니다.
 
 - 플레이: https://randomlife-game.github.io/randomlife-game/
-- 지금, 지난 세상(1950–2005년), 다가올 세상(2030–2100년) 중에서 태어날 때를 고를 수 있습니다. 출생지는 그해 나라별 출생 수에 비례해 뽑습니다.
+- 지금, 예전 어느 해(1950–2005년), 앞으로 어느 해(2030–2100년) 중에서 태어날 때를 고를 수 있습니다. 출생지는 그해 나라별 출생 수에 비례해 뽑습니다.
 - 사건과 선택지는 게임을 위한 허구지만, 그 확률과 문장 속 숫자는 공개 통계로 계산합니다.
 
 ## 데이터
@@ -27,3 +27,11 @@
 python3 -m http.server 8765 &
 node tools/make-share-pages.js
 ```
+
+## 플레이 카운터 (`counter/`)
+
+첫 화면에 "오늘 두 아이의 일생을 끝까지 산 판" 수를 보여 줘요. 결말까지 간 판마다 숫자 하나만 올라가고, 누가 했는지는 저장하지 않아요. 숫자가 100보다 작으면 대신 나라 수를 보여 줘요.
+
+- Cloudflare Workers + Durable Object(SQLite)로 돌아가요. 무료 요금제로 충분해요.
+- `counter/` 아래 파일이 바뀌면 GitHub Actions(`.github/workflows/deploy-counter.yml`)가 배포해요. 저장소 Secrets에 `CLOUDFLARE_API_TOKEN`과 `CLOUDFLARE_ACCOUNT_ID`가 필요해요.
+- 주소: `GET /count` → `{today, total}`, `POST /done` → 1 올림. 날짜는 한국 시간 기준이에요.
