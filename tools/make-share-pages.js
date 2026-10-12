@@ -14,13 +14,13 @@ const SITE="https://randomlife-game.github.io/randomlife-game/";
 const SRC=process.env.SRC||"http://localhost:8765/index.html";
 const T={
   ko:{t:(p,x)=>`친구가 ${p}에서 ${x}로 태어나 한평생을 살아 봤어요`,sx:["남자아이","여자아이"],
-      d:"80억 명 중 한 명으로 무작위로 태어나 보세요. 같은 날 정반대 형편에서 태어난 아이와 나란히 살아요. 무료 · 가입 없음",go:"이 인생 보러 가기",site:"랜덤인생게임"},
+      d:"같은 날 정반대 형편에서 태어난 두 아이의 일생을 나란히 살아 보세요. 무료 · 가입 없음",go:"이 인생 보러 가기",site:"랜덤인생게임"},
   en:{t:(p,x)=>`A friend lived a whole life as a ${x} born in ${p}`,sx:["boy","girl"],
-      d:"Be born at random as one of 8 billion people, and live alongside a child born the same day into the opposite life. Free, no sign-up.",go:"See this life",site:"Random Life"},
+      d:"Live two lives side by side: you, and a child born the same day at the opposite end. Free, no sign-up.",go:"See this life",site:"Random Life"},
   ja:{t:(p,x)=>`友だちが${p}で${x}として生まれ、一生を生きてみました`,sx:["男の子","女の子"],
-      d:"80億人の中の一人としてランダムに生まれてみよう。同じ日に正反対の境遇で生まれた子と並んで生きます。無料・登録不要",go:"この人生を見る",site:"ランダム人生"},
+      d:"同じ日に正反対の境遇で生まれた二人の一生を、並べて生きてみよう。無料・登録不要",go:"この人生を見る",site:"ランダム人生"},
   zh:{t:(p,x)=>`朋友作为出生在${p}的${x}，过完了一生`,sx:["男孩","女孩"],
-      d:"随机成为80亿人中的一个，和同一天出生在截然相反境遇中的孩子并肩生活。免费，无需注册。",go:"去看这段人生",site:"随机人生"}
+      d:"和同一天出生在截然相反境遇中的孩子，并肩过完两段人生。免费，无需注册。",go:"去看这段人生",site:"随机人生"}
 };
 const LANGS=["ko","en","ja","zh"];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
