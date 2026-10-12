@@ -5,14 +5,14 @@
 <meta name="theme-color" content="#f3eee4">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>랜덤인생게임 · 같은 날 태어난 두 아이의 일생</title>
-<link rel="canonical" href="https://randomlife-game.github.io/randomlife-game/">
-<link rel="alternate" hreflang="ko" href="https://randomlife-game.github.io/randomlife-game/">
-<link rel="alternate" hreflang="en" href="https://randomlife-game.github.io/randomlife-game/?l=en">
-<link rel="alternate" hreflang="ja" href="https://randomlife-game.github.io/randomlife-game/?l=ja">
-<link rel="alternate" hreflang="zh" href="https://randomlife-game.github.io/randomlife-game/?l=zh">
-<link rel="alternate" hreflang="x-default" href="https://randomlife-game.github.io/randomlife-game/">
+<link rel="canonical" href="https://randomlife-game.github.io/">
+<link rel="alternate" hreflang="ko" href="https://randomlife-game.github.io/">
+<link rel="alternate" hreflang="en" href="https://randomlife-game.github.io/?l=en">
+<link rel="alternate" hreflang="ja" href="https://randomlife-game.github.io/?l=ja">
+<link rel="alternate" hreflang="zh" href="https://randomlife-game.github.io/?l=zh">
+<link rel="alternate" hreflang="x-default" href="https://randomlife-game.github.io/">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"VideoGame","name":"랜덤인생게임","alternateName":["Random Life","ランダム人生","随机人生"],"url":"https://randomlife-game.github.io/randomlife-game/","image":"https://randomlife-game.github.io/randomlife-game/og.png","description":"같은 날 정반대 형편에서 태어난 두 아이의 일생을 나란히 살아 보는 무료 웹 게임. 출생지는 나라별 출생 수 통계로 정해져요.","inLanguage":["ko","en","ja","zh"],"genre":["Simulation","Life simulation"],"gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+{"@context":"https://schema.org","@type":"VideoGame","name":"랜덤인생게임","alternateName":["Random Life","ランダム人生","随机人生"],"url":"https://randomlife-game.github.io/","image":"https://randomlife-game.github.io/og.png","description":"같은 날 정반대 형편에서 태어난 두 아이의 일생을 나란히 살아 보는 무료 웹 게임. 출생지는 나라별 출생 수 통계로 정해져요.","inLanguage":["ko","en","ja","zh"],"genre":["Simulation","Life simulation"],"gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
 </script>
 <meta name="description" content="같은 날 정반대 형편에서 태어난 두 아이의 일생을 나란히 살아 보는 게임 · Live two lives side by side: children born the same day at opposite ends · 同じ日に正反対の境遇で生まれた二人の一生を並べて生きるゲーム · 并肩过完同一天出生、境遇相反的两个孩子的一生">
 <meta property="og:type" content="website">
@@ -20,10 +20,10 @@
 <meta property="og:locale" content="ko_KR">
 <meta property="og:title" content="랜덤인생게임 · 같은 날 태어나도 문이 달라요">
 <meta property="og:description" content="같은 날 정반대 형편에서 태어난 두 아이의 일생을 5분 동안 나란히 살아 보세요. 무료 · 가입 없음">
-<meta property="og:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
-<meta property="og:url" content="https://randomlife-game.github.io/randomlife-game/">
+<meta property="og:image" content="https://randomlife-game.github.io/og.png">
+<meta property="og:url" content="https://randomlife-game.github.io/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
+<meta name="twitter:image" content="https://randomlife-game.github.io/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -1524,7 +1524,7 @@ const totalBirths=COUNTRIES.reduce((s,c)=>s+c[5],0);
 const shareOf=c=>Math.round(c[5]/totalBirths*1000)/10;
 
 /* ---------- 언어·설정 ---------- */
-const SITE_URL="https://randomlife-game.github.io/randomlife-game/";
+const SITE_URL="https://randomlife-game.github.io/";
 function setLang(l,keep){
   if(!LANGS.some(x=>x[0]===l)) l="ko";
   LANG=l; LI=LANGS.findIndex(x=>x[0]===l);
@@ -2181,7 +2181,7 @@ function endInfo(){
   const cmp=age<5?"":diff>=0?ui("cmp_more",{place:place(G.c),le:G.c[6].toFixed(1),n:Math.round(diff)}):ui("cmp_less",{place:place(G.c),le:G.c[6].toFixed(1),n:Math.round(-diff)});
   return {age,title,cmp,causeTxt:UI.causes[cause][LI]};
 }
-const SITE="https://randomlife-game.github.io/randomlife-game/";
+const SITE="https://randomlife-game.github.io/";
 function shareURL(){
   const p=new URLSearchParams({c:G.c[0],s:G.sex,a:G.ended.age,k:G.ended.k,l:LANG});
   if(G.daily) p.set("d",G.date);

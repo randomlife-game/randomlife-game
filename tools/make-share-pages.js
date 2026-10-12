@@ -10,7 +10,7 @@
 const fs=require("fs"), path=require("path");
 let chromium; try{({chromium}=require("playwright"))}catch(e){({chromium}=require(require("child_process").execSync("npm root -g").toString().trim()+"/playwright"))}
 const ROOT=path.resolve(__dirname,".."), OUT=path.join(ROOT,"s");
-const SITE="https://randomlife-game.github.io/randomlife-game/";
+const SITE="https://randomlife-game.github.io/";
 const SRC=process.env.SRC||"http://localhost:8765/index.html";
 const T={
   ko:{t:(p,x)=>`친구가 ${p}에서 ${x}로 태어나 한평생을 살아 봤어요`,sx:["남자아이","여자아이"],
