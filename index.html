@@ -4,17 +4,26 @@
 <meta charset="utf-8">
 <meta name="theme-color" content="#f3eee4">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>랜덤인생게임 · Random Life</title>
+<title>랜덤인생게임 · 같은 날 태어난 두 아이의 일생</title>
+<link rel="canonical" href="https://randomlife-game.github.io/">
+<link rel="alternate" hreflang="ko" href="https://randomlife-game.github.io/">
+<link rel="alternate" hreflang="en" href="https://randomlife-game.github.io/?l=en">
+<link rel="alternate" hreflang="ja" href="https://randomlife-game.github.io/?l=ja">
+<link rel="alternate" hreflang="zh" href="https://randomlife-game.github.io/?l=zh">
+<link rel="alternate" hreflang="x-default" href="https://randomlife-game.github.io/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"랜덤인생게임","alternateName":["Random Life","ランダム人生","随机人生"],"url":"https://randomlife-game.github.io/","image":"https://randomlife-game.github.io/og.png","description":"같은 날 정반대 형편에서 태어난 두 아이의 일생을 나란히 살아 보는 무료 웹 게임. 출생지는 나라별 출생 수 통계로 정해져요.","inLanguage":["ko","en","ja","zh"],"genre":["Simulation","Life simulation"],"gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+</script>
 <meta name="description" content="같은 날 정반대 형편에서 태어난 두 아이의 일생을 나란히 살아 보는 게임 · Live two lives side by side: children born the same day at opposite ends · 同じ日に正反対の境遇で生まれた二人の一生を並べて生きるゲーム · 并肩过完同一天出生、境遇相反的两个孩子的一生">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="랜덤인생게임">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:title" content="랜덤인생게임 · 같은 날 태어나도 문이 달라요">
 <meta property="og:description" content="같은 날 정반대 형편에서 태어난 두 아이의 일생을 5분 동안 나란히 살아 보세요. 무료 · 가입 없음">
-<meta property="og:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
-<meta property="og:url" content="https://randomlife-game.github.io/randomlife-game/">
+<meta property="og:image" content="https://randomlife-game.github.io/og.png">
+<meta property="og:url" content="https://randomlife-game.github.io/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
+<meta name="twitter:image" content="https://randomlife-game.github.io/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -414,7 +423,17 @@
 </head>
 <body>
 <header class="top" id="top"></header>
-<main id="app"></main>
+<main id="app"><noscript><div style="max-width:720px;margin:40px auto;padding:0 16px">
+<h1>랜덤인생게임: 같은 날 태어나도 문이 달라요</h1>
+<p>같은 날, 같은 성별로, 정반대 형편에서 태어난 두 아이의 일생을 5분 동안 나란히 살아 보는 무료 웹 게임이에요. 어느 나라에서 태어날지는 그해 나라별 출생 수 통계에 따라 정해지고, 선택지마다 다른 아이에게는 그 문이 열렸는지 닫혔는지 보여 줘요. 가입 없이 한국어, 영어, 일본어, 중국어로 할 수 있어요.</p>
+<h2 lang="en">Random Life: born the same day, different doors</h2>
+<p lang="en">A free five-minute web game where you live two lives side by side: two children born on the same day, at opposite ends of the world's fortunes. Where you are born follows real birth statistics, and every choice shows whether that door was open for the other child.</p>
+<h2 lang="ja">ランダム人生：同じ日に生まれても、扉は違う</h2>
+<p lang="ja">同じ日に正反対の境遇で生まれた二人の一生を、5分で並べて生きる無料のウェブゲーム。生まれる国は実際の出生数の統計で決まります。</p>
+<h2 lang="zh">随机人生：同一天出生，命运之门却不同</h2>
+<p lang="zh">一款免费的网页游戏：用五分钟并肩过完同一天出生、境遇相反的两个孩子的一生。出生地按真实的各国出生人数统计决定。</p>
+<p>이 게임은 자바스크립트를 켜야 할 수 있어요. · Please enable JavaScript to play.</p>
+</div></noscript></main>
 <script>
 /* 국가 데이터: World Bank Open Data (CC BY 4.0) — [iso3, -, -, 지역, 소득, 추정출생수, 기대수명, 영아사망(천명당), 1인당GDP(PPP)] */
 const NAMES={"ABW":["아루바","Aruba","アルバ","阿鲁巴"],"AFG":["아프가니스탄","Afghanistan","アフガニスタン","阿富汗"],"AGO":["앙골라","Angola","アンゴラ","安哥拉"],"ALB":["알바니아","Albania","アルバニア","阿尔巴尼亚"],"AND":["안도라","Andorra","アンドラ","安道尔"],"ARE":["아랍에미리트","United Arab Emirates","アラブ首長国連邦","阿拉伯联合酋长国"],"ARG":["아르헨티나","Argentina","アルゼンチン","阿根廷"],"ARM":["아르메니아","Armenia","アルメニア","亚美尼亚"],"ASM":["아메리칸 사모아","American Samoa","米領サモア","美属萨摩亚"],"ATG":["앤티가 바부다","Antigua & Barbuda","アンティグア・バーブーダ","安提瓜和巴布达"],"AUS":["오스트레일리아","Australia","オーストラリア","澳大利亚"],"AUT":["오스트리아","Austria","オーストリア","奥地利"],"AZE":["아제르바이잔","Azerbaijan","アゼルバイジャン","阿塞拜疆"],"BDI":["부룬디","Burundi","ブルンジ","布隆迪"],"BEL":["벨기에","Belgium","ベルギー","比利时"],"BEN":["베냉","Benin","ベナン","贝宁"],"BFA":["부르키나파소","Burkina Faso","ブルキナファソ","布基纳法索"],"BGD":["방글라데시","Bangladesh","バングラデシュ","孟加拉国"],"BGR":["불가리아","Bulgaria","ブルガリア","保加利亚"],"BHR":["바레인","Bahrain","バーレーン","巴林"],"BHS":["바하마","Bahamas","バハマ","巴哈马"],"BIH":["보스니아 헤르체고비나","Bosnia & Herzegovina","ボスニア・ヘルツェゴビナ","波斯尼亚和黑塞哥维那"],"BLR":["벨라루스","Belarus","ベラルーシ","白俄罗斯"],"BLZ":["벨리즈","Belize","ベリーズ","伯利兹"],"BMU":["버뮤다","Bermuda","バミューダ","百慕大"],"BOL":["볼리비아","Bolivia","ボリビア","玻利维亚"],"BRA":["브라질","Brazil","ブラジル","巴西"],"BRB":["바베이도스","Barbados","バルバドス","巴巴多斯"],"BRN":["브루나이","Brunei","ブルネイ","文莱"],"BTN":["부탄","Bhutan","ブータン","不丹"],"BWA":["보츠와나","Botswana","ボツワナ","博茨瓦纳"],"CAF":["중앙 아프리카 공화국","Central African Republic","中央アフリカ共和国","中非共和国"],"CAN":["캐나다","Canada","カナダ","加拿大"],"CHE":["스위스","Switzerland","スイス","瑞士"],"CHI":["채널 제도","Channel Islands","チャンネル諸島","海峡群岛"],"CHL":["칠레","Chile","チリ","智利"],"CHN":["중국","China","中国","中国"],"CIV":["코트디부아르","Côte d’Ivoire","コートジボワール","科特迪瓦"],"CMR":["카메룬","Cameroon","カメルーン","喀麦隆"],"COD":["콩고-킨샤사","Congo - Kinshasa","コンゴ民主共和国(キンシャサ)","刚果（金）"],"COG":["콩고-브라자빌","Congo - Brazzaville","コンゴ共和国(ブラザビル)","刚果（布）"],"COL":["콜롬비아","Colombia","コロンビア","哥伦比亚"],"COM":["코모로","Comoros","コモロ","科摩罗"],"CPV":["카보베르데","Cape Verde","カーボベルデ","佛得角"],"CRI":["코스타리카","Costa Rica","コスタリカ","哥斯达黎加"],"CUB":["쿠바","Cuba","キューバ","古巴"],"CUW":["퀴라소","Curaçao","キュラソー","库拉索"],"CYM":["케이맨 제도","Cayman Islands","ケイマン諸島","开曼群岛"],"CYP":["키프로스","Cyprus","キプロス","塞浦路斯"],"CZE":["체코","Czechia","チェコ","捷克"],"DEU":["독일","Germany","ドイツ","德国"],"DJI":["지부티","Djibouti","ジブチ","吉布提"],"DMA":["도미니카","Dominica","ドミニカ国","多米尼克"],"DNK":["덴마크","Denmark","デンマーク","丹麦"],"DOM":["도미니카 공화국","Dominican Republic","ドミニカ共和国","多米尼加共和国"],"DZA":["알제리","Algeria","アルジェリア","阿尔及利亚"],"ECU":["에콰도르","Ecuador","エクアドル","厄瓜多尔"],"EGY":["이집트","Egypt","エジプト","埃及"],"ERI":["에리트리아","Eritrea","エリトリア","厄立特里亚"],"ESP":["스페인","Spain","スペイン","西班牙"],"EST":["에스토니아","Estonia","エストニア","爱沙尼亚"],"ETH":["에티오피아","Ethiopia","エチオピア","埃塞俄比亚"],"FIN":["핀란드","Finland","フィンランド","芬兰"],"FJI":["피지","Fiji","フィジー","斐济"],"FRA":["프랑스","France","フランス","法国"],"FRO":["페로 제도","Faroe Islands","フェロー諸島","法罗群岛"],"FSM":["미크로네시아","Micronesia","ミクロネシア連邦","密克罗尼西亚"],"GAB":["가봉","Gabon","ガボン","加蓬"],"GBR":["영국","United Kingdom","イギリス","英国"],"GEO":["조지아","Georgia","ジョージア","格鲁吉亚"],"GHA":["가나","Ghana","ガーナ","加纳"],"GIB":["지브롤터","Gibraltar","ジブラルタル","直布罗陀"],"GIN":["기니","Guinea","ギニア","几内亚"],"GMB":["감비아","Gambia","ガンビア","冈比亚"],"GNB":["기니비사우","Guinea-Bissau","ギニアビサウ","几内亚比绍"],"GNQ":["적도 기니","Equatorial Guinea","赤道ギニア","赤道几内亚"],"GRC":["그리스","Greece","ギリシャ","希腊"],"GRD":["그레나다","Grenada","グレナダ","格林纳达"],"GRL":["그린란드","Greenland","グリーンランド","格陵兰"],"GTM":["과테말라","Guatemala","グアテマラ","危地马拉"],"GUM":["괌","Guam","グアム","关岛"],"GUY":["가이아나","Guyana","ガイアナ","圭亚那"],"HKG":["홍콩(중국 특별행정구)","Hong Kong SAR China","中華人民共和国香港特別行政区","中国香港特别行政区"],"HND":["온두라스","Honduras","ホンジュラス","洪都拉斯"],"HRV":["크로아티아","Croatia","クロアチア","克罗地亚"],"HTI":["아이티","Haiti","ハイチ","海地"],"HUN":["헝가리","Hungary","ハンガリー","匈牙利"],"IDN":["인도네시아","Indonesia","インドネシア","印度尼西亚"],"IMN":["맨섬","Isle of Man","マン島","马恩岛"],"IND":["인도","India","インド","印度"],"IRL":["아일랜드","Ireland","アイルランド","爱尔兰"],"IRN":["이란","Iran","イラン","伊朗"],"IRQ":["이라크","Iraq","イラク","伊拉克"],"ISL":["아이슬란드","Iceland","アイスランド","冰岛"],"ISR":["이스라엘","Israel","イスラエル","以色列"],"ITA":["이탈리아","Italy","イタリア","意大利"],"JAM":["자메이카","Jamaica","ジャマイカ","牙买加"],"JOR":["요르단","Jordan","ヨルダン","约旦"],"JPN":["일본","Japan","日本","日本"],"KAZ":["카자흐스탄","Kazakhstan","カザフスタン","哈萨克斯坦"],"KEN":["케냐","Kenya","ケニア","肯尼亚"],"KGZ":["키르기스스탄","Kyrgyzstan","キルギス","吉尔吉斯斯坦"],"KHM":["캄보디아","Cambodia","カンボジア","柬埔寨"],"KIR":["키리바시","Kiribati","キリバス","基里巴斯"],"KNA":["세인트키츠 네비스","St. Kitts & Nevis","セントクリストファー・ネーヴィス","圣基茨和尼维斯"],"KOR":["대한민국","South Korea","韓国","韩国"],"KWT":["쿠웨이트","Kuwait","クウェート","科威特"],"LAO":["라오스","Laos","ラオス","老挝"],"LBN":["레바논","Lebanon","レバノン","黎巴嫩"],"LBR":["라이베리아","Liberia","リベリア","利比里亚"],"LBY":["리비아","Libya","リビア","利比亚"],"LCA":["세인트루시아","St. Lucia","セントルシア","圣卢西亚"],"LIE":["리히텐슈타인","Liechtenstein","リヒテンシュタイン","列支敦士登"],"LKA":["스리랑카","Sri Lanka","スリランカ","斯里兰卡"],"LSO":["레소토","Lesotho","レソト","莱索托"],"LTU":["리투아니아","Lithuania","リトアニア","立陶宛"],"LUX":["룩셈부르크","Luxembourg","ルクセンブルク","卢森堡"],"LVA":["라트비아","Latvia","ラトビア","拉脱维亚"],"MAC":["마카오(중국 특별행정구)","Macao SAR China","中華人民共和国マカオ特別行政区","中国澳门特别行政区"],"MAF":["생마르탱","St. Martin","サン・マルタン","法属圣马丁"],"MAR":["모로코","Morocco","モロッコ","摩洛哥"],"MCO":["모나코","Monaco","モナコ","摩纳哥"],"MDA":["몰도바","Moldova","モルドバ","摩尔多瓦"],"MDG":["마다가스카르","Madagascar","マダガスカル","马达加斯加"],"MDV":["몰디브","Maldives","モルディブ","马尔代夫"],"MEX":["멕시코","Mexico","メキシコ","墨西哥"],"MHL":["마셜 제도","Marshall Islands","マーシャル諸島","马绍尔群岛"],"MKD":["북마케도니아","North Macedonia","北マケドニア","北马其顿"],"MLI":["말리","Mali","マリ","马里"],"MLT":["몰타","Malta","マルタ","马耳他"],"MMR":["미얀마","Myanmar (Burma)","ミャンマー (ビルマ)","缅甸"],"MNE":["몬테네그로","Montenegro","モンテネグロ","黑山"],"MNG":["몽골","Mongolia","モンゴル","蒙古"],"MNP":["북마리아나제도","Northern Mariana Islands","北マリアナ諸島","北马里亚纳群岛"],"MOZ":["모잠비크","Mozambique","モザンビーク","莫桑比克"],"MRT":["모리타니","Mauritania","モーリタニア","毛里塔尼亚"],"MUS":["모리셔스","Mauritius","モーリシャス","毛里求斯"],"MWI":["말라위","Malawi","マラウイ","马拉维"],"MYS":["말레이시아","Malaysia","マレーシア","马来西亚"],"NAM":["나미비아","Namibia","ナミビア","纳米比亚"],"NCL":["뉴칼레도니아","New Caledonia","ニューカレドニア","新喀里多尼亚"],"NER":["니제르","Niger","ニジェール","尼日尔"],"NGA":["나이지리아","Nigeria","ナイジェリア","尼日利亚"],"NIC":["니카라과","Nicaragua","ニカラグア","尼加拉瓜"],"NLD":["네덜란드","Netherlands","オランダ","荷兰"],"NOR":["노르웨이","Norway","ノルウェー","挪威"],"NPL":["네팔","Nepal","ネパール","尼泊尔"],"NRU":["나우루","Nauru","ナウル","瑙鲁"],"NZL":["뉴질랜드","New Zealand","ニュージーランド","新西兰"],"OMN":["오만","Oman","オマーン","阿曼"],"PAK":["파키스탄","Pakistan","パキスタン","巴基斯坦"],"PAN":["파나마","Panama","パナマ","巴拿马"],"PER":["페루","Peru","ペルー","秘鲁"],"PHL":["필리핀","Philippines","フィリピン","菲律宾"],"PLW":["팔라우","Palau","パラオ","帕劳"],"PNG":["파푸아뉴기니","Papua New Guinea","パプアニューギニア","巴布亚新几内亚"],"POL":["폴란드","Poland","ポーランド","波兰"],"PRI":["푸에르토리코","Puerto Rico","プエルトリコ","波多黎各"],"PRK":["북한","North Korea","北朝鮮","朝鲜"],"PRT":["포르투갈","Portugal","ポルトガル","葡萄牙"],"PRY":["파라과이","Paraguay","パラグアイ","巴拉圭"],"PSE":["팔레스타인 지구","Palestinian Territories","パレスチナ自治区","巴勒斯坦领土"],"PYF":["프랑스령 폴리네시아","French Polynesia","仏領ポリネシア","法属波利尼西亚"],"QAT":["카타르","Qatar","カタール","卡塔尔"],"ROU":["루마니아","Romania","ルーマニア","罗马尼亚"],"RUS":["러시아","Russia","ロシア","俄罗斯"],"RWA":["르완다","Rwanda","ルワンダ","卢旺达"],"SAU":["사우디아라비아","Saudi Arabia","サウジアラビア","沙特阿拉伯"],"SDN":["수단","Sudan","スーダン","苏丹"],"SEN":["세네갈","Senegal","セネガル","塞内加尔"],"SGP":["싱가포르","Singapore","シンガポール","新加坡"],"SLB":["솔로몬 제도","Solomon Islands","ソロモン諸島","所罗门群岛"],"SLE":["시에라리온","Sierra Leone","シエラレオネ","塞拉利昂"],"SLV":["엘살바도르","El Salvador","エルサルバドル","萨尔瓦多"],"SMR":["산마리노","San Marino","サンマリノ","圣马力诺"],"SOM":["소말리아","Somalia","ソマリア","索马里"],"SRB":["세르비아","Serbia","セルビア","塞尔维亚"],"SSD":["남수단","South Sudan","南スーダン","南苏丹"],"STP":["상투메 프린시페","São Tomé & Príncipe","サントメ・プリンシペ","圣多美和普林西比"],"SUR":["수리남","Suriname","スリナム","苏里南"],"SVK":["슬로바키아","Slovakia","スロバキア","斯洛伐克"],"SVN":["슬로베니아","Slovenia","スロベニア","斯洛文尼亚"],"SWE":["스웨덴","Sweden","スウェーデン","瑞典"],"SWZ":["에스와티니","Eswatini","エスワティニ","斯威士兰"],"SXM":["신트마르턴","Sint Maarten","シント・マールテン","荷属圣马丁"],"SYC":["세이셸","Seychelles","セーシェル","塞舌尔"],"SYR":["시리아","Syria","シリア","叙利亚"],"TCA":["터크스 케이커스 제도","Turks & Caicos Islands","タークス・カイコス諸島","特克斯和凯科斯群岛"],"TCD":["차드","Chad","チャド","乍得"],"TGO":["토고","Togo","トーゴ","多哥"],"THA":["태국","Thailand","タイ","泰国"],"TJK":["타지키스탄","Tajikistan","タジキスタン","塔吉克斯坦"],"TKM":["투르크메니스탄","Turkmenistan","トルクメニスタン","土库曼斯坦"],"TLS":["동티모르","Timor-Leste","東ティモール","东帝汶"],"TON":["통가","Tonga","トンガ","汤加"],"TTO":["트리니다드 토바고","Trinidad & Tobago","トリニダード・トバゴ","特立尼达和多巴哥"],"TUN":["튀니지","Tunisia","チュニジア","突尼斯"],"TUR":["튀르키예","Türkiye","トルコ","土耳其"],"TUV":["투발루","Tuvalu","ツバル","图瓦卢"],"TZA":["탄자니아","Tanzania","タンザニア","坦桑尼亚"],"UGA":["우간다","Uganda","ウガンダ","乌干达"],"UKR":["우크라이나","Ukraine","ウクライナ","乌克兰"],"URY":["우루과이","Uruguay","ウルグアイ","乌拉圭"],"USA":["미국","United States","アメリカ合衆国","美国"],"UZB":["우즈베키스탄","Uzbekistan","ウズベキスタン","乌兹别克斯坦"],"VCT":["세인트빈센트그레나딘","St. Vincent & Grenadines","セントビンセント及びグレナディーン諸島","圣文森特和格林纳丁斯"],"VEN":["베네수엘라","Venezuela","ベネズエラ","委内瑞拉"],"VGB":["영국령 버진아일랜드","British Virgin Islands","英領ヴァージン諸島","英属维尔京群岛"],"VIR":["미국령 버진아일랜드","U.S. Virgin Islands","米領ヴァージン諸島","美属维尔京群岛"],"VNM":["베트남","Vietnam","ベトナム","越南"],"VUT":["바누아투","Vanuatu","バヌアツ","瓦努阿图"],"WSM":["사모아","Samoa","サモア","萨摩亚"],"XKX":["코소보","Kosovo","コソボ","科索沃"],"YEM":["예멘","Yemen","イエメン","也门"],"ZAF":["남아프리카","South Africa","南アフリカ","南非"],"ZMB":["잠비아","Zambia","ザンビア","赞比亚"],"ZWE":["짐바브웨","Zimbabwe","ジンバブエ","津巴布韦"]};
@@ -442,6 +461,7 @@ const tr=(x,G)=>{const a=typeof x==="function"?x(G):x;return Array.isArray(a)?a[
 const sub=(s,p)=>s.replace(/\{(\w+)\}/g,(m,k)=>p&&k in p?p[k]:m);
 const UI={
  title:["랜덤인생게임","Random Life","ランダム人生","随机人生"],
+ doc_title:["랜덤인생게임 · 같은 날 태어난 두 아이의 일생","Random Life · Two children, born the same day","ランダム人生 · 同じ日に生まれた二人の一生","随机人生 · 同一天出生的两个孩子的一生"],
  tagline:["오늘 지구 어딘가에서 두 아이가 태어나요. 한 명은 당신, 한 명은 정반대 형편의 아이예요.","Today, somewhere on Earth, two children are born. One is you. The other starts life at the opposite end.","今日、地球のどこかで二人の子が生まれます。一人はあなた、もう一人は正反対の境遇の子です。","今天，地球某处有两个孩子出生。一个是你，另一个出生在截然相反的境遇。"],
  how_h:["어떻게 정해지나요","How it works","どう決まる？","如何决定"],
  how_p:["출생지는 세계은행 통계로 계산한 <b>국가별 연간 출생 수</b>에 비례해 뽑힙니다. 아이가 많이 태어나는 나라일수록 당첨 확률이 높습니다. 성별과 가정 형편은 무작위로 정해지고, 이후 나이대마다 선택을 하며 인생이 흘러갑니다. 형편에 따라 열리지 않는 선택지도 있습니다.",
@@ -1504,10 +1524,12 @@ const totalBirths=COUNTRIES.reduce((s,c)=>s+c[5],0);
 const shareOf=c=>Math.round(c[5]/totalBirths*1000)/10;
 
 /* ---------- 언어·설정 ---------- */
+const SITE_URL="https://randomlife-game.github.io/";
 function setLang(l,keep){
   if(!LANGS.some(x=>x[0]===l)) l="ko";
   LANG=l; LI=LANGS.findIndex(x=>x[0]===l);
-  document.documentElement.lang=l; document.title=UI.title[LI];
+  document.documentElement.lang=l; document.title=UI.doc_title[LI];
+  const cn=document.querySelector('link[rel="canonical"]'); if(cn&&new URLSearchParams(location.search).has("l")) cn.href=SITE_URL+(l==="ko"?"":"?l="+l);
   if(!keep) store.set("lang",l);
   if(view) view();
 }
@@ -2159,7 +2181,7 @@ function endInfo(){
   const cmp=age<5?"":diff>=0?ui("cmp_more",{place:place(G.c),le:G.c[6].toFixed(1),n:Math.round(diff)}):ui("cmp_less",{place:place(G.c),le:G.c[6].toFixed(1),n:Math.round(-diff)});
   return {age,title,cmp,causeTxt:UI.causes[cause][LI]};
 }
-const SITE="https://randomlife-game.github.io/randomlife-game/";
+const SITE="https://randomlife-game.github.io/";
 function shareURL(){
   const p=new URLSearchParams({c:G.c[0],s:G.sex,a:G.ended.age,k:G.ended.k,l:LANG});
   if(G.daily) p.set("d",G.date);
