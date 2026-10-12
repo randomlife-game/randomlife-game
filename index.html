@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>랜덤인생게임 · Random Life</title>
 <meta name="description" content="80억 명 중 한 명으로 무작위로 태어나 일생을 살아 보는 게임 · Be born as one of 8 billion and live a whole life · 80億人の中の一人として生まれ、一生を生きるゲーム · 成为80亿人中的一个，过完一生">
 <meta property="og:type" content="website">
@@ -23,7 +23,8 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Noto Sans JP","Noto Sans SC","Malgun Gothic",system-ui,sans-serif;line-height:1.6}
-  .wrap{max-width:640px;margin:0 auto;padding:20px 16px 64px}
+  :root{--gx:16px}
+  .wrap{max-width:640px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top)) calc(var(--gx) + env(safe-area-inset-right)) calc(64px + env(safe-area-inset-bottom)) calc(var(--gx) + env(safe-area-inset-left))}
   h1{font-size:26px;margin:0 0 4px}
   .sub{color:var(--muted);font-size:14px;margin:0 0 24px}
   .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
@@ -59,6 +60,19 @@
   .langs{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;margin-bottom:14px}
   .langs button{font-size:13px;background:var(--surface);color:var(--soft);border:1px solid var(--line);border-radius:99px;padding:3px 12px}
   .wrap{max-width:680px}
+  @media (min-width:960px){
+    :root{--gx:32px}
+    .wrap{max-width:1180px;display:grid;grid-template-columns:minmax(400px,5fr) minmax(0,6fr);column-gap:40px;align-items:start}
+    #langs{grid-column:1/-1}
+    #hero{grid-column:1;grid-row:2;position:sticky;top:24px}
+    #app{grid-column:2;grid-row:2;min-width:0}
+    .hero{margin-bottom:0}
+    .intro{text-align:left}
+    .intro .sub{margin-left:0}
+    .nums{justify-content:flex-start}
+    .actbar{margin-bottom:0}
+    .wrap{padding-bottom:calc(40px + env(safe-area-inset-bottom))}
+  }
   .intro{text-align:center;padding:8px 0 20px}
   .intro h1{font-size:36px;letter-spacing:-.02em;margin:6px 0 6px}
   .intro .sub{font-size:16px;margin:0 auto 18px;max-width:30em}
@@ -77,7 +91,21 @@
   .lifebar{height:3px;background:var(--line);border-radius:2px;margin:0 0 8px;overflow:hidden}
   .lifebar i{display:block;height:100%;background:var(--accent)}
   .hud .stats{margin-bottom:8px}
-  #next{position:sticky;bottom:12px;z-index:5;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+  .doc{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:0 0 16px}
+  .dhead{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:12px 18px;font-size:13px}
+  .dhead b{font-size:16px;letter-spacing:.04em}.dhead span{opacity:.85;font-variant-numeric:tabular-nums;font-size:12px}
+  .dbody{padding:16px 18px 18px}
+  .flab{display:block;font-size:12px;color:var(--muted)}
+  .fnote{font-size:12px;color:var(--muted);margin:4px 0 14px}
+  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+  .fgrid b{display:block;font-size:15px;line-height:1.35}
+  .stub{border-top:2px dotted var(--line);background:var(--accent-soft);padding:10px 18px;font-size:13px;color:var(--soft)}
+  .actbar{position:sticky;bottom:0;z-index:6;margin:16px calc(-1*var(--gx)) -64px;padding:12px var(--gx) calc(16px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 35%)}
+  .actbar .btn{margin:0;box-shadow:0 6px 18px rgba(168,116,42,.28)}
+  .log.tl{border-left:2px solid var(--line);margin-left:6px}
+  .log.tl li{border:0;position:relative;padding:6px 0 6px 16px}
+  .log.tl li:before{content:"";position:absolute;left:-6px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+  body.px .doc{border-radius:0;border-width:2px;box-shadow:3px 3px 0 var(--line)}
   .langs .sep{flex:1}.langs{align-items:center}
   .nm{width:100%;font:inherit;font-size:20px;font-weight:700;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
   body.px .card,body.px .btn,body.px .stat,body.px .hero,body.px .sky,body.px .map,body.px .fact,body.px .scene,body.px .nm{border-radius:0}
@@ -257,6 +285,10 @@ const UI={
  num_b:["명이 해마다 태어나요","babies are born each year","人が毎年生まれます","名婴儿每年出生"],
  num_c:["개 나라와 지역","countries and territories","の国と地域","个国家和地区"],
  steps:[["출생지와 집안이 무작위로 정해져요","Birthplace and family are drawn at random","出生地と家庭がランダムに決まります","出生地和家境随机决定"],["나이대마다 선택을 하며 살아요","Make choices at every stage of life","年代ごとに選択して生きます","在每个人生阶段做出选择"],["결말 카드를 만들어 친구에게 보여줘요","Get an ending card to share with friends","結末カードを友だちに見せよう","生成结局卡片分享给朋友"]],
+ doc_h:["탄생 기록","Birth Record","誕生の記録","出生记录"],end_doc:["인생 정산","Life Summary","人生の決算","人生总结"],
+ f_sex:["성별","Sex","性別","性别"],f_country:["태어난 나라","Country","生まれた国","出生国家"],f_area:["사는 곳","Home area","住まい","居住地"],f_fam:["집안 형편","Family means","家計","家境"],
+ f_par:["부모님 나이","Parents' ages","両親の年齢","父母年龄"],f_pjob:["부모님 직업","Parents' work","両親の仕事","父母职业"],f_sib:["형제자매","Siblings","きょうだい","兄弟姐妹"],f_le:["이 나라 기대수명","Life expectancy here","この国の平均寿命","当地预期寿命"],
+ e_age:["살았던 나이","Age at the end","生きた年数","享年"],e_le:["이 나라 기대수명","Life expectancy here","この国の平均寿命","当地预期寿命"],e_job:["마지막 직업","Last job","最後の仕事","最后的职业"],
  pass_h:["시간이 흘러가요","Time passes","時が流れます","时间流逝"],
  fact_label:["통계 한 줄","A statistic","統計ひとこと","一条统计"],
  fact_imr:["{place}에서는 아기 1000명 중 약 {n}명이 첫 돌을 넘기지 못해요. 당신은 그 고비를 넘겼어요.","In {place}, about {n} of every 1,000 babies don't reach their first birthday. You made it past that.","{place}では赤ちゃん1000人のうち約{n}人が1歳を迎えられません。あなたはその山を越えました。","在{place}，每1000名婴儿中约有{n}名活不到一岁。你熬过了这一关。"],
@@ -854,6 +886,7 @@ function renderStart(){
 const dailySeed=()=>Number(todayStr().replace(/-/g,""));
 
 let rollTimer=0;
+const hashStr=s=>{let h=7;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))|0;return h};
 function renderBirth(){
   view=renderBirth;
   if(!G.rolled){
@@ -867,22 +900,25 @@ function renderBirth(){
   }
   const c=G.c, share=Math.round(c[5]/totalBirths*1000)/10;
   show(`
-    <h1>${UI.born_h[LI]}</h1>
-    <div class="card"><h2>${UI.place_h[LI]}</h2>
-      <div class="big">${place(c)}</div>
-      <div><span class="tag">${REGIONS[c[3]][LI]}</span><span class="tag">${INCOMES[c[4]][LI]}</span></div>
-      <p style="margin-bottom:0;color:var(--soft)">${ui("born_share",{p:share,le:c[6].toFixed(1)})}</p></div>
-    <div class="card"><h2>${UI.who_h[LI]}</h2>
-      <div class="big">${UI.sex_child[LI][G.sex==="m"?0:1]} · ${UI.tiers[G.famTier][LI]}</div>
-      <p style="margin-bottom:0;color:var(--soft)">${ui("who_p",{job:G.pjob.n[LI]})}</p></div>
-    <div class="card"><h2>${UI.name_h[LI]}</h2>
-      <input id="nm" class="nm" maxlength="24" value="${G.name.replace(/"/g,"&quot;")}" aria-label="${UI.name_h[LI]}">
-      <p style="margin:6px 0 0;font-size:12px;color:var(--soft)">${UI.name_p[LI]}</p></div>
-    <div class="card"><h2>${UI.hh_h[LI]}</h2>
-      <p style="margin:0;color:var(--soft)">${UI.hh_place[LI][G.urban?0:1]} · ${G.sibs?ui("hh_sib",{n:G.sibs}):UI.hh_sib0[LI]}<br>${ui("hh_par",{m:G.mAge,f:G.fAge})}</p></div>
+    <div class="doc">
+      <div class="dhead"><b>${UI.doc_h[LI]}</b><span>No. ${c[0]}-${G.seed||Math.abs(hashStr(G.name+c[0]))%1000000}</span></div>
+      <div class="dbody">
+        <label class="flab" for="nm">${UI.name_h[LI]}</label>
+        <input id="nm" class="nm" maxlength="24" value="${G.name.replace(/"/g,"&quot;")}">
+        <p class="fnote">${UI.name_p[LI]}</p>
+        <div class="fgrid">
+          ${[[UI.f_sex,UI.sex_child[LI][G.sex==="m"?0:1]],[UI.f_country,place(c)],
+             [UI.f_area,UI.hh_place[LI][G.urban?0:1]+" · "+REGIONS[c[3]][LI]],[UI.f_fam,UI.tiers[G.famTier][LI]],
+             [UI.f_par,ui("hh_par",{m:G.mAge,f:G.fAge})],[UI.f_pjob,G.pjob.n[LI]],
+             [UI.f_sib,G.sibs?ui("hh_sib",{n:G.sibs}):UI.hh_sib0[LI]],[UI.f_le,ui("unit_yr",{n:c[6].toFixed(1)})]]
+            .map(([k,v])=>`<div><span class="flab">${Array.isArray(k)?k[LI]:k}</span><b>${v}</b></div>`).join("")}
+        </div>
+      </div>
+      <div class="stub"><span>${ui("born_share",{p:share,le:c[6].toFixed(1)})}</span></div>
+    </div>
     ${countryCard(c)}
     ${statsHTML()}
-    <button class="btn primary" id="next">${UI.start_life[LI]}</button>`,()=>{
+    <div class="actbar"><button class="btn primary" id="next">${UI.start_life[LI]}</button></div>`,()=>{
     document.getElementById("next").onclick=()=>{
       const nv=document.getElementById("nm").value.trim(); if(nv) G.name=nv.slice(0,24);
       G.log.push({a:0,f:()=>ui("born_log",{place:place(G.c),sex:UI.sex_child[LI][G.sex==="m"?0:1]})});
@@ -1054,9 +1090,18 @@ function renderEnding(){
     ["Weibo","https://service.weibo.com/share/share.php?url="+enc(url)+"&title="+enc(txt)]
   ];
   show(`
-    <h1>${UI.end_h[LI]}</h1>
-    <div class="card"><h2>${UI.end_s[LI]}</h2><div class="big">${title}</div>
-      <p style="color:var(--soft)">${ui("end_p",{place:place(G.c),sex,cause:info.causeTxt,age,cmp:info.cmp})}</p></div>
+    <div class="doc">
+      <div class="dhead"><b>${UI.end_doc[LI]}</b><span>${G.name||""}</span></div>
+      <div class="dbody">
+        <span class="flab">${UI.end_s[LI]}</span>
+        <div class="big" style="font-size:26px">${title}</div>
+        <p style="color:var(--soft);margin:6px 0 14px">${ui("end_p",{place:place(G.c),sex,cause:info.causeTxt,age,cmp:info.cmp})}</p>
+        <div class="fgrid">
+          ${[[UI.e_age,ui("unit_yr",{n:age})],[UI.e_le,ui("unit_yr",{n:G.c[6].toFixed(1)})],[UI.f_country,place(G.c)],[UI.e_job,G.job?G.job.n[LI]:"—"]]
+            .map(([k,v])=>`<div><span class="flab">${Array.isArray(k)?k[LI]:k}</span><b>${v}</b></div>`).join("")}
+        </div>
+      </div>
+    </div>
     ${statsHTML()}
     <div class="card"><h2>${UI.curve_h[LI]}</h2>${curveSVG()}</div>
     <div class="card"><h2>${UI.card_h[LI]}</h2>
@@ -1066,10 +1111,10 @@ function renderEnding(){
       ${navigator.share?`<button class="btn primary" id="native">${UI.share_native[LI]}</button>`:""}
       <div class="sns">${links.map(([n,u])=>`<a class="btn" target="_blank" rel="noopener" href="${u}">${n}</a>`).join("")}</div></div>
     ${lockedHTML()}
-    <div class="card"><h2>${UI.path_h[LI]}</h2><ul class="log">${G.log.map(x=>`<li><span>${ui("age_n",{n:x.a})}</span>${x.f()}</li>`).join("")}<li><span>${ui("age_n",{n:age})}</span>${UI.died[LI]}</li></ul></div>
+    <div class="card"><h2>${UI.path_h[LI]}</h2><ul class="log tl">${G.log.map(x=>`<li><span>${ui("age_n",{n:x.a})}</span>${x.f()}</li>`).join("")}<li><span>${ui("age_n",{n:age})}</span>${UI.died[LI]}</li></ul></div>
     ${srcHTML()}
-    <button class="btn primary" id="again">${UI.again[LI]}</button>
-    <p class="note">${UI.again_p[LI]}</p>`,()=>{
+    <p class="note">${UI.again_p[LI]}</p>
+    <div class="actbar"><button class="btn primary" id="again">${UI.again[LI]}</button></div>`,()=>{
     document.getElementById("again").onclick=()=>renderStart();
     document.getElementById("savecard").onclick=saveCard;
     const nb=document.getElementById("native");
