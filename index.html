@@ -1789,7 +1789,7 @@ function fillAds(){
 }
 function tipHTML(){ return TIP_URL?`<a href="${TIP_URL}" target="_blank" rel="noopener">☕ ${UI.tip[LI]}</a>`:""; }
 function footHTML(){
-  return `<footer class="foot"><p>${UI.note[LI]}</p><span class="foot-l">${tipHTML()}<a href="privacy.html${LANG==="ko"?"":"?l="+LANG}">${UI.privacy[LI]}</a><span>© ${new Date().getFullYear()} ${UI.title[LI]}</span></span></footer>`;
+  return `<footer class="foot"><p>${UI.note[LI]}</p><span class="foot-l">${tipHTML()}<a href="about.html${LANG==="ko"?"":"?l="+LANG}">${UI.about[LI]}</a><a href="privacy.html${LANG==="ko"?"":"?l="+LANG}">${UI.privacy[LI]}</a><span>© ${new Date().getFullYear()} ${UI.title[LI]}</span></span></footer>`;
 }
 let PLAYS=null;
 function playsHTML(){
@@ -2537,6 +2537,7 @@ Object.assign(UI,{
  ad_l:["광고","Advertisement","広告","广告"],
  tip:["재밌었다면 만든 사람에게 커피 한 잔","Enjoyed it? Buy the maker a coffee","楽しめたら作り手にコーヒーを一杯","喜欢的话，请作者喝杯咖啡"],
  privacy:["개인정보처리방침","Privacy policy","プライバシーポリシー","隐私政策"],
+ about:["게임 소개","About","ゲーム紹介","游戏介绍"],
  tw_end:["{name}{였}다면 닫힌 문은 {m}개였어요. 당신은 {n}개였어요.","As {name}, {m} doors would have closed. For you, it was {n}.","{name}だったら、閉ざされた扉は{m}個でした。あなたは{n}個でした。","如果是{name}，被关上的门有{m}扇。你是{n}扇。"],
  tw_same_day:["선택지는 같아요. 하지만 하루는 이렇게 달라요.","The options are the same. The day is not.","選択肢は同じ。でも一日はこんなに違います。","选项一样，但日子截然不同。"],
  tw_dead:["{name}{는} {age}세에 세상을 떠났어요.","{name} died at {age}.","{name}は{age}歳で亡くなりました。","{name}在{age}岁时离世。"],
