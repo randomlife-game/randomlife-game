@@ -8,18 +8,18 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="랜덤인생게임 · Random Life · ランダム人生 · 随机人生">
 <meta property="og:description" content="Who will you be out of 8 billion? 80억 명 중 당신은 누가 될까요? 80億人の中で、あなたは誰になる？ 80亿人里，你会成为谁？">
-<meta property="og:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
-<meta property="og:url" content="https://randomlife-game.github.io/randomlife-game/">
+<meta property="og:image" content="https://gyeoltaro.github.io/gyeoltaro/og.png">
+<meta property="og:url" content="https://gyeoltaro.github.io/gyeoltaro/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
+<meta name="twitter:image" content="https://gyeoltaro.github.io/gyeoltaro/og.png">
 <style>
   :root{
     --bg:#f5f2ea; --surface:#fff; --ink:#1f1d19; --soft:#58534a; --muted:#8c8578;
-    --line:#ddd6c6; --accent:#a8742a; --accent-soft:#efe0c3;
+    --line:#ddd6c6; --accent:#a8742a; --accent-soft:#efe0c3; --land:#cfc6b2; --hill1:#7a8f5a; --hill2:#58714a; --up:#2f8a57; --dn:#c0453f;
   }
   @media (prefers-color-scheme: dark){
     :root{ --bg:#14120f; --surface:#1e1b16; --ink:#ede7da; --soft:#c3bba9; --muted:#8a8170;
-      --line:#383025; --accent:#d3a352; --accent-soft:#33290f; }
+      --line:#383025; --accent:#d3a352; --accent-soft:#33290f; --land:#3a3328; --hill1:#2e3a28; --hill2:#202a1f; --up:#6cc58f; --dn:#e07f78; }
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Noto Sans JP","Noto Sans SC","Malgun Gothic",system-ui,sans-serif;line-height:1.6}
@@ -59,15 +59,53 @@
   .langs{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;margin-bottom:14px}
   .langs button{font-size:13px;background:var(--surface);color:var(--soft);border:1px solid var(--line);border-radius:99px;padding:3px 12px}
   .langs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-  @media (max-width:420px){.stats{grid-template-columns:repeat(3,1fr)}}
+  #langs{max-width:640px}
+  .hero{margin:0 0 16px;border-radius:14px;overflow:hidden;position:relative}
+  .map{display:block;width:100%;height:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+  .map .land{fill:none;stroke:var(--land);stroke-width:4.6;stroke-linecap:round}
+  .map .bd{fill:var(--accent);opacity:.35;animation:tw 3.2s ease-in-out infinite}
+  .map .ring{fill:none;stroke:var(--accent);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:ping 2s ease-out infinite}
+  .map .ring.r2{animation-delay:1s}
+  .map .pin{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+  .mapcap{position:absolute;left:0;right:0;bottom:0;padding:18px 12px 8px;font-size:12px;color:var(--soft);background:linear-gradient(transparent,var(--surface) 70%)}
+  .mapcap:empty{display:none}
+  .sky{height:150px;border-radius:14px;position:relative;overflow:hidden;border:1px solid var(--line)}
+  .sky svg{display:block;width:100%;height:100%}
+  .skycap{position:absolute;left:12px;top:8px;font-size:12px;color:#fff;opacity:.85;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+  .scene{margin:-20px -20px 14px;height:96px;border-radius:14px 14px 0 0;position:relative;display:flex;align-items:center;justify-content:center}
+  .scene .emo{font-size:52px;line-height:1;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25));animation:bob 3s ease-in-out infinite}
+  .scene .stg{position:absolute;left:12px;top:8px;font-size:12px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+  .card.ev{overflow:hidden}
+  .stat{position:relative}
+  .stat .si{font-size:18px;line-height:1;margin-bottom:2px}
+  .bar i{transition:width .7s cubic-bezier(.2,.8,.2,1)}
+  .chip{position:absolute;top:-8px;right:-4px;font-size:12px;font-weight:700;padding:1px 7px;border-radius:99px;color:#fff;animation:rise .5s ease both}
+  .chip.up{background:var(--up)}.chip.dn{background:var(--dn)}
+  .pop{animation:pop .45s ease both}
+  .roll .big{font-size:30px;text-align:center;padding:14px 0;min-height:72px}
+  .curve{width:100%;height:auto;display:block}
+  .cl{stroke-dasharray:1200;stroke-dashoffset:1200;animation:draw 1.6s ease forwards}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--soft);margin-top:8px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
+  #app>*{animation:rise .35s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+  @keyframes bob{50%{transform:translateY(-5px)}}
+  @keyframes tw{50%{opacity:.12}}
+  @keyframes ping{from{transform:scale(.6);opacity:.9}to{transform:scale(2.6);opacity:0}}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}.cl{stroke-dashoffset:0}}
+  @media (max-width:420px){.stats{gap:5px}.stat{padding:6px 2px;font-size:11px}.stat b{font-size:15px}.chip{right:-2px;padding:0 5px}}
 </style>
 </head>
 <body>
-<div class="wrap" id="app"></div>
+<div class="wrap"><div id="langs"></div><div id="hero"></div><div id="app"></div></div>
 <script>
 /* 국가 데이터: World Bank Open Data (CC BY 4.0) — [iso3, -, -, 지역, 소득, 추정출생수, 기대수명, 영아사망(천명당), 1인당GDP(PPP)] */
 const NAMES={"ABW":["아루바","Aruba","アルバ","阿鲁巴"],"AFG":["아프가니스탄","Afghanistan","アフガニスタン","阿富汗"],"AGO":["앙골라","Angola","アンゴラ","安哥拉"],"ALB":["알바니아","Albania","アルバニア","阿尔巴尼亚"],"AND":["안도라","Andorra","アンドラ","安道尔"],"ARE":["아랍에미리트","United Arab Emirates","アラブ首長国連邦","阿拉伯联合酋长国"],"ARG":["아르헨티나","Argentina","アルゼンチン","阿根廷"],"ARM":["아르메니아","Armenia","アルメニア","亚美尼亚"],"ASM":["아메리칸 사모아","American Samoa","米領サモア","美属萨摩亚"],"ATG":["앤티가 바부다","Antigua & Barbuda","アンティグア・バーブーダ","安提瓜和巴布达"],"AUS":["오스트레일리아","Australia","オーストラリア","澳大利亚"],"AUT":["오스트리아","Austria","オーストリア","奥地利"],"AZE":["아제르바이잔","Azerbaijan","アゼルバイジャン","阿塞拜疆"],"BDI":["부룬디","Burundi","ブルンジ","布隆迪"],"BEL":["벨기에","Belgium","ベルギー","比利时"],"BEN":["베냉","Benin","ベナン","贝宁"],"BFA":["부르키나파소","Burkina Faso","ブルキナファソ","布基纳法索"],"BGD":["방글라데시","Bangladesh","バングラデシュ","孟加拉国"],"BGR":["불가리아","Bulgaria","ブルガリア","保加利亚"],"BHR":["바레인","Bahrain","バーレーン","巴林"],"BHS":["바하마","Bahamas","バハマ","巴哈马"],"BIH":["보스니아 헤르체고비나","Bosnia & Herzegovina","ボスニア・ヘルツェゴビナ","波斯尼亚和黑塞哥维那"],"BLR":["벨라루스","Belarus","ベラルーシ","白俄罗斯"],"BLZ":["벨리즈","Belize","ベリーズ","伯利兹"],"BMU":["버뮤다","Bermuda","バミューダ","百慕大"],"BOL":["볼리비아","Bolivia","ボリビア","玻利维亚"],"BRA":["브라질","Brazil","ブラジル","巴西"],"BRB":["바베이도스","Barbados","バルバドス","巴巴多斯"],"BRN":["브루나이","Brunei","ブルネイ","文莱"],"BTN":["부탄","Bhutan","ブータン","不丹"],"BWA":["보츠와나","Botswana","ボツワナ","博茨瓦纳"],"CAF":["중앙 아프리카 공화국","Central African Republic","中央アフリカ共和国","中非共和国"],"CAN":["캐나다","Canada","カナダ","加拿大"],"CHE":["스위스","Switzerland","スイス","瑞士"],"CHI":["채널 제도","Channel Islands","チャンネル諸島","海峡群岛"],"CHL":["칠레","Chile","チリ","智利"],"CHN":["중국","China","中国","中国"],"CIV":["코트디부아르","Côte d’Ivoire","コートジボワール","科特迪瓦"],"CMR":["카메룬","Cameroon","カメルーン","喀麦隆"],"COD":["콩고-킨샤사","Congo - Kinshasa","コンゴ民主共和国(キンシャサ)","刚果（金）"],"COG":["콩고-브라자빌","Congo - Brazzaville","コンゴ共和国(ブラザビル)","刚果（布）"],"COL":["콜롬비아","Colombia","コロンビア","哥伦比亚"],"COM":["코모로","Comoros","コモロ","科摩罗"],"CPV":["카보베르데","Cape Verde","カーボベルデ","佛得角"],"CRI":["코스타리카","Costa Rica","コスタリカ","哥斯达黎加"],"CUB":["쿠바","Cuba","キューバ","古巴"],"CUW":["퀴라소","Curaçao","キュラソー","库拉索"],"CYM":["케이맨 제도","Cayman Islands","ケイマン諸島","开曼群岛"],"CYP":["키프로스","Cyprus","キプロス","塞浦路斯"],"CZE":["체코","Czechia","チェコ","捷克"],"DEU":["독일","Germany","ドイツ","德国"],"DJI":["지부티","Djibouti","ジブチ","吉布提"],"DMA":["도미니카","Dominica","ドミニカ国","多米尼克"],"DNK":["덴마크","Denmark","デンマーク","丹麦"],"DOM":["도미니카 공화국","Dominican Republic","ドミニカ共和国","多米尼加共和国"],"DZA":["알제리","Algeria","アルジェリア","阿尔及利亚"],"ECU":["에콰도르","Ecuador","エクアドル","厄瓜多尔"],"EGY":["이집트","Egypt","エジプト","埃及"],"ERI":["에리트리아","Eritrea","エリトリア","厄立特里亚"],"ESP":["스페인","Spain","スペイン","西班牙"],"EST":["에스토니아","Estonia","エストニア","爱沙尼亚"],"ETH":["에티오피아","Ethiopia","エチオピア","埃塞俄比亚"],"FIN":["핀란드","Finland","フィンランド","芬兰"],"FJI":["피지","Fiji","フィジー","斐济"],"FRA":["프랑스","France","フランス","法国"],"FRO":["페로 제도","Faroe Islands","フェロー諸島","法罗群岛"],"FSM":["미크로네시아","Micronesia","ミクロネシア連邦","密克罗尼西亚"],"GAB":["가봉","Gabon","ガボン","加蓬"],"GBR":["영국","United Kingdom","イギリス","英国"],"GEO":["조지아","Georgia","ジョージア","格鲁吉亚"],"GHA":["가나","Ghana","ガーナ","加纳"],"GIB":["지브롤터","Gibraltar","ジブラルタル","直布罗陀"],"GIN":["기니","Guinea","ギニア","几内亚"],"GMB":["감비아","Gambia","ガンビア","冈比亚"],"GNB":["기니비사우","Guinea-Bissau","ギニアビサウ","几内亚比绍"],"GNQ":["적도 기니","Equatorial Guinea","赤道ギニア","赤道几内亚"],"GRC":["그리스","Greece","ギリシャ","希腊"],"GRD":["그레나다","Grenada","グレナダ","格林纳达"],"GRL":["그린란드","Greenland","グリーンランド","格陵兰"],"GTM":["과테말라","Guatemala","グアテマラ","危地马拉"],"GUM":["괌","Guam","グアム","关岛"],"GUY":["가이아나","Guyana","ガイアナ","圭亚那"],"HKG":["홍콩(중국 특별행정구)","Hong Kong SAR China","中華人民共和国香港特別行政区","中国香港特别行政区"],"HND":["온두라스","Honduras","ホンジュラス","洪都拉斯"],"HRV":["크로아티아","Croatia","クロアチア","克罗地亚"],"HTI":["아이티","Haiti","ハイチ","海地"],"HUN":["헝가리","Hungary","ハンガリー","匈牙利"],"IDN":["인도네시아","Indonesia","インドネシア","印度尼西亚"],"IMN":["맨섬","Isle of Man","マン島","马恩岛"],"IND":["인도","India","インド","印度"],"IRL":["아일랜드","Ireland","アイルランド","爱尔兰"],"IRN":["이란","Iran","イラン","伊朗"],"IRQ":["이라크","Iraq","イラク","伊拉克"],"ISL":["아이슬란드","Iceland","アイスランド","冰岛"],"ISR":["이스라엘","Israel","イスラエル","以色列"],"ITA":["이탈리아","Italy","イタリア","意大利"],"JAM":["자메이카","Jamaica","ジャマイカ","牙买加"],"JOR":["요르단","Jordan","ヨルダン","约旦"],"JPN":["일본","Japan","日本","日本"],"KAZ":["카자흐스탄","Kazakhstan","カザフスタン","哈萨克斯坦"],"KEN":["케냐","Kenya","ケニア","肯尼亚"],"KGZ":["키르기스스탄","Kyrgyzstan","キルギス","吉尔吉斯斯坦"],"KHM":["캄보디아","Cambodia","カンボジア","柬埔寨"],"KIR":["키리바시","Kiribati","キリバス","基里巴斯"],"KNA":["세인트키츠 네비스","St. Kitts & Nevis","セントクリストファー・ネーヴィス","圣基茨和尼维斯"],"KOR":["대한민국","South Korea","韓国","韩国"],"KWT":["쿠웨이트","Kuwait","クウェート","科威特"],"LAO":["라오스","Laos","ラオス","老挝"],"LBN":["레바논","Lebanon","レバノン","黎巴嫩"],"LBR":["라이베리아","Liberia","リベリア","利比里亚"],"LBY":["리비아","Libya","リビア","利比亚"],"LCA":["세인트루시아","St. Lucia","セントルシア","圣卢西亚"],"LIE":["리히텐슈타인","Liechtenstein","リヒテンシュタイン","列支敦士登"],"LKA":["스리랑카","Sri Lanka","スリランカ","斯里兰卡"],"LSO":["레소토","Lesotho","レソト","莱索托"],"LTU":["리투아니아","Lithuania","リトアニア","立陶宛"],"LUX":["룩셈부르크","Luxembourg","ルクセンブルク","卢森堡"],"LVA":["라트비아","Latvia","ラトビア","拉脱维亚"],"MAC":["마카오(중국 특별행정구)","Macao SAR China","中華人民共和国マカオ特別行政区","中国澳门特别行政区"],"MAF":["생마르탱","St. Martin","サン・マルタン","法属圣马丁"],"MAR":["모로코","Morocco","モロッコ","摩洛哥"],"MCO":["모나코","Monaco","モナコ","摩纳哥"],"MDA":["몰도바","Moldova","モルドバ","摩尔多瓦"],"MDG":["마다가스카르","Madagascar","マダガスカル","马达加斯加"],"MDV":["몰디브","Maldives","モルディブ","马尔代夫"],"MEX":["멕시코","Mexico","メキシコ","墨西哥"],"MHL":["마셜 제도","Marshall Islands","マーシャル諸島","马绍尔群岛"],"MKD":["북마케도니아","North Macedonia","北マケドニア","北马其顿"],"MLI":["말리","Mali","マリ","马里"],"MLT":["몰타","Malta","マルタ","马耳他"],"MMR":["미얀마","Myanmar (Burma)","ミャンマー (ビルマ)","缅甸"],"MNE":["몬테네그로","Montenegro","モンテネグロ","黑山"],"MNG":["몽골","Mongolia","モンゴル","蒙古"],"MNP":["북마리아나제도","Northern Mariana Islands","北マリアナ諸島","北马里亚纳群岛"],"MOZ":["모잠비크","Mozambique","モザンビーク","莫桑比克"],"MRT":["모리타니","Mauritania","モーリタニア","毛里塔尼亚"],"MUS":["모리셔스","Mauritius","モーリシャス","毛里求斯"],"MWI":["말라위","Malawi","マラウイ","马拉维"],"MYS":["말레이시아","Malaysia","マレーシア","马来西亚"],"NAM":["나미비아","Namibia","ナミビア","纳米比亚"],"NCL":["뉴칼레도니아","New Caledonia","ニューカレドニア","新喀里多尼亚"],"NER":["니제르","Niger","ニジェール","尼日尔"],"NGA":["나이지리아","Nigeria","ナイジェリア","尼日利亚"],"NIC":["니카라과","Nicaragua","ニカラグア","尼加拉瓜"],"NLD":["네덜란드","Netherlands","オランダ","荷兰"],"NOR":["노르웨이","Norway","ノルウェー","挪威"],"NPL":["네팔","Nepal","ネパール","尼泊尔"],"NRU":["나우루","Nauru","ナウル","瑙鲁"],"NZL":["뉴질랜드","New Zealand","ニュージーランド","新西兰"],"OMN":["오만","Oman","オマーン","阿曼"],"PAK":["파키스탄","Pakistan","パキスタン","巴基斯坦"],"PAN":["파나마","Panama","パナマ","巴拿马"],"PER":["페루","Peru","ペルー","秘鲁"],"PHL":["필리핀","Philippines","フィリピン","菲律宾"],"PLW":["팔라우","Palau","パラオ","帕劳"],"PNG":["파푸아뉴기니","Papua New Guinea","パプアニューギニア","巴布亚新几内亚"],"POL":["폴란드","Poland","ポーランド","波兰"],"PRI":["푸에르토리코","Puerto Rico","プエルトリコ","波多黎各"],"PRK":["북한","North Korea","北朝鮮","朝鲜"],"PRT":["포르투갈","Portugal","ポルトガル","葡萄牙"],"PRY":["파라과이","Paraguay","パラグアイ","巴拉圭"],"PSE":["팔레스타인 지구","Palestinian Territories","パレスチナ自治区","巴勒斯坦领土"],"PYF":["프랑스령 폴리네시아","French Polynesia","仏領ポリネシア","法属波利尼西亚"],"QAT":["카타르","Qatar","カタール","卡塔尔"],"ROU":["루마니아","Romania","ルーマニア","罗马尼亚"],"RUS":["러시아","Russia","ロシア","俄罗斯"],"RWA":["르완다","Rwanda","ルワンダ","卢旺达"],"SAU":["사우디아라비아","Saudi Arabia","サウジアラビア","沙特阿拉伯"],"SDN":["수단","Sudan","スーダン","苏丹"],"SEN":["세네갈","Senegal","セネガル","塞内加尔"],"SGP":["싱가포르","Singapore","シンガポール","新加坡"],"SLB":["솔로몬 제도","Solomon Islands","ソロモン諸島","所罗门群岛"],"SLE":["시에라리온","Sierra Leone","シエラレオネ","塞拉利昂"],"SLV":["엘살바도르","El Salvador","エルサルバドル","萨尔瓦多"],"SMR":["산마리노","San Marino","サンマリノ","圣马力诺"],"SOM":["소말리아","Somalia","ソマリア","索马里"],"SRB":["세르비아","Serbia","セルビア","塞尔维亚"],"SSD":["남수단","South Sudan","南スーダン","南苏丹"],"STP":["상투메 프린시페","São Tomé & Príncipe","サントメ・プリンシペ","圣多美和普林西比"],"SUR":["수리남","Suriname","スリナム","苏里南"],"SVK":["슬로바키아","Slovakia","スロバキア","斯洛伐克"],"SVN":["슬로베니아","Slovenia","スロベニア","斯洛文尼亚"],"SWE":["스웨덴","Sweden","スウェーデン","瑞典"],"SWZ":["에스와티니","Eswatini","エスワティニ","斯威士兰"],"SXM":["신트마르턴","Sint Maarten","シント・マールテン","荷属圣马丁"],"SYC":["세이셸","Seychelles","セーシェル","塞舌尔"],"SYR":["시리아","Syria","シリア","叙利亚"],"TCA":["터크스 케이커스 제도","Turks & Caicos Islands","タークス・カイコス諸島","特克斯和凯科斯群岛"],"TCD":["차드","Chad","チャド","乍得"],"TGO":["토고","Togo","トーゴ","多哥"],"THA":["태국","Thailand","タイ","泰国"],"TJK":["타지키스탄","Tajikistan","タジキスタン","塔吉克斯坦"],"TKM":["투르크메니스탄","Turkmenistan","トルクメニスタン","土库曼斯坦"],"TLS":["동티모르","Timor-Leste","東ティモール","东帝汶"],"TON":["통가","Tonga","トンガ","汤加"],"TTO":["트리니다드 토바고","Trinidad & Tobago","トリニダード・トバゴ","特立尼达和多巴哥"],"TUN":["튀니지","Tunisia","チュニジア","突尼斯"],"TUR":["튀르키예","Türkiye","トルコ","土耳其"],"TUV":["투발루","Tuvalu","ツバル","图瓦卢"],"TZA":["탄자니아","Tanzania","タンザニア","坦桑尼亚"],"UGA":["우간다","Uganda","ウガンダ","乌干达"],"UKR":["우크라이나","Ukraine","ウクライナ","乌克兰"],"URY":["우루과이","Uruguay","ウルグアイ","乌拉圭"],"USA":["미국","United States","アメリカ合衆国","美国"],"UZB":["우즈베키스탄","Uzbekistan","ウズベキスタン","乌兹别克斯坦"],"VCT":["세인트빈센트그레나딘","St. Vincent & Grenadines","セントビンセント及びグレナディーン諸島","圣文森特和格林纳丁斯"],"VEN":["베네수엘라","Venezuela","ベネズエラ","委内瑞拉"],"VGB":["영국령 버진아일랜드","British Virgin Islands","英領ヴァージン諸島","英属维尔京群岛"],"VIR":["미국령 버진아일랜드","U.S. Virgin Islands","米領ヴァージン諸島","美属维尔京群岛"],"VNM":["베트남","Vietnam","ベトナム","越南"],"VUT":["바누아투","Vanuatu","バヌアツ","瓦努阿图"],"WSM":["사모아","Samoa","サモア","萨摩亚"],"XKX":["코소보","Kosovo","コソボ","科索沃"],"YEM":["예멘","Yemen","イエメン","也门"],"ZAF":["남아프리카","South Africa","南アフリカ","南非"],"ZMB":["잠비아","Zambia","ザンビア","赞比亚"],"ZWE":["짐바브웨","Zimbabwe","ジンバブエ","津巴布韦"]};
 const COUNTRIES=[["ABW",null,null,2,3,827,76.5,null,null],["AFG",null,null,3,0,1534544,66.3,48.3,null],["AGO",null,null,6,1,1452289,64.8,32.1,10251.0],["ALB",null,null,1,2,23731,79.8,8.3,28221.0],["AND",null,null,1,3,572,84.2,2.4,79567.0],["ARE",null,null,3,3,112829,83.1,3.8,null],["ARG",null,null,2,2,508950,77.5,8,32587.0],["ARM",null,null,1,2,34262,78.3,8.5,24754.0],["ASM",null,null,0,3,690,73.0,null,null],["ATG",null,null,2,3,1102,77.8,7,35832.0],["AUS",null,null,0,3,295474,83.1,3.1,71934.0],["AUT",null,null,1,3,77349,82.0,2.8,76778.0],["AZE",null,null,1,2,102470,74.6,12.5,26113.0],["BDI",null,null,6,0,477748,63.8,30.5,1248.0],["BEL",null,null,1,3,109864,82.3,3.1,74676.0],["BEN",null,null,6,1,494803,61.0,45.2,4817.0],["BFA",null,null,6,0,753534,61.3,43.6,3072.0],["BGD",null,null,5,1,3513738,74.9,24.4,10154.0],["BGR",null,null,1,3,53396,75.8,4.6,44451.0],["BHR",null,null,3,3,19204,81.4,7.3,70997.0],["BHS",null,null,2,3,4353,74.7,11.1,null],["BIH",null,null,1,2,24179,78.0,5.5,25814.0],["BLR",null,null,1,2,63602,74.4,1.8,34716.0],["BLZ",null,null,2,2,7655,73.7,10.8,14966.0],["BMU",null,null,4,3,510,82.5,null,null],["BOL",null,null,2,1,264219,68.7,14.2,12873.0],["BRA",null,null,2,2,2575030,76.0,12.3,23433.0],["BRB",null,null,2,3,3137,76.3,9.1,25894.0],["BRN",null,null,0,3,6202,75.5,8.6,92430.0],["BTN",null,null,5,1,9959,73.3,13.7,19594.0],["BWA",null,null,6,2,62516,69.3,32.1,20698.0],["CAF",null,null,6,0,254714,57.7,58.8,1314.0],["CAN",null,null,4,3,370700,82.1,4.7,66746.0],["CHE",null,null,1,3,79104,84.4,3.4,102513.0],["CHI",null,null,1,3,1381,81.2,null,null],["CHL",null,null,2,3,172781,81.4,5.8,37774.0],["CHN",null,null,0,2,9564778,78.0,4.1,29333.0],["CIV",null,null,6,1,1033685,62.1,44.8,8209.0],["CMR",null,null,6,1,994982,64.0,40.2,5788.0],["COD",null,null,6,0,4614848,62.1,56.4,1920.0],["COG",null,null,6,1,197127,66.0,27,7248.0],["COL",null,null,2,2,710561,77.9,10.5,22640.0],["COM",null,null,6,1,24896,67.0,35,4238.0],["CPV",null,null,6,2,6433,76.2,10.6,12165.0],["CRI",null,null,2,3,51530,81.0,9.1,33815.0],["CUB",null,null,2,2,94060,78.3,6.8,null],["CUW",null,null,2,3,1125,77.0,null,null],["CYM",null,null,2,3,880,80.5,null,null],["CYP",null,null,1,3,14393,81.8,4.1,64575.0],["CZE",null,null,1,3,83829,80.0,2.1,60487.0],["DEU",null,null,1,3,676279,80.8,3.1,75407.0],["DJI",null,null,3,1,24747,66.2,43,8452.0],["DMA",null,null,2,2,725,71.3,33.3,22713.0],["DNK",null,null,1,3,57087,82.3,3.5,83218.0],["DOM",null,null,2,2,202761,73.9,27.7,28721.0],["DZA",null,null,3,2,891784,76.5,19.5,18586.0],["ECU",null,null,2,2,270690,77.6,10.9,16757.0],["EGY",null,null,3,1,2473849,71.8,20.8,20204.0],["ERI",null,null,6,0,103521,68.9,24.7,null],["ESP",null,null,1,3,320808,83.9,2.6,59868.0],["EST",null,null,1,3,9702,79.3,1.5,52106.0],["ETH",null,null,6,0,4267370,67.6,34.5,3622.0],["FIN",null,null,1,3,44042,82.3,1.9,65884.0],["FJI",null,null,0,2,16703,67.5,23.5,16338.0],["FRA",null,null,1,3,666587,83.0,3.4,63975.0],["FRO",null,null,1,3,593,83.1,null,null],["FSM",null,null,0,2,2535,67.4,20.3,4604.0],["GAB",null,null,6,2,70274,68.5,25.9,22218.0],["GBR",null,null,1,3,687921,81.4,4.1,64606.0],["GEO",null,null,1,2,44474,74.7,7.5,29414.0],["GHA",null,null,6,1,908165,65.7,27.5,8610.0],["GIB",null,null,1,3,490,83.6,null,null],["GIN",null,null,6,1,502821,60.9,59.8,4935.0],["GMB",null,null,6,0,84381,66.1,32.7,3706.0],["GNB",null,null,6,0,66586,64.3,42.1,3293.0],["GNQ",null,null,6,2,58153,63.9,47.6,16133.0],["GRC",null,null,1,3,68732,81.8,3.2,45264.0],["GRD",null,null,2,2,1349,75.4,16.4,21346.0],["GRL",null,null,1,3,682,70.3,null,null],["GTM",null,null,2,2,384970,72.7,17.2,15197.0],["GUM",null,null,0,3,2924,77.4,null,null],["GUY",null,null,2,3,16636,70.3,23.2,97899.0],["HKG",null,null,0,3,36745,85.4,null,80423.0],["HND",null,null,2,1,237726,73.0,12.8,7871.0],["HRV",null,null,1,3,32172,78.9,4.1,50946.0],["HTI",null,null,2,1,260743,65.1,39,3134.0],["HUN",null,null,1,3,78017,76.7,3.1,49838.0],["IDN",null,null,0,2,4514396,71.3,15.2,17660.0],["IMN",null,null,1,3,698,81.1,null,null],["IND",null,null,5,1,23421848,72.2,23.3,11748.0],["IRL",null,null,1,3,54844,83.0,3.4,155089.0],["IRN",null,null,3,2,1164463,77.9,10.3,19699.0],["IRQ",null,null,3,2,1203732,72.4,20.1,14267.0],["ISL",null,null,1,3,4395,82.8,2.1,83431.0],["ISR",null,null,3,3,188284,83.2,2.7,59717.0],["ITA",null,null,1,3,371169,84.0,2.3,62803.0],["JAM",null,null,2,2,32343,71.6,16.4,13291.0],["JOR",null,null,3,2,236174,78.0,12,12632.0],["JPN",null,null,0,3,703190,84.0,1.8,55422.0],["KAZ",null,null,1,2,406453,74.5,7.4,44293.0],["KEN",null,null,6,1,1553377,63.8,34.2,7016.0],["KGZ",null,null,1,1,142455,72.4,14.8,9220.0],["KHM",null,null,0,1,362314,70.8,16.4,8543.0],["KIR",null,null,0,1,3453,66.6,38.8,3937.0],["KNA",null,null,2,3,549,72.3,13.9,36777.0],["KOR",null,null,0,3,242917,83.6,2.3,63125.0],["KWT",null,null,3,3,48653,84.6,7,56468.0],["LAO",null,null,0,1,164547,69.2,27.2,10383.0],["LBN",null,null,3,1,93591,77.9,15.3,null],["LBR",null,null,6,0,175375,62.3,63.2,1981.0],["LBY",null,null,3,2,123066,71.1,7.9,16521.0],["LCA",null,null,2,2,2018,72.8,15.8,28674.0],["LIE",null,null,1,3,345,84.2,null,null],["LKA",null,null,5,2,219736,77.7,5.2,17065.0],["LSO",null,null,6,1,56247,57.8,56.3,3184.0],["LTU",null,null,1,3,19066,77.2,2.8,56838.0],["LUX",null,null,1,3,6526,83.2,1.9,156542.0],["LVA",null,null,1,3,12750,76.4,2.2,46137.0],["MAC",null,null,0,3,3635,83.3,null,137031.0],["MAF",null,null,2,3,374,80.4,null,null],["MAR",null,null,3,1,630265,75.5,14.7,11112.0],["MCO",null,null,1,3,368,86.5,2.2,null],["MDA",null,null,1,2,25022,71.3,15.1,19996.0],["MDG",null,null,6,0,1037879,63.8,43,1952.0],["MDV",null,null,5,2,5615,81.3,4.7,28555.0],["MEX",null,null,2,2,2045177,75.3,12.1,25868.0],["MHL",null,null,0,2,729,67.1,22.7,8964.0],["MKD",null,null,1,2,16024,76.6,2.5,28029.0],["MLI",null,null,6,0,995353,60.7,47.5,3503.0],["MLT",null,null,3,3,4464,83.0,4.7,72210.0],["MMR",null,null,0,1,905036,67.1,32.8,6012.0],["MNE",null,null,1,2,6979,77.9,1.9,35423.0],["MNG",null,null,0,2,60316,72.4,11.2,20798.0],["MNP",null,null,0,3,527,78.9,null,null],["MOZ",null,null,6,0,1318371,63.8,43.7,1698.0],["MRT",null,null,6,1,180712,68.7,30.2,7676.0],["MUS",null,null,6,2,12811,73.8,13.8,33667.0],["MWI",null,null,6,0,690921,67.6,38,1899.0],["MYS",null,null,0,2,446125,76.8,7,41498.0],["NAM",null,null,6,1,80104,67.5,36.4,11986.0],["NCL",null,null,0,3,4135,78.9,null,null],["NER",null,null,6,0,1155798,61.4,65.6,2177.0],["NGA",null,null,6,1,7719653,54.6,69.8,9532.0],["NIC",null,null,2,1,133843,75.1,9.4,9284.0],["NLD",null,null,1,3,166406,82.0,3.4,87320.0],["NOR",null,null,1,3,54425,83.2,2,104044.0],["NPL",null,null,5,1,562744,70.6,22.2,6175.0],["NRU",null,null,0,3,296,62.3,7.7,14200.0],["NZL",null,null,0,3,58572,82.0,4,57350.0],["OMN",null,null,3,3,92311,80.2,8.3,42295.0],["PAK",null,null,3,1,6993016,67.8,48.2,6573.0],["PAN",null,null,2,3,72682,79.8,12,43902.0],["PER",null,null,2,2,546311,77.9,11,18816.0],["PHL",null,null,0,2,1856913,69.9,21.7,12577.0],["PLW",null,null,0,3,189,69.4,18.6,23052.0],["PNG",null,null,0,1,261536,66.3,31.3,5215.0],["POL",null,null,1,3,251407,78.4,3.6,54262.0],["PRI",null,null,2,3,18154,81.9,null,52196.0],["PRK",null,null,0,0,342766,73.7,13.3,null],["PRT",null,null,1,3,85358,82.4,2.7,53146.0],["PRY",null,null,2,2,138158,74.0,14.5,20181.0],["PSE",null,null,3,1,143460,69.2,17,5000.0],["PYF",null,null,0,3,3022,84.2,null,null],["QAT",null,null,3,3,28236,82.5,4.8,128883.0],["ROU",null,null,1,3,142652,76.5,6,50895.0],["RUS",null,null,1,3,1205512,73.4,4.1,49568.0],["RWA",null,null,6,0,409398,68.0,29.4,4164.0],["SAU",null,null,3,3,610064,79.0,4.7,73784.0],["SDN",null,null,6,0,1704851,66.5,42.9,2192.0],["SEN",null,null,6,1,552813,68.9,28.9,5463.0],["SGP",null,null,0,3,45223,83.3,2.2,163354.0],["SLB",null,null,0,1,22392,70.7,16.4,2788.0],["SLE",null,null,6,0,265476,62.0,54.6,3717.0],["SLV",null,null,2,2,99302,72.3,8.8,14101.0],["SMR",null,null,1,3,143,85.8,1.2,null],["SOM",null,null,6,0,831395,59.0,65.4,1643.0],["SRB",null,null,1,2,60252,76.0,4.6,33910.0],["SSD",null,null,6,0,355913,57.7,71.9,null],["STP",null,null,6,1,6751,69.9,9.2,6388.0],["SUR",null,null,2,2,11005,73.8,14.8,22652.0],["SVK",null,null,1,3,46017,78.4,5.3,49309.0],["SVN",null,null,1,3,16835,82.3,1.8,59245.0],["SWE",null,null,1,3,98549,84.1,2,72529.0],["SWZ",null,null,6,1,29646,64.3,42.2,12529.0],["SXM",null,null,2,3,400,76.5,null,56491.0],["SYC",null,null,6,3,1350,76.3,12.9,35854.0],["SYR",null,null,3,0,594394,72.6,17.7,null],["TCA",null,null,2,3,492,78.2,3,null],["TCD",null,null,6,0,909460,55.2,56.3,2903.0],["TGO",null,null,6,1,275791,62.9,34.8,4079.0],["THA",null,null,0,2,580121,76.6,7.7,26250.0],["TJK",null,null,1,1,272904,71.9,23.5,5923.0],["TKM",null,null,1,2,159234,70.2,30.4,22602.0],["TLS",null,null,0,1,30924,67.9,34.6,4809.0],["TON",null,null,0,2,2386,73.1,7.8,8675.0],["TTO",null,null,2,3,14362,73.6,17,37121.0],["TUN",null,null,3,1,165471,76.7,9.7,15233.0],["TUR",null,null,1,2,944664,77.4,8,45288.0],["TUV",null,null,0,2,209,67.3,16.5,6759.0],["TZA",null,null,6,1,2454996,67.2,28.7,4471.0],["UGA",null,null,6,0,1767640,68.5,35.9,3488.0],["UKR",null,null,1,2,214392,74.7,7.6,18905.0],["URY",null,null,2,3,33170,78.3,6.2,38315.0],["USA",null,null,4,3,3622919,78.9,5.5,90027.0],["UZB",null,null,1,1,948568,72.5,12.8,13601.0],["VCT",null,null,2,2,1199,71.4,10.2,22799.0],["VEN",null,null,2,1,433457,72.7,21.2,null],["VGB",null,null,2,3,326,77.4,11.4,null],["VIR",null,null,2,3,1152,80.8,null,null],["VNM",null,null,0,2,1361420,74.7,12,18088.0],["VUT",null,null,0,1,9284,71.7,14.4,4525.0],["WSM",null,null,0,2,5483,71.8,12.3,9319.0],["XKX",null,null,1,2,18765,78.2,8,19263.0],["YEM",null,null,3,0,1437021,69.4,33.8,null],["ZAF",null,null,6,2,1197825,66.3,24.2,15906.0],["ZMB",null,null,6,1,716584,66.5,34.6,4379.0],["ZWE",null,null,6,1,506829,63.1,62.4,6470.0]];
+/* 세계 점지도: 3°×2.5° 격자의 육지 비트맵(Natural Earth 110m, 퍼블릭 도메인)과 국가 중심 좌표 */
+const MAP={"cols":120,"rows":56,"lat0":84,"lat1":-58,"hex":"00000000fe07f800000000000000000000000ffffff8003800001800000000000208cffff80050000000000000000005af80fff8000001007fc03400000037bb803ff800000611fffe100003f0e7c9f83ff0001c0037ffffff8087ffffffae3f80007fcff7ffffffff4fffffff3c1e0e00efffffffffffff07fffff8841c0003dfffffffffffdf0fc7fff03a000003c3fffffffffe300181fff83e000021dfffffffffc0c00400ffffbf8000701fffffffff80c000007fffbf80005ffffffffffff08000001ffffc00000ffffffffffff00000001ffff440001fffffffffffd00000001ffffe00000f7df7ffffff900000001ffff0000078b833fffffe000000001fffe000007057f3fffffa000000001fffe000006017fbfffffa200000000fffc000003e00fffffff2c000000007ff8000007f90fffffff90000000001f08000007ffff7fffff80000000003f0000001fffefbfffff00000000000e0000001fffffa3fffe8000000000060400003ffff7f1fdfc0000000000072080001ffff3e0f1e8000000000001e000001ffffbc0e1f08000000000007000003fffff0060708000000000001000001ffffc0060300000000000000df0000fffff80400000000000000003f8000fffff00004040000000000003fe00001fff00008200000000000003fe00001ffe00006e00000000000007ff00001ffc00006e08000000000007ffe0000ff80000229f000000000007fff0000ff800001003800000000003fff0000ff800000181000000000003fff00007f800000001000000000001ffe0000ffc80000019000000000001ffe0000ff98000007d0000000000007fe0000ff10000007f8000000000007fc00007f1000001ffc000000000007f800007f1000003ffc00000000000ff000007e0000003ffe00000000000ff000007e0000003ffe00000000000fe000003c0000001ffe00000000000fc0000020000000307c00000000000f80000000000000001c00000000000e00000000000000000002000000001c00000000000000000806000000000c00000000000000000008000000001c00000000000000000000000000001c00000000001000000000000000001880000000000000000000000000000c00000000000000000000000000000000000000000000000000","cen":{"AFG":[66,33.8],"AGO":[17.5,-12.3],"ALB":[20,41.1],"ARE":[54.2,23.9],"ARG":[-64.7,-34.6],"ARM":[45,40.2],"AUS":[134.2,-25.6],"AUT":[14.1,47.6],"AZE":[47.7,40.3],"BDI":[29.9,-3.4],"BEL":[4.6,50.7],"BEN":[2.3,9.6],"BFA":[-1.8,12.3],"BGD":[90.3,23.8],"BGR":[25.2,42.8],"BHS":[-77.9,24.5],"BIH":[17.8,44.2],"BLR":[28,53.5],"BLZ":[-88.7,17.2],"BOL":[-64.7,-16.7],"BRA":[-53.2,-10.7],"BRN":[114.9,4.7],"BTN":[90.5,27.4],"BWA":[23.8,-22.1],"CAF":[20.4,6.5],"CAN":[-97.9,58.4],"CHE":[8.1,46.8],"CHL":[-71.2,-35.9],"CHN":[103.4,36.7],"CIV":[-5.6,7.6],"CMR":[12.6,5.7],"COD":[23.6,-2.8],"COG":[15.1,-0.8],"COL":[-73.1,3.9],"CRI":[-84.2,10],"CUB":[-78.9,21.6],"CYP":[33,34.9],"CZE":[15.3,49.8],"DEU":[10.3,51.1],"DJI":[42.5,11.8],"DNK":[9.3,56.2],"DOM":[-70.5,18.9],"DZA":[2.6,28.1],"ECU":[-78.4,-1.5],"EGY":[29.9,26.5],"ERI":[38.7,15.4],"ESP":[-3.6,40.3],"EST":[25.8,58.6],"ETH":[39.6,8.6],"FIN":[26.1,64.3],"FJI":[179.4,-16.5],"FRA":[2.3,46.6],"GAB":[11.7,-0.6],"GBR":[-2.6,53.8],"GEO":[43.5,42.2],"GHA":[-1.2,7.9],"GIN":[-11.1,10.5],"GMB":[-15.4,13.5],"GNB":[-15.1,12],"GNQ":[10.4,1.6],"GRC":[22.5,39.3],"GRL":[-42,73.2],"GTM":[-90.4,15.7],"GUY":[-59,4.8],"HND":[-86.6,14.8],"HRV":[16.6,45],"HTI":[-72.7,18.9],"HUN":[19.3,47.2],"IDN":[114,-0.3],"IND":[79.5,22.8],"IRL":[-8,53.2],"IRN":[54.5,32.5],"IRQ":[43.8,33],"ISL":[-18.8,65.1],"ISR":[35,31.5],"ITA":[12.4,43.4],"JAM":[-77.3,18.1],"JOR":[36.8,31.2],"JPN":[136.7,36],"KAZ":[67.2,48.4],"KEN":[37.8,0.6],"KGZ":[74.6,41.5],"KHM":[104.9,12.7],"KOR":[127.8,36.4],"KWT":[47.6,29.3],"LAO":[103.8,18.4],"LBN":[35.9,33.9],"LBR":[-9.4,6.4],"LBY":[18,27],"LKA":[80.7,7.7],"LSO":[28.2,-29.6],"LTU":[23.9,55.3],"LUX":[6,49.8],"LVA":[24.8,56.8],"MAR":[-8.7,29.8],"MDA":[28.4,47.2],"MDG":[46.7,-19.3],"MEX":[-102.2,23.9],"MKD":[21.7,41.6],"MLI":[-3.6,17.2],"MMR":[96.5,20.9],"MNE":[19.3,42.8],"MNG":[103,47],"MOZ":[35.5,-17.2],"MRT":[-10.3,20.2],"MWI":[34.2,-13.2],"MYS":[114.7,3.5],"NAM":[17.1,-22],"NCL":[165.5,-21.3],"NER":[9.3,17.3],"NGA":[8,9.5],"NIC":[-85,12.8],"NLD":[5.5,52.3],"NOR":[12.4,64.1],"NPL":[84,28.2],"NZL":[170.6,-44],"OMN":[56.1,20.6],"PAK":[69.2,29.9],"PAN":[-80.1,8.5],"PER":[-74.4,-9.1],"PHL":[121.6,15.7],"PNG":[144.3,-6.6],"POL":[19.3,52.1],"PRI":[-66.5,18.2],"PRK":[127.1,40.1],"PRT":[-8.1,39.6],"PRY":[-58.4,-23.2],"PSE":[35.3,31.9],"QAT":[51.2,25.3],"ROU":[25,45.9],"RUS":[95.7,65.9],"RWA":[29.9,-2],"SAU":[44.6,24.1],"SDN":[29.8,16],"SEN":[-14.5,14.4],"SLB":[159.1,-7.9],"SLE":[-11.8,8.5],"SLV":[-88.9,13.7],"SOM":[45.7,4.7],"SRB":[20.8,44.2],"SSD":[30.2,7.3],"SUR":[-55.9,4.1],"SVK":[19.5,48.7],"SVN":[14.9,46.1],"SWE":[16.1,62.4],"SWZ":[31.4,-26.5],"SYR":[38.5,35],"TCD":[18.6,15.3],"TGO":[1,8.4],"THA":[101,15],"TJK":[71,38.6],"TKM":[59.3,39.1],"TLS":[126,-8.8],"TTO":[-61.3,10.4],"TUN":[9.5,34.1],"TUR":[35.4,39.1],"TZA":[34.7,-6.3],"UGA":[32.4,1.3],"UKR":[31.3,49.2],"URY":[-56,-32.8],"USA":[-98.7,39.9],"UZB":[63.4,41.8],"VEN":[-66.2,7.2],"VNM":[106.3,16.6],"VUT":[166.9,-15.2],"YEM":[47.5,15.9],"ZAF":[25.2,-28.9],"ZMB":[27.8,-13.4],"ZWE":[29.8,-18.9],"ABW":[-70,12.5],"AND":[1.6,42.5],"ASM":[-170.7,-14.3],"ATG":[-61.8,17.1],"BHR":[50.55,26.0],"BMU":[-64.75,32.3],"BRB":[-59.55,13.2],"CHI":[-2.1,49.4],"COM":[43.3,-11.7],"CPV":[-23.6,15.1],"CUW":[-69,12.2],"CYM":[-81.25,19.3],"DMA":[-61.4,15.4],"FRO":[-6.9,62],"FSM":[158.2,6.9],"GIB":[-5.35,36.1],"GRD":[-61.7,12.1],"GUM":[144.8,13.4],"HKG":[114.2,22.3],"IMN":[-4.5,54.2],"KIR":[173,1.4],"KNA":[-62.7,17.3],"LCA":[-61,13.9],"LIE":[9.55,47.15],"MAC":[113.55,22.2],"MAF":[-63.05,18.07],"MCO":[7.4,43.7],"MDV":[73.5,3.2],"MHL":[171,7.1],"MLT":[14.4,35.9],"MNP":[145.7,15.2],"MUS":[57.55,-20.3],"NRU":[166.9,-0.5],"PLW":[134.5,7.5],"PYF":[-149.4,-17.7],"SGP":[103.8,1.35],"SMR":[12.45,43.9],"STP":[6.6,0.3],"SXM":[-63.05,18.04],"SYC":[55.5,-4.65],"TCA":[-71.8,21.8],"TON":[-175.2,-21.2],"TUV":[179.2,-8.5],"VCT":[-61.2,13.25],"VGB":[-64.6,18.4],"VIR":[-64.9,18.35],"WSM":[-172.1,-13.6],"XKX":[20.9,42.6]}};
 /* ---------- 언어 ---------- */
 const LANGS=[["ko","한국어"],["en","English"],["ja","日本語"],["zh","中文"]];
 let LANG="ko", LI=0;
@@ -156,6 +194,10 @@ const UI={
  died:["생을 마쳤다","Died","生涯を終えた","生命终结"],
  again:["다시 태어나기","Be born again","もう一度生まれる","再次出生"],
  again_p:["같은 버튼으로 80억 명 중 또 다른 한 명이 됩니다.","Press it to become another one of the 8 billion.","ボタン一つで、80億人の中のまた別の一人になれます。","再按一次，就会成为80亿人中的另一个人。"],
+ curve_h:["내 인생의 다섯 줄기","The five strands of your life","わたしの人生の五本の流れ","我人生的五条脉络"],
+ map_caption:["지금도 매년 태어나는 사람들 — 점이 클수록 많이 태어나는 곳","Where people are born every year — bigger dots mean more births","今も毎年生まれる人々 — 点が大きいほど出生が多い場所","每年出生的人们 — 圆点越大，出生越多"],
+ rolling:["당신이 태어날 곳을 뽑는 중…","Drawing your birthplace…","生まれる場所を抽選中…","正在抽取你的出生地…"],
+ sun_note:["하루처럼 흘러가는 일생","A life that passes like a single day","一日のように過ぎていく一生","如一日般流逝的一生"],
  back:["처음으로","Back to start","最初へ","回到开头"]
 };
 const ui=(k,p)=>sub(UI[k][LI],p);
@@ -215,7 +257,7 @@ function wsample(arr,n,wf,rf){
   return out;
 }
 function parentJob(G){ // 부모 직업: 형편에 맞는 직업을 가중 추첨(학력 제한은 느슨하게)
-  const pool=JOBS.filter(j=>jobW(j,G)>0&&(j.f||0)<=G.famTier&&(j.e||0)<=40+G.famTier*15);
+  const pool=JOBS.filter(j=>jobW(j,G)>0&&(j.f||0)<=G.famTier&&(j.e||0)<=40+G.famTier*15&&(G.famTier>=2?(j.e||j.f):G.famTier<=1?!((j.e||0)>45||(j.f||0)>=2):true));
   return wsample(pool,1,j=>jobW(j,G)*(G.famTier>=2&&(j.e||0)>=45?2:1),rnd)[0];
 }
 function jobChoices(G,e){
@@ -422,7 +464,109 @@ const clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,v));
 const randn=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
 const pick=a=>a[Math.floor(rnd()*a.length)];
 const STATKEYS=["h","w","j","r","e"];
-const app=document.getElementById("app");
+const app=document.getElementById("app"), langEl=document.getElementById("langs"), heroEl=document.getElementById("hero");
+/* ---------- 시각 연출 ---------- */
+const STAT_ICON=["💪","🪙","🌤️","🤝","🛠️"];
+const STAGE_ICON=["🍼","🎒","🧭","🌱","🏙️","🍂","🌇"];
+const dark=()=>window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches;
+// 하루처럼: 새벽 → 아침 → 한낮 → 오후 → 노을 → 밤 (t = 나이/100)
+const SKY_L=[[0,"#ffd9a8","#fff1d6"],[.2,"#8ec5ff","#d6efff"],[.5,"#5aa9f0","#bfe3ff"],[.75,"#f3b36b","#ffe0b0"],[.9,"#d9776b","#f3b58c"],[1,"#2b2f5a","#6a5a8a"]];
+const SKY_D=[[0,"#3a2a2a","#5a3f33"],[.2,"#1f3b5a","#2d5273"],[.5,"#153a63","#245a86"],[.75,"#5a3a1f","#8a5a2f"],[.9,"#4a2230","#7a3a3a"],[1,"#0d0f24","#23244a"]];
+const hexRGB=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+function skyColors(t){
+  const L=dark()?SKY_D:SKY_L; t=clamp(t,0,1);
+  let i=0; while(i<L.length-2&&t>L[i+1][0]) i++;
+  const a=L[i],b=L[i+1],u=(t-a[0])/(b[0]-a[0]);
+  const mix=(x,y)=>"rgb("+hexRGB(x).map((v,k)=>Math.round(v+(hexRGB(y)[k]-v)*u)).join(",")+")";
+  return [mix(a[1],b[1]),mix(a[2],b[2])];
+}
+function mapSVG(mode,hl){
+  const M=MAP,W=M.cols*6,H=M.rows*6;
+  const px=(lo,la)=>[(lo+180)/360*W,(M.lat0-la)/(M.lat0-M.lat1)*H];
+  let land="";
+  for(let r=0;r<M.rows;r++)for(let c=0;c<M.cols;c++){
+    if(parseInt(M.hex[r*(M.cols/4)+(c>>2)],16)>>(3-(c&3))&1) land+=`M${c*6+3} ${r*6+3}h0`;
+  }
+  let dots="";
+  if(mode==="all"){
+    for(const c of COUNTRIES){
+      const p=M.cen[c[0]]; if(!p) continue; const [x,y]=px(p[0],p[1]);
+      const r=(2+Math.sqrt(c[5]/1e6)*2.4).toFixed(1);
+      dots+=`<circle class="bd" style="animation-delay:${(c[5]%17)/6}s" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}"/>`;
+    }
+  } else if(hl){
+    const p=M.cen[hl]; if(p){const [x,y]=px(p[0],p[1]);
+      dots=`<circle class="ring" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10"/><circle class="ring r2" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10"/><circle class="pin" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5"/>`;}
+  }
+  return `<svg class="map" viewBox="0 0 ${W} ${H}" role="img"><path class="land" d="${land}"/>${dots}</svg>`;
+}
+let sky={t:0,raf:0,built:false};
+function skyHTML(){
+  return `<div class="sky" id="sky"><svg viewBox="0 0 600 150" preserveAspectRatio="xMidYMax slice">
+    <g id="stars" opacity="0">${[[60,20],[130,45],[220,15],[310,35],[400,18],[470,42],[540,22],[90,70],[350,60],[510,70]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.4" fill="#fff"/>`).join("")}</g>
+    <circle id="sun" r="16" cx="40" cy="120" fill="#ffd36b"/><circle id="halo" r="28" cx="40" cy="120" fill="#ffd36b" opacity=".25"/>
+    <path d="M0 150V122C70 105 120 112 190 124S320 108 400 118 540 112 600 122V150Z" fill="var(--hill1)"/>
+    <path d="M0 150V135C90 124 150 132 230 138S380 126 470 134 560 130 600 134V150Z" fill="var(--hill2)"/>
+  </svg><div class="skycap"></div></div>`;
+}
+function paintSky(t){
+  const el=document.getElementById("sky"); if(!el) return;
+  const [a,b]=skyColors(t);
+  el.style.background=`linear-gradient(${a},${b})`;
+  const u=.06+.88*clamp(t,0,1), x=40+520*u, y=118-100*Math.sin(Math.PI*u);
+  for(const id of ["sun","halo"]){const n=document.getElementById(id);n.setAttribute("cx",x.toFixed(1));n.setAttribute("cy",y.toFixed(1));}
+  const hot=clamp((t-.7)/.3,0,1);
+  document.getElementById("sun").setAttribute("fill",`rgb(255,${Math.round(211-hot*90)},${Math.round(107-hot*40)})`);
+  document.getElementById("stars").setAttribute("opacity",clamp((t-.88)/.12,0,1).toFixed(2));
+}
+function setSky(age,ended){
+  const target=clamp(age/100,0,1), from=sky.t;
+  cancelAnimationFrame(sky.raf);
+  const t0=performance.now(), dur=ended?1200:900;
+  const step=now=>{const u=clamp((now-t0)/dur,0,1),e=1-Math.pow(1-u,3);sky.t=from+(target-from)*e;paintSky(sky.t);if(u<1) sky.raf=requestAnimationFrame(step)};
+  if(from===target||!document.getElementById("sky")){sky.t=target;paintSky(target)}else sky.raf=requestAnimationFrame(step);
+  const cap=document.querySelector(".skycap"); if(cap) cap.textContent=UI.sun_note[LI];
+}
+function heroHTML(h){
+  if(!h) return "";
+  if(h.type==="map") return `<div class="hero">${mapSVG(h.mode,h.iso)}<div class="mapcap">${h.cap||""}</div></div>`;
+  if(h.type==="sky") return `<div class="hero">${skyHTML()}</div>`;
+  return "";
+}
+const sceneBG=age=>{const [a,b]=skyColors(clamp(age/100,0,1));return `linear-gradient(${a},${b})`};
+function statsHTML(prev){
+  const names=ST();
+  return `<div class="stats">`+STATKEYS.map((k,i)=>{
+    const v=Math.round(G.s[k]), pv=prev?Math.round(prev[k]):v, d=v-pv;
+    return `<div class="stat"><div class="si">${STAT_ICON[i]}</div>${names[i]}<b data-to="${v}" data-from="${pv}">${pv}</b><div class="bar"><i data-w="${v}" style="width:${pv}%"></i></div>${d?`<span class="chip ${d>0?"up":"dn"}">${d>0?"+":""}${d}</span>`:""}</div>`;
+  }).join("")+`</div>`;
+}
+function animateStats(){
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    app.querySelectorAll(".bar i[data-w]").forEach(i=>i.style.width=i.dataset.w+"%");
+    app.querySelectorAll(".stat b[data-to]").forEach(b=>{
+      const f=+b.dataset.from,t=+b.dataset.to; if(f===t) return;
+      const t0=performance.now(); const st=now=>{const u=clamp((now-t0)/700,0,1);b.textContent=Math.round(f+(t-f)*u);if(u<1)requestAnimationFrame(st)};requestAnimationFrame(st);
+    });
+  }));
+}
+function curveSVG(){
+  const W=600,H=220,pad=28,mx=Math.max(20,G.ended.age);
+  const X=a=>pad+(W-pad*2)*a/mx, Y=v=>H-pad-(H-pad*2)*v/100;
+  const COL=["#d9534f","#c28a1d","#3f8f6b","#5b6fd6","#8e5bb5"];
+  let g=`<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="var(--line)"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="var(--line)"/>`;
+  [0,25,50,75,100].forEach(v=>{g+=`<line x1="${pad}" x2="${W-pad}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-dasharray="2 4" opacity=".6"/>`});
+  STATKEYS.forEach((k,i)=>{
+    const pts=G.hist.map(h=>`${X(h.a).toFixed(1)},${Y(h[k]).toFixed(1)}`).join(" ");
+    g+=`<polyline class="cl" points="${pts}" fill="none" stroke="${COL[i]}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" style="animation-delay:${i*.15}s"/>`;
+    const l=G.hist[G.hist.length-1];g+=`<circle cx="${X(l.a).toFixed(1)}" cy="${Y(l[k]).toFixed(1)}" r="4" fill="${COL[i]}"/>`;
+  });
+  g+=`<text x="${pad}" y="${H-8}" font-size="11" fill="var(--muted)">0</text><text x="${W-pad}" y="${H-8}" font-size="11" text-anchor="end" fill="var(--muted)">${G.ended.age}</text>`;
+  const names=ST();
+  return `<svg viewBox="0 0 ${W} ${H}" class="curve">${g}</svg><div class="legend">${STATKEYS.map((k,i)=>`<span><i style="background:${COL[i]}"></i>${STAT_ICON[i]} ${names[i]}</span>`).join("")}</div>`;
+}
+const EVICON=["🎒","🏠","🤒","🏫","🎂","🪣","📚","👶","🧭","📉","💌","🛵","🎓","📱","✈️","💼","💍","🩺","🌍","🕊️","🔑","🏪","🍼","🎲","🏥","⚡","🔥","✏️","🗣️","🔄","🪺","🚨","🤝","🏡","🌇","🪙","👧","💊","🕯️"];
+
 let G=null, view=null;
 const place=c=>NAMES[c[0]][LI];
 const fmtN=n=>{
@@ -444,8 +588,12 @@ function setLang(l,keep){
 function langBar(){
   return `<div class="langs">${LANGS.map(([c,n])=>`<button data-lang="${c}" class="${c===LANG?"on":""}">${n}</button>`).join("")}</div>`;
 }
-function bindLang(){ app.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>setLang(b.dataset.lang)); }
-function show(html,bind){ app.innerHTML=langBar()+html; bindLang(); if(bind) bind(); window.scrollTo(0,0); }
+function bindLang(){ langEl.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>setLang(b.dataset.lang)); }
+function show(html,bind,hero){
+  langEl.innerHTML=langBar(); bindLang();
+  if(hero&&hero.type==="sky"){ if(!document.getElementById("sky")){heroEl.innerHTML=heroHTML(hero);paintSky(sky.t)} setSky(hero.age,hero.ended); }
+  else heroEl.innerHTML=heroHTML(hero);
+  app.innerHTML=html; if(bind) bind(); }
 
 /* ---------- 출생 ---------- */
 function weightedBirth(){
@@ -470,18 +618,15 @@ function newLife(seed){
     daily:!!seed, seed:seed||0, locked:[], bio:[], date:seed?todayStr():"", job:null,
     c, sex, fam, famTier, lifespan, age:0, stageIdx:0,
     s:{h:clamp(60+randn()*10+(inc-1.5)*4),w:clamp(fam),j:clamp(55+randn()*8),r:clamp(50+randn()*12),e:clamp(fam*0.4+10)},
-    log:[], cause:"", ended:null
+    log:[], cause:"", ended:null, rolled:false, hist:[]
   };
   g.pjob=parentJob(g);
+  g.hist.push({a:0,...g.s});
   rnd=Math.random;
   return g;
 }
 
 /* ---------- 화면 ---------- */
-function statsHTML(){
-  const names=ST();
-  return `<div class="stats">`+STATKEYS.map((k,i)=>`<div class="stat">${names[i]}<b>${Math.round(G.s[k])}</b><div class="bar"><i style="width:${G.s[k]}%"></i></div></div>`).join("")+`</div>`;
-}
 function fxText(fx){
   if(!fx) return "";
   const names=ST();
@@ -522,12 +667,22 @@ function renderStart(){
     <p class="note">${UI.note[LI]}</p>`,()=>{
     document.getElementById("go").onclick=()=>{G=newLife();renderBirth()};
     const dg=document.getElementById("daily"); if(dg) dg.onclick=()=>{G=newLife(dailySeed());renderBirth()};
-  });
+  },{type:"map",mode:"all",cap:UI.map_caption[LI]});
 }
 const dailySeed=()=>Number(todayStr().replace(/-/g,""));
 
+let rollTimer=0;
 function renderBirth(){
   view=renderBirth;
+  if(!G.rolled){
+    clearInterval(rollTimer);
+    show(`<div class="card roll"><h2>${UI.rolling[LI]}</h2><div class="big" id="ticker">…</div></div>`,()=>{
+      const tk=document.getElementById("ticker");
+      rollTimer=setInterval(()=>{const c=COUNTRIES[Math.floor(Math.random()*COUNTRIES.length)];if(tk)tk.textContent=NAMES[c[0]][LI]},70);
+      setTimeout(()=>{clearInterval(rollTimer);G.rolled=true;renderBirth()},1500);
+    },{type:"map",mode:"all",cap:""});
+    return;
+  }
   const c=G.c, share=Math.round(c[5]/totalBirths*1000)/10;
   show(`
     <h1>${UI.born_h[LI]}</h1>
@@ -544,7 +699,7 @@ function renderBirth(){
       G.log.push({a:0,f:()=>ui("born_log",{place:place(G.c),sex:UI.sex_child[LI][G.sex==="m"?0:1]})});
       startStage();
     };
-  });
+  },{type:"map",mode:"hl",iso:c[0],cap:""});
 }
 
 /* ---------- 진행 ---------- */
@@ -588,7 +743,7 @@ function showEvent(){
   view=showEvent;
   const e=cur.e;
   show(`${stageHead()}${statsHTML()}
-    <div class="card"><div class="q">${tr(e.t,G)}</div>
+    <div class="card ev"><div class="scene" style="background:${sceneBG(G.age)}"><span class="emo">${EVICON[EV.indexOf(e)]||"✨"}</span><span class="stg">${STAGE_ICON[G.stageIdx]} ${UI.stages[G.stageIdx][LI]}</span></div><div class="q">${tr(e.t,G)}</div>
       ${cur.ch.map((c,i)=>{
         if(c.req&&!c.req(G)){
           if(!cur.logged) G.locked.push({a:G.age,l:c.l,why:c.why});
@@ -599,10 +754,10 @@ function showEvent(){
     </div>`,()=>{
       cur.logged=true;
       app.querySelectorAll("button[data-i]").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
-    });
+    },{type:"sky",age:G.age});
 }
 function choose(i){
-  const e=cur.e, ch=cur.ch[i];
+  const e=cur.e, ch=cur.ch[i], prevS={...G.s};
   applyFx(ch.fx);
   if(ch.job) G.job=ch.job;
   let res=ch.res, died=false;
@@ -615,12 +770,14 @@ function choose(i){
   const sum=Object.values(ch.fx||{}).reduce((s,v)=>s+Math.abs(v),0)+(died?30:0)+(ch.job?25:0);
   G.bio.push({a:age,l:lab,imp:sum,job:!!ch.job});
   if(G.s.h<=10&&G.age>5){ G.lifespan=Math.min(G.lifespan,G.age+Math.floor(rnd()*6)); G.cause=G.cause||"health"; }
+  G.hist.push({a:G.age,...G.s});
   const dead=G.age>=G.lifespan, fx=ch.fx;
-  view=()=>show(`${stageHead()}${statsHTML()}
-    <div class="card"><div class="res">${tr(res,G)}${fxText(fx)}</div>
+  view=()=>{show(`${stageHead()}${statsHTML(prevS)}
+    <div class="card ev"><div class="res pop">${tr(res,G)}${fxText(fx)}</div>
       <button class="btn primary" id="cont">${dead?"…":UI.cont[LI]}</button></div>`,()=>{
         document.getElementById("cont").onclick=()=>dead?ending():nextEvent();
-      });
+        animateStats();
+      },{type:"sky",age:G.age}); };
   view();
 }
 
@@ -654,7 +811,7 @@ function endInfo(){
   return {age,title,cmp,causeTxt:UI.causes[cause][LI]};
 }
 function shareURL(){
-  const base=location.origin&&location.origin!=="null"?location.origin+location.pathname:"https://randomlife-game.github.io/randomlife-game/";
+  const base=location.origin&&location.origin!=="null"?location.origin+location.pathname:"https://gyeoltaro.github.io/gyeoltaro/";
   const p=new URLSearchParams({c:G.c[0],s:G.sex,a:G.ended.age,k:G.ended.k,l:LANG});
   if(G.daily) p.set("d",G.date);
   return base+"?"+p.toString();
@@ -675,6 +832,7 @@ function renderEnding(){
     <div class="card"><h2>${UI.end_s[LI]}</h2><div class="big">${title}</div>
       <p style="color:var(--soft)">${ui("end_p",{place:place(G.c),sex,cause:info.causeTxt,age,cmp:info.cmp})}</p></div>
     ${statsHTML()}
+    <div class="card"><h2>${UI.curve_h[LI]}</h2>${curveSVG()}</div>
     <div class="card"><h2>${UI.card_h[LI]}</h2>
       <canvas id="card" width="1080" height="1350"></canvas>
       <div class="row" style="margin-top:10px"><button class="btn" id="savecard">${UI.save[LI]}</button><button class="btn" id="copy">${UI.copy[LI]}</button></div></div>
@@ -694,7 +852,7 @@ function renderEnding(){
       try{await navigator.clipboard.writeText(full);e.target.textContent=UI.copied[LI]}catch(_){prompt(UI.copy[LI],full)}
     };
     drawCard(info);
-  });
+  },{type:"map",mode:"hl",iso:G.c[0],cap:""});
 }
 
 /* ---------- 자서전 카드 ---------- */
@@ -732,7 +890,7 @@ function drawCard(info){
   ctx.fillStyle="#8c8578";ctx.font=`400 30px ${FF}`;
   ctx.fillText(ui("card_foot",{n:G.locked.length,age:info.age}),96,H-190);
   ctx.fillText(UI.card_sub[LI],96,H-140);
-  ctx.fillText((location.host||"randomlife-game.github.io/randomlife-game"),96,H-96);
+  ctx.fillText((location.host||"gyeoltaro.github.io/gyeoltaro"),96,H-96);
 }
 function saveCard(){
   const cv=document.getElementById("card");
