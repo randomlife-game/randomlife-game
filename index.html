@@ -7,8 +7,10 @@
 <title>랜덤인생게임 · Random Life</title>
 <meta name="description" content="80억 명 중 한 명으로 무작위로 태어나 일생을 살아 보는 게임 · Be born as one of 8 billion and live a whole life · 80億人の中の一人として生まれ、一生を生きるゲーム · 成为80亿人中的一个，过完一生">
 <meta property="og:type" content="website">
-<meta property="og:title" content="랜덤인생게임 · Random Life · ランダム人生 · 随机人生">
-<meta property="og:description" content="Who will you be out of 8 billion? 80억 명 중 당신은 누가 될까요? 80億人の中で、あなたは誰になる？ 80亿人里，你会成为谁？">
+<meta property="og:site_name" content="랜덤인생게임">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="랜덤인생게임 · 80억 명 중 당신은 누가 될까요?">
+<meta property="og:description" content="지구에 태어나는 아기 한 명이 되어 일생을 살아 보세요. 같은 날 정반대 형편에서 태어난 아이와 나란히 살아요. 무료 · 가입 없음">
 <meta property="og:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
 <meta property="og:url" content="https://randomlife-game.github.io/randomlife-game/">
 <meta name="twitter:card" content="summary_large_image">
@@ -257,6 +259,29 @@
   .tw-l li.shut em{background:var(--dn);color:#fff}
   .tw-none{margin:10px 0 0;font-size:13px;color:var(--ink2)}
   .tw-who b{display:block;font-size:17px;font-weight:900;letter-spacing:-.02em}.tw-who span{font-size:12.5px;color:var(--mute)}
+  .tw-day{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid var(--rule);font-size:14px;font-weight:600;line-height:1.5}
+  .twin.gone{border-style:solid;border-color:var(--ink2);background:color-mix(in srgb,var(--ink) 5%,transparent)}
+  .twin.gone .tw-badge{background:var(--ink)}
+  .tw-rip{font-size:12px;font-weight:700;color:var(--mute);margin-left:4px}
+  .resume{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:1.5px solid var(--ink);border-radius:14px;padding:12px 14px 12px 16px;margin:0 0 20px;background:var(--card)}
+  .resume b{display:block;font-size:15px}.resume span{display:block;font-size:13px;color:var(--mute)}
+  .cta.sm{padding:11px 18px;font-size:15px;border-radius:12px;box-shadow:none}
+  .ghost.sm{padding:7px 12px;font-size:13px}
+  .lives{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:8px}
+  .lives li{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px solid var(--rule);border-radius:12px;background:var(--bg)}
+  .lv-a{flex:none;min-width:52px;font-weight:900}.lv-a b{font-size:24px}.lv-a small{font-size:12px;margin-left:1px}
+  .lv-b{flex:1;min-width:0}.lv-b b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lv-b span,.lv-b small{display:block;font-size:12.5px;color:var(--ink2);line-height:1.45}.lv-b small{color:var(--mute);margin-top:3px}
+  .lives time{flex:none;font-size:12px;color:var(--mute)}
+  .lv-f{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}.lv-f .cap{margin:0}
+  .cta.chat{width:100%;flex-direction:column;gap:2px;margin:0 0 14px;padding:14px 18px;font-size:17px}
+  .cta.chat small{font-size:12px;font-weight:600;opacity:.9}
+  .cmp table{width:100%;border-collapse:collapse;font-size:14px}
+  .cmp th,.cmp td{padding:9px 6px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+  .cmp th{font-size:12.5px;color:var(--mute);font-weight:600;width:28%}
+  .cmp thead th{color:var(--ink);font-size:14px;font-weight:800}
+  .cmp td.t{color:var(--cmp);font-weight:700}
+  .cmp-l{margin:14px 0 4px;font-size:16px;font-weight:800;letter-spacing:-.01em}
   .vs{display:grid;gap:8px;margin-top:12px}
   .vs>div{display:grid;grid-template-columns:minmax(0,1fr) 70px 22px;gap:8px;align-items:center;font-size:12.5px}
   .vs span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink2)}
@@ -1094,12 +1119,19 @@ function syncTwin(){
   const g0=G.hist[0];
   for(const k of STATKEYS) T.s[k]=clamp(T.s0[k]+(G.s[k]-g0[k]));
   T.age=G.age; T.stageIdx=G.stageIdx; T.job=G.job;
+  if(!T.goneLogged&&twinAge(T)<G.age){
+    T.goneLogged=true; const nm=shortName(T.name), a=twinAge(T), tc=T.c;
+    G.log.push({a:G.age,f:()=>kj(ui(a<1?"tw_dead_log0":"tw_dead_log",{place:place(tc),name:esc(nm),age:a}),nm)});
+  }
   return T;
 }
 function twinHTML(){
   const T=syncTwin(); if(!T) return "";
   const e=cur.e, nm=esc(T.name);
   const head=`<div class="tw-h"><span class="tw-badge">🔀</span><div><b>${ui("tw_ev",{name:nm})}</b><span>${place(T.c)} · ${UI.tiers[T.famTier][LI]}</span></div></div>`;
+  if(twinAge(T)<G.age){ const sn=shortName(T.name);
+    return `<div class="twin gone"><div class="tw-h"><span class="tw-badge">🕯️</span><div><b>${kj(ui(twinAge(T)<1?"tw_dead0":"tw_dead",{name:esc(sn),age:twinAge(T)}),sn)}</b><span>${ui("tw_dead_p",{place:place(T.c),le:T.c[6].toFixed(1)})}</span></div></div></div>`; }
+  if(e.ok&&!e.jobs&&!e.ok(T)) return `<div class="twin">${head}<p class="tw-day">${twinDay(T,EV.indexOf(e))}</p></div>`;
   if(e.ok&&!e.jobs&&!e.ok(T)) return `<div class="twin">${head}<p class="tw-none">${ui("tw_none",{name:nm})}</p></div>`;
   if(!cur.tch) cur.tch=e.jobs?jobChoices(T,e):e.ch;
   const mine=new Map(cur.ch.map(c=>[c.l,!(c.req&&!c.req(G))]));
@@ -1111,13 +1143,14 @@ function twinHTML(){
     return `<li class="${open?"":"lk"} ${flag}"><i>${open?"✓":"🔒"}</i><span>${lab}${!open?`<small>${tr(c.why,T)}</small>`:""}${flag?`<em>${UI[flag==="open"?"tw_open":"tw_shut"][LI]}</em>`:""}</span></li>`;
   }).join("");
   if(!cur.twLogged){cur.twLogged=true;T.locked+=cur.tch.filter(c=>c.req&&!c.req(T)).length}
-  return `<div class="twin">${head}<ul class="tw-l">${rows}</ul>${diff?"":`<p class="tw-none">${UI.tw_same[LI]}</p>`}</div>`;
+  if(!diff) return `<div class="twin">${head}<p class="tw-day">${twinDay(T,EV.indexOf(e))}</p><p class="tw-none">${UI.tw_same_day[LI]}</p></div>`;
+  return `<div class="twin">${head}<ul class="tw-l">${rows}</ul></div>`;
 }
 function twinBox(){
   const T=syncTwin(); if(!T) return "";
   const n=G.locked.length, m=T.locked, mx=Math.max(1,n,m);
   return `<div class="box twbox"><div class="box-h"><h3>🔀 ${UI.tw_h[LI]}</h3></div>
-    <div class="tw-who"><b>${esc(T.name)}</b><span>${place(T.c)} · ${UI.tiers[T.famTier][LI]} · ${UI.hh_place[LI][T.urban?0:1]}</span></div>
+    <div class="tw-who"><b>${esc(T.name)}${twinAge(T)<G.age?` <small class="tw-rip">🕯️ ${ui("age_n",{n:twinAge(T)})}</small>`:""}</b><span>${place(T.c)} · ${UI.tiers[T.famTier][LI]} · ${UI.hh_place[LI][T.urban?0:1]}</span></div>
     <div class="vs"><div><span>${UI.you[LI]} · ${place(G.c)}</span><i><u style="width:${n/mx*100}%"></u></i><b>${n}</b></div><div><span>${esc(T.name.split(" ")[0])} · ${place(T.c)}</span><i><u class="t" style="width:${m/mx*100}%"></u></i><b>${m}</b></div></div>
     <p class="cap">${UI.tw_doors[LI]} · ${UI.tw_p[LI]}</p></div>`;
 }
@@ -1132,7 +1165,11 @@ const friend=(()=>{
   try{
     const p=new URLSearchParams(location.search);
     const c=COUNTRIES.find(x=>x[0]===p.get("c")), a=+p.get("a"), k=+p.get("k"), s=p.get("s");
-    if(c&&a>=0&&a<=120&&k>=0&&k<UI.titles.length&&(s==="m"||s==="f")) return {c,a,k,s,l:p.get("l")};
+    if(c&&a>=0&&a<=120&&k>=0&&k<UI.titles.length&&(s==="m"||s==="f")){
+      const tc=COUNTRIES.find(x=>x[0]===p.get("tc")), ta=+p.get("ta"), n=+p.get("n"), m=+p.get("m");
+      const tw=tc&&ta>=0&&ta<=120&&n>=0&&m>=0?{c:tc,a:ta,n,m}:null;
+      return {c,a,k,s,l:p.get("l"),tw};
+    }
   }catch(e){}
   return null;
 })();
@@ -1179,7 +1216,8 @@ function renderStart(){
     <div>
       <div class="eyebrow">${UI.trust[LI].map(t=>`<span>${t}</span>`).join("")}</div>
       <h1 class="h-display">${UI.hero_h[LI]}</h1>
-      ${friend?`<div class="friend">${ui("friend",{place:place(friend.c),sex:UI.sex_adult[LI][friend.s==="m"?0:1],age:friend.a,title:UI.titles[friend.k][LI]})}</div>`:""}
+      ${friend?`<div class="friend">${ui("friend",{place:place(friend.c),sex:UI.sex_adult[LI][friend.s==="m"?0:1],age:friend.a,title:UI.titles[friend.k][LI]})}${friend.tw?" "+ui(friend.tw.a<1?"friend_tw0":"friend_tw",{place:place(friend.tw.c),age:friend.tw.a,n:friend.tw.n,m:friend.tw.m}):""}</div>`:""}
+      ${resumeHTML()}
       <p class="lead">${UI.tagline[LI]} ${UI.hero_p[LI]}</p>
       <div class="cta-row"><button class="cta" id="go">${UI.random_go[LI]} →</button>
         <button class="cta2" id="daily">${ui(done?"daily_again":"daily_go")}<small>${done&&prev.text?esc(prev.text[LI]||""):ui("daily_h",{d:todayStr()})}</small></button></div>
@@ -1191,6 +1229,7 @@ function renderStart(){
     </div>
     <div><div class="baby" id="baby"><div class="scn"></div><div class="baby-b"></div></div><p class="cap">${UI.sm_p[LI]}</p></div>
    </section>
+   ${livesHTML()}
    <section class="sec">
     <div class="sec-h"><h2>${UI.where_h[LI]}</h2><p>${UI.where_p[LI]}</p></div>
     <div class="where">
@@ -1219,6 +1258,8 @@ function renderStart(){
   const start=()=>{G=newLife();skyT=0;renderBirth()};
   document.getElementById("go").onclick=start; document.getElementById("go2").onclick=start;
   document.getElementById("daily").onclick=()=>{G=newLife(dailySeed());skyT=0;renderBirth()};
+  const rs=document.getElementById("resume"); if(rs) rs.onclick=resumeRun;
+  const lc=document.getElementById("lvClear"); if(lc) lc.onclick=()=>{ if(confirm(UI.lv_sure[LI])){ try{localStorage.removeItem(LIVES_KEY)}catch(e){} renderStart(); } };
   window.scrollTo(0,0);
 }
 
@@ -1421,6 +1462,7 @@ function showEvent(){
 }
 function evQuestion(){
   const e=cur.e;
+  if(!cur.logged) saveRun();
   setEv(`<p class="kick">${EVICON[EV.indexOf(e)]||"✨"} ${ui("age_n",{n:G.age})} · ${UI.stages[G.stageIdx][LI]}</p><div class="q">${tr(e.t,G)}</div>
     <div class="choices">${cur.ch.map((c,i)=>{
       if(c.req&&!c.req(G)){
@@ -1482,6 +1524,8 @@ function ending(){
     G.ended.text=text;
     if(G.daily) store.set("daily",{date:G.date,text:UI.titles[k].map((t,i)=>`${NAMES[G.c[0]][i]} · ${sub(UI.age_n[i],{n:age})} · ${t}`)});
     if(G.hist[G.hist.length-1].a!==age) G.hist.push({a:age,...G.s});
+    if(G.twin) syncTwin();
+    keepLife(); clearRun();
   }
   AUTO=false; clearTimeout(autoT);
   view=renderEnding; renderEnding();
@@ -1494,12 +1538,15 @@ function endInfo(){
 }
 const SITE="https://randomlife-game.github.io/randomlife-game/";
 function shareURL(){
-  const base=location.protocol.startsWith("http")?location.origin+location.pathname:SITE;
   const p=new URLSearchParams({c:G.c[0],s:G.sex,a:G.ended.age,k:G.ended.k,l:LANG});
   if(G.daily) p.set("d",G.date);
-  return base+"?"+p.toString();
+  const T=G.twin; if(T){p.set("tc",T.c[0]);p.set("ta",twinAge(T));p.set("n",G.locked.length);p.set("m",T.locked)}
+  return siteBase()+"s/"+LANG+"/"+G.c[0]+"-"+G.sex+".html?"+p.toString();
 }
-function shareText(){ return G.ended.text[LI]+" #"+UI.share_tags[LI]; }
+function shareText(){
+  const T=G.twin, tw=T?" "+ui(twinAge(T)<1?"share_tw0":"share_tw",{place:place(T.c),age:twinAge(T),n:G.locked.length,m:T.locked}):"";
+  return G.ended.text[LI]+tw+" #"+UI.share_tags[LI];
+}
 function topEnd(){
   topEl.innerHTML=`<div class="top-in"><button class="brand" data-home>${LOGO}<span class="only-d">${UI.title[LI]}</span></button>
     <div class="hud-age">${ageParts(G.ended.age)}</div><div class="hud-who"><b>${esc(G.name)}</b><span>${UI.end_doc[LI]} · ${place(G.c)}</span></div>
@@ -1533,18 +1580,21 @@ function renderEnding(){
    </section>
    <div class="dash">
     <div class="col ca">
-      <div class="box"><div class="box-h"><h3>${UI.card_h[LI]}</h3></div><canvas id="card" width="1080" height="1350"></canvas>
+      <div class="box"><div class="box-h"><h3>${UI.card_h[LI]}</h3></div>
+        <button class="cta chat" id="chat">${UI.chat_go[LI]}<small>${UI.chat_sub[LI]}</small></button>
+        <canvas id="card" width="1080" height="1350"></canvas>
         <div class="row2"><button class="ghost" id="savecard">${UI.save[LI]}</button><button class="ghost" id="copy">${UI.copy[LI]}</button></div>
         <div class="sns">${links.map(([n,u])=>`<a class="ghost" target="_blank" rel="noopener" href="${u}">${n}</a>`).join("")}</div>
         <p class="cap">${UI.share_p[LI]}</p></div>
     </div>
     <div class="col cb">
+      ${compareBox()}
       <div class="box"><div class="box-h"><h3>${UI.curve_h[LI]}</h3><span>${STATKEYS.map((k,i)=>`${STAT_ICON[i]} ${Math.round(G.s[k])}`).join(" ")}</span></div>${curveSVG(age,true)}</div>
       <div class="box"><div class="box-h"><h3>${UI.path_h[LI]}</h3><span>${ui("age_n",{n:0})} – ${ui("age_n",{n:age})}</span></div><ul class="log full">${G.log.map(x=>`<li><span class="a">${ui("age_n",{n:x.a})}</span><span>${x.f()}</span></li>`).join("")}<li><span class="a">${ui("age_n",{n:age})}</span><span><b>${UI.died[LI]}</b></span></li></ul></div>
     </div>
     <div class="col cc">
       ${regHTML()}
-      ${G.twin?twinBox().replace('<p class="cap">',`<p style="margin:12px 0 0;font-size:14px;font-weight:600">${ui("tw_end",{name:esc(G.twin.name),m:G.twin.locked,n:G.locked.length})}</p><p class="cap">`):""}
+      ${G.twin?twinBox().replace('<p class="cap">',`<p style="margin:12px 0 0;font-size:14px;font-weight:600">${ujn("tw_end",{name:esc(shortName(G.twin.name)),m:G.twin.locked,n:G.locked.length})}</p><p class="cap">`):""}
       ${lockBox(true)}
       <div class="box"><div class="box-h"><h3>${ui("ctry_h",{place:place(G.c)})}</h3></div>${indRows(G.c)}</div>
       <div class="box"><div class="box-h"><h3>${UI.src_h[LI]}</h3></div><p style="margin:0;font-size:13px;color:var(--ink2)">${srcP()}</p></div>
@@ -1557,6 +1607,7 @@ function renderEnding(){
   const again=()=>renderStart();
   $("again").onclick=again; $("again2").onclick=again;
   $("savecard").onclick=saveCard;
+  $("chat").onclick=()=>sendToChat($("chat"));
   const nb=$("native");
   if(nb) nb.onclick=()=>navigator.share({title:UI.title[LI],text:txt,url}).catch(()=>{});
   $("copy").onclick=async e=>{
@@ -1575,6 +1626,7 @@ function bioLines(info){
   if(G.job) lines.push(ui("card_job",{job:G.job.n[LI]}));
   for(const k of key) if(!k.job) lines.push(ui("card_choice",{a:k.a,l:tr(k.l,G)}));
   lines.push(ui("card_end",{age:info.age,cause:info.causeTxt}));
+  if(G.twin) lines.push(ui(twinAge(G.twin)<1?"card_tw0":"card_tw",{place:place(G.twin.c),name:shortName(G.twin.name),age:twinAge(G.twin),m:G.twin.locked}));
   return lines;
 }
 function wrapText(ctx,text,w){
@@ -1613,6 +1665,219 @@ function saveCard(){
     const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="my-life.png";a.click();
   });
 }
+
+/* ---------- 한국어 조사: 이름 끝 받침에 맞추기 ---------- */
+function hasBatchim(w){
+  const ch=String(w).trim().slice(-1); if(!ch) return false;
+  const code=ch.charCodeAt(0);
+  if(code>=0xAC00&&code<=0xD7A3) return (code-0xAC00)%28!==0;
+  if(/[a-z]/i.test(ch)) return /(n|m|l|ng)$/i.test(String(w).trim()); // 로마자 이름은 한글로 읽었을 때 끝소리 기준(대략)
+  return false;
+}
+// "{name}{는}"처럼 쓴 자리를 이름에 맞는 조사로 바꿔요 (한국어 화면만)
+const JOSA={"는":["은","는"],"가":["이","가"],"를":["을","를"],"와":["과","와"],"였":["이었","였"],"야":["이야","야"]};
+function kj(s,name){
+  return LI===0?s.replace(/\{(는|가|를|와|였|야)\}/g,(m,k)=>JOSA[k][hasBatchim(name)?0:1]):s.replace(/\{(는|가|를|와|였|야)\}/g,"");
+}
+const ujn=(k,p)=>kj(ui(k,p),p.name);
+const shortName=n=>String(n).split(" ")[0];
+
+/* ---------- 같은 날 태어난 아이의 하루: 선택지가 같을 때도 형편 차이가 보이게 ---------- */
+// [단계 1~6][낮은 형편/높은 형편] — {name}{는}은 조사 자리
+const TW_DAY=[null,
+ [[["같은 해, {name}{는} 새벽마다 물을 길으러 먼 길을 걸어요.","This year, {name} walks a long way every dawn to fetch water.","同じ年、{name}は毎朝早く遠くまで水を汲みに歩きます。","这一年，{name}每天清晨走很远的路去打水。"],
+   ["같은 해, {name}{는} 열이 나도 근처에 병원이 없어 집에서 버텨요.","This year, {name} runs a fever, but with no clinic nearby they wait it out at home.","同じ年、{name}は熱を出しても近くに病院がなく、家で耐えます。","这一年，{name}发烧了，附近没有诊所，只能在家硬撑。"],
+   ["같은 해, {name}{는} 동생을 업고 시장에 따라 나가요.","This year, {name} carries a younger sibling to the market.","同じ年、{name}は弟や妹をおぶって市場について行きます。","这一年，{name}背着弟弟妹妹跟着去集市。"]],
+  [["같은 해, {name}{는} 방과 후 피아노와 수영을 배우러 다녀요.","This year, {name} goes to piano and swimming lessons after school.","同じ年、{name}は放課後にピアノと水泳を習いに通います。","这一年，{name}放学后去学钢琴和游泳。"],
+   ["같은 해, {name}{는} 가벼운 감기에도 소아과에 가요.","This year, {name} sees a pediatrician for even a mild cold.","同じ年、{name}は軽い風邪でも小児科に行きます。","这一年，{name}小小感冒也去看儿科医生。"],
+   ["같은 해, {name}{는} 가족과 비행기를 타고 바다로 여행을 가요.","This year, {name} flies to the seaside with their family.","同じ年、{name}は家族と飛行機で海へ旅行します。","这一年，{name}和家人坐飞机去海边旅行。"]]],
+ [[["같은 나이, {name}{는} 학비 때문에 학교를 그만두고 일을 시작해요.","At the same age, {name} leaves school to work because of the fees.","同じ年頃、{name}は学費のために学校をやめて働き始めます。","同样的年纪，{name}因为学费辍学开始干活。"],
+   ["같은 나이, {name}{는} 저녁마다 등불 하나로 숙제를 해요.","At the same age, {name} does homework by a single lamp each evening.","同じ年頃、{name}は毎晩ランプ一つで宿題をします。","同样的年纪，{name}每晚就着一盏灯写作业。"],
+   ["같은 나이, {name}의 친구 몇은 벌써 결혼 이야기가 오가요.","At the same age, talk of marriage has already begun for some of {name}'s friends.","同じ年頃、{name}の友だちの何人かにはもう結婚の話が出ています。","同样的年纪，{name}的几个朋友已经开始谈婚论嫁。"]],
+  [["같은 나이, {name}{는} 여름 방학에 해외 어학연수를 다녀와요.","At the same age, {name} spends the summer at a language school abroad.","同じ年頃、{name}は夏休みに海外の語学研修に行ってきます。","同样的年纪，{name}暑假出国参加语言研修。"],
+   ["같은 나이, {name}{는} 대학 입시 상담을 받기 시작해요.","At the same age, {name} starts working with a college admissions coach.","同じ年頃、{name}は大学受験の相談を受け始めます。","同样的年纪，{name}开始接受升学咨询。"],
+   ["같은 나이, {name}{는} 첫 노트북을 선물로 받아요.","At the same age, {name} gets a first laptop as a gift.","同じ年頃、{name}は初めてのノートパソコンをプレゼントされます。","同样的年纪，{name}收到了第一台笔记本电脑。"]]],
+ [[["같은 시기, {name}{는} 일자리를 찾아 도시 변두리로 떠나요.","Around the same time, {name} leaves for the edge of a city to look for work.","同じ頃、{name}は仕事を探して都市の外れへ出ていきます。","差不多同时，{name}去城市边缘找活干。"],
+   ["같은 시기, {name}{는} 하루 일당으로 온 가족의 끼니를 챙겨요.","Around the same time, {name}'s day wage feeds the whole family.","同じ頃、{name}の日当で家族みんなが食べています。","差不多同时，{name}靠一天的工钱养活一家人。"],
+   ["같은 시기, {name}{는} 해외 취업 브로커에게 빚을 지고 비자를 기다려요.","Around the same time, {name} borrows from a labor broker and waits for a work visa abroad.","同じ頃、{name}は出稼ぎの仲介業者に借金をしてビザを待っています。","差不多同时，{name}向劳务中介借了钱，等着出国打工的签证。"]],
+  [["같은 시기, {name}{는} 부모님이 구해 준 집에서 첫 직장을 다녀요.","Around the same time, {name} starts a first job, living in a flat their parents found.","同じ頃、{name}は親が用意した部屋に住んで最初の仕事に就きます。","差不多同时，{name}住在父母安排的房子里，开始第一份工作。"],
+   ["같은 시기, {name}{는} 1년 동안 세계 여행을 떠나요.","Around the same time, {name} takes a year to travel the world.","同じ頃、{name}は一年かけて世界を旅します。","差不多同时，{name}花一年时间环游世界。"],
+   ["같은 시기, {name}{는} 대학원 진학을 고민해요.","Around the same time, {name} is weighing graduate school.","同じ頃、{name}は大学院に進むか考えています。","差不多同时，{name}在考虑读研究生。"]]],
+ [[["같은 시기, {name}{는} 아이가 아파도 일당을 놓칠까 봐 쉬지 못해요.","Around the same time, {name} can't take a day off even when their child is sick, for fear of losing the day's pay.","同じ頃、{name}は子どもが病気でも日当を失うのが怖くて休めません。","差不多同时，{name}孩子生病也不敢请假，怕丢了一天的工钱。"],
+   ["같은 시기, {name}의 동네에 가뭄이 들어 수확이 반으로 줄어요.","Around the same time, drought cuts the harvest in {name}'s village by half.","同じ頃、{name}の村は干ばつで収穫が半分に減ります。","差不多同时，{name}的村子遭了旱灾，收成减半。"],
+   ["같은 시기, {name}{는} 병원비를 마련하려고 가축을 팔아요.","Around the same time, {name} sells livestock to pay a hospital bill.","同じ頃、{name}は治療費のために家畜を売ります。","差不多同时，{name}卖了牲口凑医药费。"]],
+  [["같은 시기, {name}{는} 육아휴직을 쓰고 아이 곁에 있어요.","Around the same time, {name} takes parental leave to stay with their child.","同じ頃、{name}は育児休暇を取って子どものそばにいます。","差不多同时，{name}请了育儿假陪在孩子身边。"],
+   ["같은 시기, {name}{는} 건강검진에서 작은 혹을 일찍 발견해 치료해요.","Around the same time, a routine checkup catches a small lump early, and {name} gets treated.","同じ頃、{name}は健康診断で小さなしこりを早く見つけて治療します。","差不多同时，{name}在体检中及早发现了一个小肿块并接受了治疗。"],
+   ["같은 시기, {name}{는} 대출을 받아 집을 사요.","Around the same time, {name} takes out a mortgage and buys a home.","同じ頃、{name}はローンを組んで家を買います。","差不多同时，{name}贷款买了房。"]]],
+ [[["같은 시기, {name}{는} 무릎이 아파도 연금이 없어 계속 일해요.","Around the same time, {name}'s knees ache, but with no pension they keep working.","同じ頃、{name}は膝が痛んでも年金がないので働き続けます。","差不多同时，{name}膝盖疼，可没有养老金，只能继续干活。"],
+   ["같은 시기, {name}{는} 손주들을 맡아 키워요.","Around the same time, {name} is raising their grandchildren.","同じ頃、{name}は孫たちを預かって育てています。","差不多同时，{name}在帮着带孙辈。"],
+   ["같은 시기, {name}{는} 처음으로 혈압을 재 보고 약값에 놀라요.","Around the same time, {name} has their blood pressure checked for the first time and is shocked by the price of the pills.","同じ頃、{name}は初めて血圧を測り、薬代に驚きます。","差不多同时，{name}第一次量了血压，被药价吓了一跳。"]],
+  [["같은 시기, {name}{는} 은퇴 후 연금으로 살 계획을 세워요.","Around the same time, {name} plans a retirement on a pension.","同じ頃、{name}は年金で暮らす老後の計画を立てます。","差不多同时，{name}在规划靠养老金生活的退休日子。"],
+   ["같은 시기, {name}{는} 무릎 수술을 받고 몇 주 만에 다시 걸어요.","Around the same time, {name} has knee surgery and is walking again within weeks.","同じ頃、{name}は膝の手術を受け、数週間でまた歩けるようになります。","差不多同时，{name}做了膝盖手术，几周后就能走路了。"],
+   ["같은 시기, {name}{는} 자녀의 결혼식 비용을 대 줘요.","Around the same time, {name} pays for their child's wedding.","同じ頃、{name}は子どもの結婚式の費用を出してあげます。","差不多同时，{name}为孩子出了婚礼的钱。"]]],
+ [[["같은 시기, {name}{는} 집 앞 그늘에 앉아 동네 아이들을 지켜봐요.","Around the same time, {name} sits in the shade outside the house, watching the neighborhood kids.","同じ頃、{name}は家の前の日陰に座り、近所の子どもたちを見守っています。","差不多同时，{name}坐在家门口的树荫下看着邻居家的孩子。"],
+   ["같은 시기, {name}{는} 가장 가까운 병원까지 버스로 반나절을 가야 해요.","Around the same time, the nearest hospital is half a day away by bus for {name}.","同じ頃、{name}にとって一番近い病院はバスで半日かかります。","差不多同时，{name}去最近的医院要坐半天的车。"]],
+  [["같은 시기, {name}{는} 동네 병원에서 정기적으로 진료를 받아요.","Around the same time, {name} sees a doctor regularly at a clinic down the street.","同じ頃、{name}は近くの病院で定期的に診てもらっています。","差不多同时，{name}在附近的医院定期看病。"],
+   ["같은 시기, {name}{는} 손주들과 영상통화를 해요.","Around the same time, {name} video-calls their grandchildren.","同じ頃、{name}は孫たちとビデオ通話をしています。","差不多同时，{name}和孙辈视频通话。"]]]
+];
+const twinUp=T=>T.famTier>=2; // 형편이 좋은 쪽이면 높은 형편 문장
+function twinDay(T,k){
+  const set=(TW_DAY[Math.min(6,Math.max(1,G.stageIdx))]||[])[twinUp(T)?1:0]; if(!set) return "";
+  const nm=shortName(T.name), line=set[Math.abs(hashStr(T.name+k))%set.length];
+  // 위에 이미 "같은 나이, ~에게는"이 있어서 앞의 때 표현은 떼요
+  const t=line[LI].replace(/^(같은 해|같은 나이|같은 시기|This year|At the same age|Around the same time|同じ年頃|同じ年|同じ頃|这一年|同样的年纪|差不多同时)[,、，]\s*/,"");
+  return kj(sub(t.charAt(0).toUpperCase()+t.slice(1),{name:esc(nm)}),nm);
+}
+// 그 아이의 직업: 그 아이 나라와 형편으로 따로 뽑아요
+function twinJob(T){
+  if(T.ownJob!==undefined) return T.ownJob;
+  if(Math.min(T.lifespan,110)<18){T.ownJob=null;return null}
+  const r=mulberry(Math.abs(hashStr(T.name+"job"))+3);
+  const pool=JOBS.filter(j=>j.w[T.c[4]]>0&&(!j.f||T.famTier>=j.f)&&(!j.e||T.s.e>=j.e||T.famTier>=2&&j.e<=70));
+  const wt=j=>j.w[T.c[4]]*(T.famTier>=2?((j.e||0)>=45?4:j.f?3:(j.e||0)>=30?1:.3):T.famTier===0&&(j.e||0)>=45?.2:1);
+  T.ownJob=pool.length?wsample(pool,1,wt,r)[0]:null;
+  return T.ownJob;
+}
+const twinAge=T=>Math.min(T.lifespan,110);
+
+/* ---------- 이어서 살기: 고를 때마다 이 브라우저에 저장 ---------- */
+const RUN_KEY="run", LIVES_KEY="lives", RUN_VER=()=>EV.length+"-"+STAGES.length+"-"+JOBS.length;
+function freezeVal(v,key){
+  if(typeof v==="function"){
+    const keep=LI, out=[0,1,2,3].map(i=>{LI=i;try{const x=key==="f"?v():v(G);return Array.isArray(x)?x[i]:x}catch(e){return ""}});
+    LI=keep; return {__t:out};
+  }
+  if(Array.isArray(v)) return v.map(x=>freezeVal(x));
+  if(v&&typeof v==="object"){const o={};for(const k in v)o[k]=freezeVal(v[k],k);return o}
+  return v;
+}
+function thawVal(v,key){
+  if(v&&typeof v==="object"&&!Array.isArray(v)&&v.__t){const t=v.__t;return key==="f"?()=>t[LI]:t}
+  if(Array.isArray(v)) return v.map(x=>thawVal(x));
+  if(v&&typeof v==="object"){const o={};for(const k in v)o[k]=thawVal(v[k],k);return o}
+  return v;
+}
+const jobIdx=j=>j?JOBS.indexOf(j):-1;
+function packLife(g){
+  const o=freezeVal({...g,c:g.c[0],pjob:jobIdx(g.pjob),job:jobIdx(g.job),ownJob:undefined,twin:null});
+  if(g.twin) o.twin=packLife(g.twin);
+  return o;
+}
+function unpackLife(o){
+  const g=thawVal(o);
+  g.c=COUNTRIES.find(x=>x[0]===o.c); g.pjob=JOBS[o.pjob]||JOBS[0]; g.job=o.job>=0?JOBS[o.job]:null;
+  if(o.twin) g.twin=unpackLife(o.twin);
+  return g;
+}
+function saveRun(){
+  if(!G||G.ended) return;
+  try{
+    const q=[cur,...queue].filter(Boolean).map(x=>({ei:EV.indexOf(x.e),age:x.age}));
+    store.set(RUN_KEY,{v:RUN_VER(),t:Date.now(),si:G.stageIdx,q,g:packLife(G)});
+  }catch(e){}
+}
+const clearRun=()=>{try{localStorage.removeItem(RUN_KEY)}catch(e){}};
+function savedRun(){
+  const r=store.get(RUN_KEY);
+  if(!r||r.v!==RUN_VER()||!r.g||!COUNTRIES.some(x=>x[0]===r.g.c)||!r.q||r.q.some(x=>!EV[x.ei])) return null;
+  return r;
+}
+function resumeRun(){
+  const r=savedRun(); if(!r) return renderStart();
+  G=unpackLife(r.g); G.stageIdx=r.si; G.rolled=true;
+  queue=r.q.map(x=>({e:EV[x.ei],age:x.age})); cur=null;
+  G.shownAge=G.age; skyT=clamp(G.age/100,0,1);
+  ensureDash(true); nextEvent();
+}
+
+/* ---------- 지금까지 살아 본 사람들 ---------- */
+function keepLife(){
+  try{
+    const T=G.twin, list=store.get(LIVES_KEY)||[];
+    list.unshift({n:G.name,c:G.c[0],s:G.sex,a:G.ended.age,k:G.ended.k,j:jobIdx(G.job),f:G.famTier,d:todayStr(),dy:G.daily?1:0,
+      dl:G.locked.length,tw:T?{n:T.name,c:T.c[0],a:twinAge(T),dl:T.locked}:null});
+    store.set(LIVES_KEY,list.slice(0,60));
+  }catch(e){}
+}
+function livesHTML(){
+  const list=(store.get(LIVES_KEY)||[]).filter(x=>COUNTRIES.some(c=>c[0]===x.c)&&UI.titles[x.k]);
+  if(!list.length) return "";
+  const ctry=new Set(list.map(x=>x.c)).size, yrs=list.reduce((s,x)=>s+x.a,0);
+  const card=x=>{
+    const c=COUNTRIES.find(k=>k[0]===x.c), tc=x.tw&&COUNTRIES.find(k=>k[0]===x.tw.c);
+    return `<li><div class="lv-a">${ageParts(x.a)}</div><div class="lv-b"><b>${esc(x.n)}</b><span>${place(c)} · ${UI.sex_child[LI][x.s==="m"?0:1]} · ${UI.titles[x.k][LI]}</span>
+      ${tc?`<small>🔀 ${esc(shortName(x.tw.n))} · ${place(tc)} · ${ui("age_n",{n:x.tw.a})} · ${UI.tw_doors[LI]} ${x.dl} : ${x.tw.dl}</small>`:""}</div><time>${x.d.slice(5).replace("-","/")}</time></li>`;
+  };
+  return `<section class="sec" id="lives">
+    <div class="sec-h"><h2>${UI.lv_h[LI]}</h2><p>${ui("lv_p",{n:list.length,c:ctry,y:yrs.toLocaleString()})}</p></div>
+    <div class="box"><ul class="lives">${list.slice(0,12).map(card).join("")}</ul>
+    <div class="lv-f"><p class="cap">${UI.lv_note[LI]}</p><button class="ghost sm" id="lvClear">${UI.lv_clear[LI]}</button></div></div>
+  </section>`;
+}
+function resumeHTML(){
+  const r=savedRun(); if(!r) return "";
+  const g=r.g, c=COUNTRIES.find(x=>x[0]===g.c);
+  return `<div class="resume"><div><b>${UI.rs_h[LI]}</b><span>${esc(g.name)} · ${place(c)} · ${ui("age_n",{n:g.age})}</span></div><button class="cta sm" id="resume">${UI.rs_go[LI]} →</button></div>`;
+}
+
+
+function compareBox(){
+  const T=G.twin; if(!T||!G.ended) return "";
+  const me=G.ended.age, ta=twinAge(T), sn=shortName(T.name), tj=twinJob(T), R=UI.cmp_rows;
+  const rows=[[R[0],place(G.c),place(T.c)],[R[1],UI.tiers[G.famTier][LI],UI.tiers[T.famTier][LI]],
+    [R[2],ui("unit_yr",{n:me}),ui("unit_yr",{n:ta})],[R[3],ui("unit_yr",{n:G.c[6].toFixed(1)}),ui("unit_yr",{n:T.c[6].toFixed(1)})],
+    [R[4],G.job?G.job.n[LI]:"—",tj?tj.n[LI]:"—"],[R[5],G.locked.length,T.locked]];
+  const d=ta-me, line=kj(ui(ta<1?"tcmp_0":d<0?"tcmp_less":d>0?"tcmp_more":"tcmp_same",{name:esc(sn),n:Math.abs(d)}),sn);
+  return `<div class="box cmp"><div class="box-h"><h3>🔀 ${UI.cmp_h[LI]}</h3></div>
+    <table><thead><tr><th></th><th>${UI.cmp_you[LI]}</th><th>${esc(sn)}</th></tr></thead>
+    <tbody>${rows.map(([k,a,b])=>`<tr><th>${k[LI]}</th><td>${a}</td><td class="t">${b}</td></tr>`).join("")}</tbody></table>
+    <p class="cmp-l">${line}</p><p class="cap">${UI.cmp_p[LI]}</p></div>`;
+}
+
+/* ---------- 공유 ---------- */
+// 공유 링크는 나라·성별별 미리보기 페이지(s/언어/나라-성별.html)를 거쳐 첫 화면으로 와요.
+// 카카오톡·X 같은 곳에서 링크를 붙이면 그 페이지의 제목과 그림이 미리보기로 떠요.
+function siteBase(){ return location.protocol.startsWith("http")?location.origin+location.pathname.replace(/[^/]*$/,""):SITE; }
+async function sendToChat(btn){
+  const url=shareURL(), txt=shareText();
+  if(navigator.share){ try{ await navigator.share({text:txt,url}); return; }catch(e){ if(e&&e.name==="AbortError") return; } }
+  try{ await navigator.clipboard.writeText(txt+"\n"+url); btn.querySelector("small").textContent=UI.chat_copied[LI]; }
+  catch(_){ prompt(UI.copy[LI],txt+"\n"+url); }
+}
+
+Object.assign(UI,{
+ tw_end:["{name}{였}다면 닫힌 문은 {m}개였어요. 당신은 {n}개였어요.","As {name}, {m} doors would have closed. For you, it was {n}.","{name}だったら、閉ざされた扉は{m}個でした。あなたは{n}個でした。","如果是{name}，被关上的门有{m}扇。你是{n}扇。"],
+ tw_same_day:["선택지는 같아요. 하지만 하루는 이렇게 달라요.","The options are the same. The day is not.","選択肢は同じ。でも一日はこんなに違います。","选项一样，但日子截然不同。"],
+ tw_dead:["{name}{는} {age}세에 세상을 떠났어요.","{name} died at {age}.","{name}は{age}歳で亡くなりました。","{name}在{age}岁时离世。"],
+ tw_dead_p:["{place}의 기대수명은 {le}세예요. 같은 날 태어났지만, 당신은 계속 살아가요.","Life expectancy in {place} is {le}. You were born the same day, and you go on living.","{place}の平均寿命は{le}歳です。同じ日に生まれたあなたは、生き続けます。","{place}的平均寿命是{le}岁。同一天出生的你，还在继续生活。"],
+ tw_dead_log:["🕯️ 같은 날 {place}에서 태어난 {name}{가} {age}세에 세상을 떠났다","🕯️ {name}, born the same day in {place}, died at {age}","🕯️ 同じ日に{place}で生まれた{name}が{age}歳で亡くなった","🕯️ 同一天出生在{place}的{name}在{age}岁离世"],
+ cmp_h:["두 사람의 일생","Two lives, one birthday","二人の一生","两个人的一生"],
+ cmp_you:["당신","You","あなた","你"],
+ cmp_rows:[["태어난 곳","Born in","生まれた場所","出生地"],["집안 형편","Family","家庭","家境"],["산 나이","Lived to","生きた年齢","活到"],["기대수명","Life expectancy","平均寿命","平均寿命"],["마지막 직업","Last job","最後の仕事","最后的工作"],["닫힌 문","Closed doors","閉ざされた扉","被关上的门"]],
+ tcmp_less:["{name}{는} 당신보다 {n}년 먼저 떠났어요.","{name} died {n} years before you.","{name}はあなたより{n}年早く亡くなりました。","{name}比你早{n}年离世。"],
+ tcmp_more:["{name}{는} 당신보다 {n}년 더 살았어요.","{name} lived {n} years longer than you.","{name}はあなたより{n}年長く生きました。","{name}比你多活了{n}年。"],
+ tcmp_same:["{name}{와} 당신은 같은 나이에 떠났어요.","You and {name} died at the same age.","{name}とあなたは同じ年齢で亡くなりました。","你和{name}在同样的年纪离世。"],
+ cmp_p:["같은 날, 같은 성별로 태어났어요. 다른 건 태어난 곳과 집안뿐이에요. 그 아이의 수명은 그 나라 통계로 정해졌어요.","Same day, same sex. Only the place and the family were different. Their lifespan was drawn from their country's statistics.","同じ日、同じ性別に生まれました。違うのは生まれた場所と家庭だけ。その子の寿命はその国の統計で決まりました。","同一天、同样性别出生。不同的只有出生地和家庭。那个孩子的寿命由其国家的统计数据决定。"],
+ card_tw:["같은 날 {place}에서 태어난 {name}: {age}세, 닫힌 문 {m}개","{name}, born the same day in {place}: lived to {age}, {m} closed doors","同じ日に{place}で生まれた{name}:{age}歳、閉ざされた扉{m}個","同一天出生在{place}的{name}：{age}岁，被关上的门{m}扇"],
+ share_tw:["같은 날 {place}에서 태어난 아이는 {age}세까지 살았어요. 닫힌 문은 나 {n}개, 그 아이 {m}개.","A child born the same day in {place} lived to {age}. Closed doors: me {n}, them {m}.","同じ日に{place}で生まれた子は{age}歳まで生きました。閉ざされた扉は私{n}個、その子{m}個。","同一天出生在{place}的孩子活到{age}岁。被关上的门：我{n}扇，那个孩子{m}扇。"],
+ friend_tw:["같은 날 {place}에서 태어난 아이는 {age}세까지 살았고, 닫힌 문은 {n}개 대 {m}개였어요.","A child born the same day in {place} lived to {age}. Closed doors: {n} vs {m}.","同じ日に{place}で生まれた子は{age}歳まで生き、閉ざされた扉は{n}対{m}でした。","同一天出生在{place}的孩子活到{age}岁，被关上的门是{n}比{m}。"],
+ chat_go:["💬 카톡·메시지로 보내기","💬 Send in a chat","💬 LINE・メッセージで送る","💬 发给朋友"],
+ chat_sub:["친구가 링크를 열면 이 인생부터 보여요","Your friend sees this life first","友だちはまずこの人生を見ます","朋友打开链接会先看到这段人生"],
+ chat_copied:["복사했어요. 카카오톡 대화창에 붙여 넣으세요.","Copied. Paste it into your chat.","コピーしました。トークに貼り付けてください。","已复制，粘贴到聊天窗口即可。"],
+ lv_h:["내가 살아 본 사람들","People you've been","生きてみた人たち","你活过的人"],
+ lv_p:["{n}번 태어나 {c}개 나라에서 모두 {y}년을 살았어요.","Born {n} times, in {c} countries, for {y} years in all.","{n}回生まれ、{c}か国で合わせて{y}年生きました。","出生{n}次，在{c}个国家，一共活了{y}年。"],
+ lv_note:["이 기록은 이 브라우저에만 남고 서버로 보내지 않아요.","Kept only in this browser. Nothing is sent to a server.","この記録はこのブラウザにだけ残り、サーバーには送りません。","记录只保存在本浏览器，不会上传服务器。"],
+ lv_clear:["기록 지우기","Clear","記録を消す","清除记录"],
+ lv_sure:["살아 본 사람들 기록을 모두 지울까요?","Clear every life you've lived?","生きてみた人たちの記録をすべて消しますか？","要清除所有记录吗？"],
+ rs_h:["살던 인생이 있어요","A life is waiting","途中の人生があります","有一段没过完的人生"],
+ rs_go:["이어서 살기","Keep living","続きを生きる","继续生活"],
+ tw_dead0:["{name}{는} 첫 돌을 맞지 못하고 세상을 떠났어요.","{name} died before their first birthday.","{name}は1歳の誕生日を迎える前に亡くなりました。","{name}还没满一岁就离世了。"],
+ tw_dead_log0:["🕯️ 같은 날 {place}에서 태어난 {name}{가} 첫 돌을 맞지 못하고 세상을 떠났다","🕯️ {name}, born the same day in {place}, died before their first birthday","🕯️ 同じ日に{place}で生まれた{name}が1歳を迎える前に亡くなった","🕯️ 同一天出生在{place}的{name}未满一岁就离世了"],
+ tcmp_0:["{name}{는} 첫 돌을 넘기지 못했어요.","{name} did not live to see a first birthday.","{name}は1歳の誕生日を迎えられませんでした。","{name}没能活到一周岁。"],
+ share_tw0:["같은 날 {place}에서 태어난 아이는 첫 돌을 넘기지 못했어요. 닫힌 문은 나 {n}개, 그 아이 {m}개.","A child born the same day in {place} did not reach their first birthday. Closed doors: me {n}, them {m}.","同じ日に{place}で生まれた子は1歳を迎えられませんでした。閉ざされた扉は私{n}個、その子{m}個。","同一天出生在{place}的孩子没能活到一周岁。被关上的门：我{n}扇，那个孩子{m}扇。"],
+ friend_tw0:["같은 날 {place}에서 태어난 아이는 첫 돌을 넘기지 못했어요.","A child born the same day in {place} did not reach their first birthday.","同じ日に{place}で生まれた子は1歳を迎えられませんでした。","同一天出生在{place}的孩子没能活到一周岁。"],
+ card_tw0:["같은 날 {place}에서 태어난 {name}: 첫 돌을 넘기지 못함","{name}, born the same day in {place}: did not reach age one","同じ日に{place}で生まれた{name}:1歳を迎えられず","同一天出生在{place}的{name}：没能活到一岁"]
+});
 
 /* ---------- 시작 ---------- */
 (function init(){
