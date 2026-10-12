@@ -201,6 +201,9 @@
   .faq summary{cursor:pointer;font-weight:700;font-size:14.5px}.faq p{margin:6px 0 2px}
   .foot{border-top:1px solid var(--rule);padding:22px 0 0;display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;font-size:12.5px;color:var(--mute)}
   .foot p{margin:0;max-width:52em}
+  .foot-l{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline}.foot-l a{color:var(--ink2)}
+  .ad{margin:8px auto 36px;max-width:970px;text-align:center}
+  .ad small{display:block;font-size:11px;letter-spacing:.06em;color:var(--mute);margin-bottom:6px}
 
   /* ---------- 진행 화면 (3단) ---------- */
   .dash{display:grid;gap:16px;padding:18px 0 8px;grid-template-areas:"b" "a" "c";grid-template-columns:minmax(0,1fr)}
@@ -1756,6 +1759,37 @@ function hundredHTML(){
 }
 /* 한 판을 끝낸 수. 서버(counter/)가 세고, 숫자가 작을 땐 나라 수를 대신 보여 줘요. */
 const COUNTER_URL="https://randomlife-plays.kkjlg.workers.dev", PLAY_MIN=100;
+
+/* ---------- 광고와 후원 ----------
+   계정 승인 뒤 받은 코드만 채우면 켜져요. 비어 있으면 아무것도 보이지 않아요.
+   광고는 첫 화면 중간과 결말 화면 아래에만 두고, 일생을 사는 동안에는 띄우지 않아요.
+   앱(Capacitor) 안과 내 컴퓨터에서 열 때는 광고를 꺼요. */
+const ADSENSE_CLIENT="", ADSENSE_SLOT={start:"",end:""};  // 예: "ca-pub-1234567890123456", "1234567890"
+const ADFIT_UNIT={start:"",end:""};                       // 예: "DAN-AbCdEf123456"
+const TIP_URL="";                                          // 예: "https://buymeacoffee.com/…" 또는 "https://ko-fi.com/…"
+const NO_ADS=!!window.Capacitor||/^(localhost|127\.|$)/.test(location.hostname);
+function adHTML(where){
+  if(NO_ADS) return "";
+  const box=inner=>`<aside class="ad" aria-label="${UI.ad_l[LI]}"><small>${UI.ad_l[LI]}</small>${inner}</aside>`;
+  if(ADSENSE_CLIENT&&ADSENSE_SLOT[where]) return box(`<ins class="adsbygoogle" style="display:block" data-ad-client="${ADSENSE_CLIENT}" data-ad-slot="${ADSENSE_SLOT[where]}" data-ad-format="auto" data-full-width-responsive="true"></ins>`);
+  if(ADFIT_UNIT[where]) return box(`<ins class="kakao_ad_area" style="display:none" data-ad-unit="${ADFIT_UNIT[where]}" data-ad-width="320" data-ad-height="100"></ins>`);
+  return "";
+}
+function addScript(id,src){
+  const old=document.getElementById(id); if(old) old.remove();
+  const s=document.createElement("script"); s.id=id; s.async=true; s.src=src; s.crossOrigin="anonymous";
+  document.head.appendChild(s);
+}
+function fillAds(){
+  if(NO_ADS) return;
+  app.querySelectorAll("ins.adsbygoogle:not([data-adsbygoogle-status])").forEach(()=>{try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}});
+  if(app.querySelector("ins.kakao_ad_area")) addScript("adfit","https://t1.daumcdn.net/kas/static/ba.min.js");
+}
+if(ADSENSE_CLIENT&&!NO_ADS) addScript("adsense","https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client="+ADSENSE_CLIENT);
+function tipHTML(){ return TIP_URL?`<a href="${TIP_URL}" target="_blank" rel="noopener">☕ ${UI.tip[LI]}</a>`:""; }
+function footHTML(){
+  return `<footer class="foot"><p>${UI.note[LI]}</p><span class="foot-l">${tipHTML()}<a href="privacy.html${LANG==="ko"?"":"?l="+LANG}">${UI.privacy[LI]}</a><span>© ${new Date().getFullYear()} ${UI.title[LI]}</span></span></footer>`;
+}
 let PLAYS=null;
 function playsHTML(){
   if(PLAYS&&PLAYS.today>=PLAY_MIN) return `<div class="live"><b>${PLAYS.today.toLocaleString()}</b><span>${UI.plays_today[LI]}</span></div>`;
@@ -1805,6 +1839,7 @@ function renderStart(){
     </div>
     <div class="tiles"><div class="tile"><b>${Math.round(SHARE_LOW*100)}%</b><span>${UI.bs1[LI]}</span></div><div class="tile"><b>${Math.round(SHARE_SHORT*100)}%</b><span>${UI.bs2[LI]}</span></div><div class="tile"><b>${Math.round(IMR_SUM*1000)}</b><span>${UI.bs3[LI]}</span></div></div>
    </section>
+   ${adHTML("start")}
    ${whenSec()}
    <section class="sec">
     <div class="sec-h"><h2>${UI.diff_h[LI]}</h2></div>
@@ -1819,10 +1854,10 @@ function renderStart(){
     <div class="faq"><h3>${UI.faq_h[LI]}</h3>${UI.faq.map(q=>`<details><summary>${q[0][LI]}</summary><p>${q[1][LI]}</p></details>`).join("")}</div>
     <div class="srcbox"><h3>${UI.src_h[LI]}</h3>${srcP()}</div>
    </section>
-   <footer class="foot"><p>${UI.note[LI]}</p><span>© ${new Date().getFullYear()} ${UI.title[LI]}</span></footer>
+   ${footHTML()}
    <div class="dock m"><button class="cta" id="go2">${UI.random_go[LI]} →</button></div>
   </div>`;
-  loadPlays(); paintBaby(); loopBaby();
+  loadPlays(); paintBaby(); loopBaby(); fillAds();
   app.querySelectorAll("[data-era]").forEach(b=>b.onclick=()=>{ERA=b.dataset.era;store.set("era",ERA);app.querySelectorAll("[data-era]").forEach(x=>x.classList.toggle("on",x===b))});
   const start=()=>{G=newLife(null,{year:pickYear(ERA,Math.random)});skyT=0;renderBirth()};
   document.getElementById("go").onclick=start; document.getElementById("go2").onclick=start;
@@ -2250,7 +2285,8 @@ function renderEnding(){
       <div class="box"><div class="box-h"><h3>${UI.src_h[LI]}</h3></div><div class="srcbox">${srcP()}</div></div>
     </div>
    </div>
-   <p class="cap" style="text-align:center">${UI.again_p[LI]}</p>
+   ${adHTML("end")}
+   <p class="cap" style="text-align:center">${UI.again_p[LI]}${TIP_URL?"<br>"+tipHTML():""}</p>
    <div class="dock m"><button class="cta" id="again2">${UI.again[LI]} →</button></div>
   </div>`;
   $("pScene").innerHTML=sceneSVG(G,age,{t:Math.max(.9,clamp(age/100,0,1)),ar:1.6});
@@ -2265,7 +2301,7 @@ function renderEnding(){
     const full=txt+"\n"+url;
     try{await navigator.clipboard.writeText(full);e.target.textContent=UI.copied[LI]}catch(_){prompt(UI.copy[LI],full)}
   };
-  drawCard(info); bindTabs(app);
+  drawCard(info); bindTabs(app); fillAds();
   window.scrollTo(0,0);
 }
 
@@ -2497,6 +2533,9 @@ async function sendToChat(btn){
 }
 
 Object.assign(UI,{
+ ad_l:["광고","Advertisement","広告","广告"],
+ tip:["재밌었다면 만든 사람에게 커피 한 잔","Enjoyed it? Buy the maker a coffee","楽しめたら作り手にコーヒーを一杯","喜欢的话，请作者喝杯咖啡"],
+ privacy:["개인정보처리방침","Privacy policy","プライバシーポリシー","隐私政策"],
  tw_end:["{name}{였}다면 닫힌 문은 {m}개였어요. 당신은 {n}개였어요.","As {name}, {m} doors would have closed. For you, it was {n}.","{name}だったら、閉ざされた扉は{m}個でした。あなたは{n}個でした。","如果是{name}，被关上的门有{m}扇。你是{n}扇。"],
  tw_same_day:["선택지는 같아요. 하지만 하루는 이렇게 달라요.","The options are the same. The day is not.","選択肢は同じ。でも一日はこんなに違います。","选项一样，但日子截然不同。"],
  tw_dead:["{name}{는} {age}세에 세상을 떠났어요.","{name} died at {age}.","{name}は{age}歳で亡くなりました。","{name}在{age}岁时离世。"],

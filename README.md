@@ -35,3 +35,11 @@ node tools/make-share-pages.js
 - Cloudflare Workers + Durable Object(SQLite)로 돌아가요. 무료 요금제로 충분해요.
 - `counter/` 아래 파일이 바뀌면 GitHub Actions(`.github/workflows/deploy-counter.yml`)가 배포해요. 저장소 Secrets에 `CLOUDFLARE_API_TOKEN`과 `CLOUDFLARE_ACCOUNT_ID`가 필요해요.
 - 주소: `GET /count` → `{today, total}`, `POST /done` → 1 올림. 날짜는 한국 시간 기준이에요.
+
+## 광고와 후원
+
+`index.html`의 `ADSENSE_CLIENT`·`ADSENSE_SLOT`, `ADFIT_UNIT`, `TIP_URL`을 채우면 켜져요. 비어 있으면 아무것도 보이지 않아요.
+
+- 광고는 첫 화면 중간과 결말 화면 아래에만 나와요. 일생을 사는 동안, 앱(Capacitor) 안, 내 컴퓨터(localhost)에서는 나오지 않아요.
+- AdSense를 켤 때는 `ads.txt`도 함께 넣고, AdSense의 자동 광고는 꺼 두세요.
+- 개인정보처리방침: `privacy.html` (4개 언어)
