@@ -348,6 +348,45 @@
   body.px .stl .bar,body.px .stl .bar i,body.px .ibar,body.px .ibar i,body.px .bars i,body.px .bars u,body.px .daybar,body.px .pbar,body.px .pbar i{border-radius:0}
   body.px .scn svg{image-rendering:pixelated}
 
+  /* 나라 도감과 배지 */
+  .map .a0{fill:var(--rule2);opacity:.7}
+  .map .a1{fill:var(--brand)}
+  .map .a2{fill:none;stroke:var(--cmp);stroke-width:2.2}
+  .map .a2.both{stroke-dasharray:3 2.4}
+  .at-leg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:12.5px;color:var(--ink2)}
+  .at-leg span{display:inline-flex;align-items:center;gap:6px}
+  .at-leg i{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .at-leg i.a1{background:var(--brand)}.at-leg i.a2{border:2px solid var(--cmp)}.at-leg i.a0{background:var(--rule2)}
+  .at-big{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:16px}
+  .at-big>div{background:var(--ink);color:var(--bg);border-radius:14px;padding:14px 16px}
+  .at-big b{display:block;font-size:30px;font-weight:900;letter-spacing:-.04em;line-height:1;color:#ffb98f}
+  .at-big .tw b{color:#b9c8ff}
+  @media (prefers-color-scheme: dark){.at-big>div{background:var(--bg2);color:var(--ink);border:1px solid var(--rule2)}.at-big b{color:var(--brand)}.at-big .tw b{color:var(--cmp)}}
+  .at-big span{display:block;font-size:12.5px;opacity:.82;margin-top:8px;word-break:keep-all}
+  .bdg-box{margin-top:16px}
+  .bdgs{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  @media (min-width:560px){.bdgs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (min-width:1000px){.bdgs{grid-template-columns:repeat(var(--bc,4),minmax(0,1fr))}}
+  .at-bars .r{grid-template-columns:minmax(6em,14em) 1fr 3.4em}
+  .bdg{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px dashed var(--rule2);border-radius:14px;background:var(--bg);min-width:0}
+  .bdg .em{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:22px;background:var(--bg2);filter:grayscale(1);opacity:.6}
+  .bdg.on{border-style:solid;border-color:var(--rule);background:var(--card)}
+  .bdg.on .em{filter:none;opacity:1;background:var(--brand-soft);box-shadow:inset 0 0 0 2px var(--brand)}
+  .bdg>div{flex:1;min-width:0;position:relative}
+  .bdg b{display:block;font-size:14.5px;line-height:1.3;padding-right:38px}
+  .bdg span{display:block;font-size:12.5px;color:var(--ink2);line-height:1.45;margin-top:2px;word-break:keep-all}
+  .bdg time{position:absolute;top:1px;right:0;font-size:11.5px;color:var(--mute)}
+  .bdg .pb{display:block;height:6px;border-radius:99px;background:var(--bg2);overflow:hidden;margin-top:8px}
+  .bdg .pb u{display:block;height:100%;background:var(--mute)}
+  .bdg small{display:block;font-size:11.5px;color:var(--mute);margin-top:3px;font-variant-numeric:tabular-nums}
+  .astrip{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:-6px 0 20px}
+  .astrip>span{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;padding:7px 12px;border-radius:99px;border:1px solid var(--rule2);background:var(--card);animation:rise .5s ease both}
+  .astrip .as-c{border-color:var(--brand);color:var(--brand)}
+  .astrip .as-c.dim{border-color:var(--rule2);color:var(--ink2);font-weight:600}
+  .astrip .as-b{background:var(--brand);border-color:var(--brand);color:#fff;animation:pop .6s cubic-bezier(.2,1.6,.4,1) both}
+  .astrip .lnk{background:none;border:0;padding:4px 2px;font-size:13px;font-weight:700;color:var(--ink2);text-decoration:underline;text-underline-offset:3px}
+  @keyframes pop{from{opacity:0;transform:scale(.4) rotate(-8deg)}to{opacity:1;transform:none}}
+  body.px .bdg,body.px .bdg .em,body.px .at-big>div,body.px .astrip>span,body.px .bdg .pb{border-radius:0}
   @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   @keyframes fade{from{opacity:0}to{opacity:1}}
   @keyframes stamp{from{opacity:0;transform:rotate(-14deg) scale(1.8)}to{opacity:.75;transform:rotate(-14deg) scale(1)}}
@@ -1682,6 +1721,7 @@ function renderStart(){
     <div><div class="baby" id="baby"><div class="scn"></div><div class="baby-b"></div></div><p class="cap">${UI.sm_p[LI]}</p></div>
    </section>
    ${livesHTML()}
+   ${atlasHTML()}
    <section class="sec">
     <div class="sec-h"><h2>${UI.where_h[LI]}</h2><p>${UI.where_p[LI]}</p></div>
     <div class="where">
@@ -1713,7 +1753,7 @@ function renderStart(){
   document.getElementById("go").onclick=start; document.getElementById("go2").onclick=start;
   document.getElementById("daily").onclick=()=>{G=newLife(dailySeed());skyT=0;renderBirth()};
   const rs=document.getElementById("resume"); if(rs) rs.onclick=resumeRun;
-  const lc=document.getElementById("lvClear"); if(lc) lc.onclick=()=>{ if(confirm(UI.lv_sure[LI])){ try{localStorage.removeItem(LIVES_KEY)}catch(e){} renderStart(); } };
+  const lc=document.getElementById("lvClear"); if(lc) lc.onclick=()=>{ if(confirm(UI.lv_sure[LI])){ try{localStorage.removeItem(LIVES_KEY);localStorage.removeItem(ATLAS_KEY)}catch(e){} renderStart(); } };
   window.scrollTo(0,0);
 }
 
@@ -2057,7 +2097,7 @@ function ending(){
     if(G.daily) store.set("daily",{date:G.date,text:UI.titles[k].map((t,i)=>`${NAMES[G.c[0]][i]} · ${sub(UI.age_n[i],{n:age})} · ${t}`)});
     if(G.hist[G.hist.length-1].a!==age) G.hist.push({a:age,...G.s});
     if(G.twin) syncTwin();
-    keepLife(); clearRun();
+    recordAtlas(); keepLife(); clearRun();
   }
   AUTO=false; clearTimeout(autoT);
   view=renderEnding; renderEnding();
@@ -2106,6 +2146,7 @@ function renderEnding(){
       <p class="sum">${ui("end_p",{place:place(G.c),sex,cause:info.causeTxt,age,cmp:info.cmp})}</p>
       <div class="facts4">${[[UI.e_age,ui("unit_yr",{n:age})],[UI.e_le,ui("unit_yr",{n:G.c[6].toFixed(1)})],[UI.f_country,place(G.c)],[UI.e_job,G.job?G.job.n[LI]:"—"]]
         .map(([k,v])=>`<div><small>${k[LI]}</small><b>${v}</b></div>`).join("")}</div>
+      ${atlasStrip()}
       <div class="cta-row only-d"><button class="cta" id="again">${UI.again[LI]} →</button>${navigator.share?`<button class="cta2" id="native">${UI.share_native[LI]}<small>${UI.share_h[LI]}</small></button>`:""}</div>
     </div>
     <div class="scene-card"><div class="scn" id="pScene"></div><span class="scene-tag">${STAGE_ICON[6]} ${UI.sun_note[LI]}</span></div>
@@ -2141,6 +2182,7 @@ function renderEnding(){
   const again=()=>renderStart();
   $("again").onclick=again; $("again2").onclick=again;
   $("savecard").onclick=saveCard;
+  const ta=$("toAtlas"); if(ta) ta.onclick=()=>{ renderStart(); const el=$("atlas"); if(el) el.scrollIntoView(); };
   $("chat").onclick=()=>sendToChat($("chat"));
   const nb=$("native");
   if(nb) nb.onclick=()=>navigator.share({title:UI.title[LI],text:txt,url}).catch(()=>{});
@@ -2411,6 +2453,173 @@ Object.assign(UI,{
  share_tw0:["같은 날 {place}에서 태어난 아이는 첫 돌을 넘기지 못했어요. 닫힌 문은 나 {n}개, 그 아이 {m}개.","A child born the same day in {place} did not reach their first birthday. Closed doors: me {n}, them {m}.","同じ日に{place}で生まれた子は1歳を迎えられませんでした。閉ざされた扉は私{n}個、その子{m}個。","同一天出生在{place}的孩子没能活到一周岁。被关上的门：我{n}扇，那个孩子{m}扇。"],
  friend_tw0:["같은 날 {place}에서 태어난 아이는 첫 돌을 넘기지 못했어요.","A child born the same day in {place} did not reach their first birthday.","同じ日に{place}で生まれた子は1歳を迎えられませんでした。","同一天出生在{place}的孩子没能活到一周岁。"],
  card_tw0:["같은 날 {place}에서 태어난 {name}: 첫 돌을 넘기지 못함","{name}, born the same day in {place}: did not reach age one","同じ日に{place}で生まれた{name}:1歳を迎えられず","同一天出生在{place}的{name}：没能活到一岁"]
+});
+
+/* ---------- 나라 도감과 배지: 끝난 삶마다 이 브라우저에 쌓여요 ---------- */
+const ATLAS_KEY="atlas";
+const ctryOf=iso=>COUNTRIES.find(c=>c[0]===iso);
+function blankAtlas(){return{v:1,n:0,y:0,c:{},a80:0,best:0,jobs:{},ks:{},tiers:[0,0,0,0],days:[],dl0:0,twl:0,rare:0,past:0,fut:0,got:{},tc:{},twn:0,dm:0,dt:0,gap5:0,rev:0}}
+function addToAtlas(A,x){
+  // x: {c,a,k,j,f,d,dy,dl,tw:{c,a,dl},y}
+  A.n++; A.y+=x.a; A.c[x.c]=(A.c[x.c]||0)+1;
+  if(x.a>=80) A.a80++; A.best=Math.max(A.best,x.a);
+  if(x.j>=0) A.jobs[x.j]=1; A.ks[x.k]=1;
+  if(x.f>=0&&x.f<4) A.tiers[x.f]++;
+  if(x.dy&&x.d&&!A.days.includes(x.d)) A.days=[...A.days,x.d].slice(-60);
+  if(x.dl===0&&x.a>=18) A.dl0++;
+  if(x.tw){ A.twn++; A.dm+=x.dl||0; A.dt+=x.tw.dl||0; if(x.tw.c) A.tc[x.tw.c]=(A.tc[x.tw.c]||0)+1; if(x.tw.a>x.a) A.twl++; const g=(x.tw.dl||0)-(x.dl||0); if(g>=5) A.gap5++; if(g<0) A.rev=(A.rev||0)+1; }
+  const c=ctryOf(x.c); if(c&&c[5]/totalBirths<0.001) A.rare++;
+  if(typeof x.y==="number"&&typeof NOW_Y!=="undefined"){ if(x.y<NOW_Y) A.past++; else if(x.y>NOW_Y) A.fut++; }
+}
+function loadAtlas(){
+  let A=store.get(ATLAS_KEY);
+  if(A&&A.v===1){ A.gap5=A.gap5||0; A.rev=A.rev||0; return A; }
+  // 도감이 생기기 전에 살았던 삶도 채워 넣어요
+  A=blankAtlas();
+  const old=(store.get(LIVES_KEY)||[]).slice().reverse();
+  for(const x of old) if(ctryOf(x.c)) addToAtlas(A,x);
+  for(const b of shownBadges()) if(b.ok(A)) A.got[b.id]=old.length?old[old.length-1].d:todayStr();
+  store.set(ATLAS_KEY,A);
+  return A;
+}
+const regionsOf=A=>new Set(Object.keys(A.c).map(i=>(ctryOf(i)||[])[3]).filter(r=>r!=null));
+const maxSame=A=>Math.max(0,...Object.values(A.c));
+// 배지: [진행, 목표]를 돌려줘요. era는 태어날 시대를 고를 수 있을 때만 보여요
+const BADGES=[
+ {id:"first",ic:"🌱",p:A=>[A.n,1]},
+ {id:"ten",ic:"🔟",p:A=>[A.n,10]},
+ {id:"hund",ic:"💯",p:A=>[A.n,100]},
+ {id:"c10",ic:"🧭",p:A=>[Object.keys(A.c).length,10]},
+ {id:"c50",ic:"🗺️",p:A=>[Object.keys(A.c).length,50]},
+ {id:"reg",ic:"🌏",p:A=>[regionsOf(A).size,REGIONS.length]},
+ {id:"old10",ic:"👵",p:A=>[A.a80,10]},
+ {id:"cent",ic:"🎂",p:A=>[Math.min(A.best,100),100]},
+ {id:"ends",ic:"⚖️",p:A=>[(A.tiers[0]?1:0)+(A.tiers[3]?1:0),2]},
+ {id:"swap",ic:"🔀",p:A=>[A.twl,1]},
+ {id:"gap5",ic:"🗝️",p:A=>[A.gap5,1]},
+ {id:"rev",ic:"🔁",p:A=>[A.rev,3]},
+ {id:"open",ic:"🚪",p:A=>[A.dl0,1]},
+ {id:"jobs",ic:"🧰",p:A=>[Object.keys(A.jobs).length,10]},
+ {id:"titles",ic:"📜",p:A=>[Object.keys(A.ks).length,6]},
+ {id:"rare",ic:"🔍",p:A=>[A.rare,1]},
+ {id:"home",ic:"🏠",p:A=>[maxSame(A),3]},
+ {id:"daily",ic:"📅",p:A=>[A.days.length,7]},
+ {id:"past",ic:"⏳",era:1,p:A=>[A.past,1]},
+ {id:"fut",ic:"🚀",era:1,p:A=>[A.fut,1]}
+].map(b=>({...b,ok:A=>{const [v,g]=b.p(A);return v>=g}}));
+const shownBadges=()=>BADGES.filter(b=>!b.era||typeof NOW_Y!=="undefined");
+
+// 끝난 삶 하나를 도감에 더하고, 새로 생긴 나라와 배지를 돌려줘요
+function recordAtlas(){
+  if(!G||!G.ended||G.atlasDone) return G&&G.atlasNew;
+  const A=loadAtlas(), T=G.twin, fresh=!A.c[G.c[0]];
+  addToAtlas(A,{c:G.c[0],a:G.ended.age,k:G.ended.k,j:jobIdx(G.job),f:G.famTier,d:todayStr(),dy:G.daily?1:0,dl:G.locked.length,tw:T?{c:T.c[0],a:twinAge(T),dl:T.locked}:null,y:G.year});
+  const won=[];
+  for(const b of shownBadges()) if(!A.got[b.id]&&b.ok(A)){A.got[b.id]=todayStr();won.push(b.id)}
+  store.set(ATLAS_KEY,A);
+  G.atlasDone=true; G.atlasNew={fresh,won,nc:Object.keys(A.c).length};
+  return G.atlasNew;
+}
+
+function atlasMap(A,hl){
+  const M=MAP,W=M.cols*6,H=M.rows*6;
+  const px=(lo,la)=>[(lo+180)/360*W,(M.lat0-la)/(M.lat0-M.lat1)*H];
+  let land="";
+  for(let r=0;r<M.rows;r++)for(let c=0;c<M.cols;c++){
+    if(parseInt(M.hex[r*(M.cols/4)+(c>>2)],16)>>(3-(c&3))&1) land+=`M${c*6+3} ${r*6+3}h0`;
+  }
+  let off="",on="";
+  for(const c of COUNTRIES){
+    const p=M.cen[c[0]]; if(!p) continue; const [x,y]=px(p[0],p[1]).map(v=>v.toFixed(1)), n=A.c[c[0]]||0, m=A.tc[c[0]]||0;
+    const tip=`<title>${place(c)}${n?" · "+UI.at_lived[LI]+" "+ui("at_times",{n}):""}${m?" · "+UI.at_twin[LI]+" "+ui("at_times",{n:m}):""}</title>`;
+    if(!n&&!m){ off+=`<circle class="a0" cx="${x}" cy="${y}" r="2.6">${tip}</circle>`; continue; }
+    const r=(4.2+Math.min(Math.max(n,m),6)*1.1).toFixed(1);
+    on+=n?`<circle class="a1" cx="${x}" cy="${y}" r="${r}">${tip}</circle>`:"";
+    if(m) on+=`<circle class="a2${n?" both":""}" cx="${x}" cy="${y}" r="${(+r+(n?2.4:0)).toFixed(1)}">${n?"":tip}</circle>`;
+    if(c[0]===hl) on+=`<circle class="ring" cx="${x}" cy="${y}" r="10"/>`;
+  }
+  return `<svg class="map atlas-map" viewBox="0 0 ${W} ${H}" role="img" aria-label="${UI.at_h[LI]}"><path class="land" d="${land}"/>${off}${on}</svg>`;
+}
+function regionRows(A){
+  const tot=REGIONS.map(()=>0), got=REGIONS.map(()=>0);
+  for(const c of COUNTRIES){ if(c[3]==null) continue; tot[c[3]]++; if(A.c[c[0]]) got[c[3]]++; }
+  return REGIONS.map((r,i)=>`<div class="r"><span>${r[LI]}</span><i><u style="width:${(got[i]/Math.max(1,tot[i])*100).toFixed(1)}%"></u></i><b>${got[i]}/${tot[i]}</b></div>`).join("");
+}
+function badgeLI(A,b,isNew){
+  const [v,g]=b.p(A), done=!!A.got[b.id];
+  return `<li class="bdg${done?" on":""}${isNew?" nw":""}"><span class="em">${done?b.ic:"🔒"}</span><div><b>${UI.bd[b.id][0][LI]}</b><span>${UI.bd[b.id][1][LI]}</span>
+    ${done?`<time>${A.got[b.id].slice(5).replace("-","/")}</time>`:`<i class="pb"><u style="width:${(Math.min(v,g)/g*100).toFixed(1)}%"></u></i><small>${Math.min(v,g)} / ${g}</small>`}</div></li>`;
+}
+function atlasHTML(){
+  const A=loadAtlas(); if(!A.n) return "";
+  const nc=Object.keys(A.c).length, tn=Object.keys(A.tc).length, share=COUNTRIES.reduce((s,c)=>s+(A.c[c[0]]?c[5]:0),0)/totalBirths*100;
+  const next=COUNTRIES.filter(c=>!A.c[c[0]]).sort((a,b)=>b[5]-a[5])[0];
+  const bs=shownBadges(), got=bs.filter(b=>A.got[b.id]).length;
+  // 받은 배지 먼저, 그다음 거의 다 된 것부터
+  const order=bs.slice().sort((a,b)=>{const da=!!A.got[a.id],db=!!A.got[b.id];if(da!==db)return da?-1:1;const [va,ga]=a.p(A),[vb,gb]=b.p(A);return vb/gb-va/ga});
+  return `<section class="sec" id="atlas">
+    <div class="sec-h"><h2>${UI.at_h[LI]}</h2><p>${ui("at_p",{n:nc,t:COUNTRIES.length,s:share<1?share.toFixed(1):Math.round(share)})}${tn?" "+ui("at_p2",{m:tn}):""}</p></div>
+    <div class="where">
+      <div class="box">${atlasMap(A)}<div class="at-leg"><span><i class="a1"></i>${UI.at_lived[LI]}</span><span><i class="a2"></i>${UI.at_twin[LI]}</span><span><i class="a0"></i>${UI.at_not[LI]}</span></div>
+        ${next?`<p class="cap">${ui("at_next",{place:place(next),p:shareOf(next)})}</p>`:""}</div>
+      <div class="box"><div class="box-h"><h3>${UI.at_reg[LI]}</h3><span>${nc} / ${COUNTRIES.length}</span></div><div class="bars at-bars">${regionRows(A)}</div>
+        <div class="at-big"><div><b>${Math.round(nc/COUNTRIES.length*100)}%</b><span>${UI.at_pct[LI]}</span></div><div><b>${got}/${bs.length}</b><span>${UI.at_bd[LI]}</span></div>
+          ${A.twn?`<div class="tw"><b>${A.dm} : ${A.dt}</b><span>${ui("at_doors",{n:A.twn})}</span></div>`:""}</div></div>
+    </div>
+    <div class="box bdg-box"><div class="box-h"><h3>${UI.bd_h[LI]}</h3><span>${got} / ${bs.length}</span></div>
+      <ul class="bdgs" style="--bc:${bs.length%4?3:4}">${order.map(b=>badgeLI(A,b,false)).join("")}</ul></div>
+  </section>`;
+}
+// 결말 화면 첫머리에 붙는 한 줄: 새 나라, 새 배지
+function atlasStrip(){
+  const r=recordAtlas(); if(!r) return "";
+  const A=loadAtlas(), items=[];
+  if(r.fresh) items.push(`<span class="as-c">🗺️ ${ui("at_new",{place:place(G.c),n:r.nc,t:COUNTRIES.length})}</span>`);
+  else items.push(`<span class="as-c dim">🗺️ ${ui("at_again",{place:place(G.c),n:A.c[G.c[0]]})}</span>`);
+  for(const id of r.won){ const b=BADGES.find(x=>x.id===id); items.push(`<span class="as-b">${b.ic} ${UI.bd[id][0][LI]}</span>`); }
+  return `<div class="astrip">${items.join("")}<button class="lnk" id="toAtlas">${UI.at_go[LI]} →</button></div>`;
+}
+
+Object.assign(UI,{
+ at_h:["두 아이로 채운 세계 도감","An atlas filled by two children","二人の子で埋める世界図鑑","两个孩子一起点亮的世界图鉴"],
+ at_p:["{t}개 나라 중 {n}곳에서 살아 봤어요. 그 나라들에서 세계 아기의 {s}%가 태어나요.","You've lived in {n} of {t} countries. {s}% of the world's babies are born in them.","{t}か国のうち{n}か国で生きてみました。そこで世界の赤ちゃんの{s}%が生まれます。","在{t}个国家中，你已在{n}个生活过。全世界{s}%的婴儿出生在这些国家。"],
+ at_lived:["살아 본 나라","Lived","生きた国","生活过"],
+ at_twin:["그 아이가 산 나라","The other child's","あの子が生きた国","那个孩子生活过"],
+ at_p2:["같은 날 태어난 아이들은 {m}개 나라에서 살았어요.","The children born on your birthdays lived in {m}.","同じ日に生まれた子たちは{m}か国で生きました。","与你同一天出生的孩子们生活在{m}个国家。"],
+ at_doors:["닫힌 문 합계 (나 : 그 아이)","Doors closed (you : the other child)","閉ざされた扉 (わたし:あの子)","关上的门 (你:那个孩子)"],
+ at_not:["아직","Not yet","まだ","还没有"],
+ at_times:["{n}번","{n}×","{n}回","{n}次"],
+ at_next:["아직 못 가 본 곳 중 아기가 가장 많이 태어나는 나라는 {place}예요. 세계 출생의 {p}%예요.","Of the places you haven't been, the most babies are born in {place}: {p}% of the world's births.","まだの国で赤ちゃんが最も多く生まれるのは{place}。世界の出生の{p}%です。","还没去过的国家里，出生婴儿最多的是{place}，占全球出生的{p}%。"],
+ at_reg:["지역별로 채운 나라","Countries filled, by region","地域別に埋まった国","各地区已点亮的国家"],
+ at_pct:["도감을 채웠어요","of the atlas filled","図鑑が埋まりました","图鉴已点亮"],
+ at_bd:["배지를 모았어요","badges earned","バッジを集めました","已获得徽章"],
+ at_new:["도감에 새 나라: {place} · {n}/{t}","New in your atlas: {place} · {n}/{t}","図鑑に新しい国:{place} · {n}/{t}","图鉴新增：{place} · {n}/{t}"],
+ at_again:["{place}에서 {n}번째 삶","Life no. {n} in {place}","{place}で{n}回目の人生","在{place}的第{n}次人生"],
+ at_go:["도감 보기","See your atlas","図鑑を見る","查看图鉴"],
+ bd_h:["모은 배지","Badges","集めたバッジ","收集的徽章"],
+ bd:{
+  first:[["첫 울음","First cry","産声","第一声啼哭"],["한 번 태어나 일생을 살았어요","Live one whole life","一度生まれて一生を生きる","出生一次，走完一生"]],
+  ten:[["열 번의 생일","Ten birthdays","十回の誕生","十次出生"],["열 번 태어나기","Be born 10 times","10回生まれる","出生10次"]],
+  hund:[["백 번의 생일","A hundred births","百回の誕生","百次出生"],["백 번 태어나기","Be born 100 times","100回生まれる","出生100次"]],
+  c10:[["열 나라","Ten countries","十の国","十个国家"],["서로 다른 10개 나라에서 살기","Live in 10 different countries","10か国で生きる","在10个不同国家生活"]],
+  c50:[["오십 나라","Fifty countries","五十の国","五十个国家"],["서로 다른 50개 나라에서 살기","Live in 50 different countries","50か国で生きる","在50个不同国家生活"]],
+  reg:[["일곱 지역","All seven regions","七つの地域","七大地区"],["세계 7개 지역에서 모두 살기","Live in every one of the 7 world regions","世界の7地域すべてで生きる","在全球7个地区都生活过"]],
+  old10:[["여든 넘긴 삶 열 번","Past eighty, ten times","八十を越えた人生 十回","十次活过八十"],["80살을 넘겨 산 인생 10번","Live past 80 ten times","80歳を越えて生きる人生を10回","十次活过80岁"]],
+  cent:[["백 살","A hundred years","百歳","百岁"],["한 번이라도 100살까지 살기","Reach 100 once","一度でも100歳まで生きる","有一次活到100岁"]],
+  ends:[["양 끝","Both ends","両端","两端"],["가장 어려운 집과 가장 풍족한 집에서 모두 태어나기","Be born into both the poorest and the wealthiest kind of family","最も苦しい家と最も裕福な家の両方に生まれる","既出生在最困难的家，也出生在最富裕的家"]],
+  gap5:[["다섯 개의 문","Five doors apart","五つの扉","相差五扇门"],["같은 날 태어난 아이보다 닫힌 문이 5개 이상 적었던 삶","A life where the other child had 5 or more doors closed than you","同じ日に生まれた子より閉ざされた扉が5個以上少ない人生","比同一天出生的孩子少关上5扇以上的门"]],
+  rev:[["반대편에서","From the other side","向こう側から","在另一边"],["같은 날 태어난 아이보다 내 문이 더 많이 닫힌 삶 3번","Three lives where more of your doors closed than the other child's","同じ日に生まれた子より自分の扉が多く閉ざされた人生を3回","三次人生里，你关上的门比同一天出生的孩子多"]],
+  swap:[["바뀐 자리","Places swapped","入れ替わった場所","交换的位置"],["같은 날 태어난 그 아이가 나보다 오래 산 삶","The child born the same day outlives you","同じ日に生まれたあの子があなたより長生きする","同一天出生的那个孩子比你活得久"]],
+  open:[["닫히지 않은 문","No door closed","閉ざされない扉","没有关上的门"],["어른이 되도록 닫힌 문이 하나도 없는 삶","Reach adulthood with no door closed","大人になるまで扉が一つも閉ざされない人生","长大成人，没有一扇门被关上"]],
+  jobs:[["열 가지 일","Ten trades","十の仕事","十种工作"],["서로 다른 직업 10가지 해 보기","Work 10 different jobs","10種類の仕事をする","做过10种不同的工作"]],
+  titles:[["여섯 개의 결말","Six endings","六つの結末","六种结局"],["서로 다른 결말 제목 6개 받기","Get 6 different ending titles","6種類の結末タイトルを得る","得到6种不同的结局标题"]],
+  rare:[["드문 출생","A rare birth","まれな誕生","罕见的出生"],["세계 출생의 0.1%도 안 되는 나라에서 태어나기","Be born where under 0.1% of the world's babies are","世界の出生の0.1%未満の国に生まれる","出生在占全球出生不到0.1%的国家"]],
+  home:[["또 이곳","Here again","またここ","又是这里"],["같은 나라에서 세 번 태어나기","Be born in the same country 3 times","同じ国に3回生まれる","在同一个国家出生3次"]],
+  daily:[["일주일의 한 명","A week of todays","一週間の一人","一周的每日一人"],["서로 다른 7일 동안 '오늘의 한 명' 살기","Play 'today's one' on 7 different days","7日間「今日の一人」を生きる","在7天里玩“今日一人”"]],
+  past:[["지나간 시대","Another time","過ぎた時代","过去的年代"],["과거에 태어나 살아 보기","Live a life born in the past","過去に生まれて生きる","出生在过去，走完一生"]],
+  fut:[["다가올 시대","Times to come","来たる時代","未来的年代"],["미래에 태어나 살아 보기","Live a life born in the future","未来に生まれて生きる","出生在未来，走完一生"]]
+ },
+ lv_sure:["살아 본 사람들과 도감, 배지 기록을 모두 지울까요?","Clear every life you've lived, your atlas and your badges?","生きてみた人たち、図鑑、バッジの記録をすべて消しますか？","要清除所有人生、图鉴和徽章记录吗？"]
 });
 
 /* ---------- 시작 ---------- */
