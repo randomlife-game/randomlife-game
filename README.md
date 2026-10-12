@@ -41,5 +41,5 @@ node tools/make-share-pages.js
 `index.html`의 `ADSENSE_CLIENT`·`ADSENSE_SLOT`, `ADFIT_UNIT`, `TIP_URL`을 채우면 켜져요. 비어 있으면 아무것도 보이지 않아요.
 
 - 광고는 첫 화면 중간과 결말 화면 아래에만 나와요. 일생을 사는 동안, 앱(Capacitor) 안, 내 컴퓨터(localhost)에서는 나오지 않아요.
-- AdSense를 켤 때는 `ads.txt`도 함께 넣고, AdSense의 자동 광고는 꺼 두세요.
+- AdSense 스크립트와 확인 태그는 `<head>`에, 게시자 줄은 `ads.txt`에 있어요. AdSense의 자동 광고는 꺼 두세요.
 - 개인정보처리방침: `privacy.html` (4개 언어)
