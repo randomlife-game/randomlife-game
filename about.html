@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>게임 소개 · 랜덤인생게임</title>
+<meta name="description" content="같은 날 정반대 형편에서 태어난 두 아이의 일생을 나란히 살아 보는 웹 게임. 출생지를 뽑는 방법, 노는 법, 쓰는 통계를 소개해요.">
+<link rel="canonical" href="https://randomlife-game.github.io/about.html">
+<style>
+  :root{--bg:#faf6ee;--card:#fffdf8;--ink:#1f1d19;--ink2:#4a4439;--mute:#857b69;--rule:#e6dccb;--brand:#c4572a}
+  @media (prefers-color-scheme: dark){:root{--bg:#15120e;--card:#1e1a14;--ink:#f1eadc;--ink2:#cbc1ae;--mute:#8f8572;--rule:#332b21;--brand:#e8804b}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Hiragino Sans","PingFang SC","Malgun Gothic",system-ui,sans-serif;line-height:1.7;-webkit-text-size-adjust:100%}
+  main{max-width:760px;margin:0 auto;padding:28px 16px 64px}
+  a{color:var(--brand)}
+  .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+  .top a.home{font-weight:800;text-decoration:none;color:var(--ink)}
+  nav.lang{display:flex;gap:4px}
+  nav.lang a{font-size:13px;padding:4px 10px;border:1px solid var(--rule);border-radius:999px;text-decoration:none;color:var(--ink2)}
+  nav.lang a.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  h1{font-size:28px;letter-spacing:-.03em;margin:0 0 4px}
+  .date{color:var(--mute);font-size:13px;margin:0 0 24px}
+  h2{font-size:17px;margin:28px 0 6px}
+  p,li{color:var(--ink2);font-size:15px;overflow-wrap:anywhere}
+  html[lang=ko] p,html[lang=ko] li{word-break:keep-all}
+  ul{padding-left:20px}
+  .cta{display:inline-block;margin:20px 0 4px;padding:12px 22px;border-radius:999px;background:var(--brand);color:#fff;font-weight:800;text-decoration:none}
+  .lead{font-size:17px;color:var(--ink)}
+  [data-l]{display:none}[data-l].on{display:block}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><a class="home" id="home" href="./">← 랜덤인생게임</a>
+<nav class="lang"><a href="?l=ko" data-k="ko">한국어</a><a href="?l=en" data-k="en">EN</a><a href="?l=ja" data-k="ja">日本語</a><a href="?l=zh" data-k="zh">中文</a></nav></div>
+
+<article data-l="ko">
+<h1>랜덤인생게임 소개</h1>
+<p class="lead">오늘 지구 어딘가에서 아이 둘이 태어나요. 한 명은 당신이고, 다른 한 명은 정반대 형편에서 태어난 아이예요. 랜덤인생게임은 이 두 사람의 일생을 5분 남짓 동안 나란히 살아 보는 무료 웹 게임이에요.</p>
+<a class="cta" href="./">지금 태어나 보기 →</a>
+<h2>어디에서 태어날지는 어떻게 정해지나요</h2>
+<p>출생지는 나라별로 한 해에 태어나는 아기 수에 비례해서 뽑아요. 아기가 많이 태어나는 나라일수록 뽑힐 확률이 높아요. 그래서 많은 판이 인도, 중국, 나이지리아, 파키스탄 같은 나라에서 시작돼요. 지금 기준으로 세계 아기의 약 66%가 저소득·중하위소득 나라에서 태어나고, 약 21%는 기대수명이 65세보다 짧은 곳에서 태어나요. 첫돌을 넘기지 못하는 아기는 1,000명 중 약 28명이에요. 게임 첫 화면의 지도와 숫자는 이 계산을 그대로 보여 줘요.</p>
+<p>성별과 집안 형편도 무작위로 정해져요. 같은 나라라도 어떤 집에서 태어나느냐에 따라 학교, 병원, 일자리에 닿을 가능성이 달라져요.</p>
+<h2>이렇게 놀아요</h2>
+<ol>
+<li><b>태어나기</b>: 버튼을 누르면 출생지, 성별, 집안이 정해져요. 이름을 직접 지어 줄 수도 있어요.</li>
+<li><b>나이대마다 고르기</b>: 어린 시절부터 노년까지 갈림길이 나와요. 학교에 갈지, 일을 배우러 도시로 갈지, 가족을 꾸릴지 같은 선택을 해요. 형편 때문에 아예 열리지 않는 선택지는 자물쇠로 표시돼요.</li>
+<li><b>결말 보기</b>: 삶이 끝나면 내가 한 선택으로 한 장짜리 자서전 카드가 만들어져요. 저장하거나 친구에게 보낼 수 있어요.</li>
+</ol>
+<p>한 판은 보통 5~10분이에요. 속도 버튼이나 자동 진행으로 더 빨리 끝까지 볼 수도 있어요.</p>
+<h2>"다른 곳이었다면": 옆에서 함께 사는 아이</h2>
+<p>이 게임의 가장 큰 특징이에요. 내가 태어난 날, 같은 성별로 정반대 형편에서 태어난 아이가 한 명 더 정해져요. 내가 갈림길 앞에 설 때마다 그 아이에게는 같은 문이 열렸는지 잠겼는지 나란히 보여 줘요. 마지막에는 두 사람이 평생 닫힌 문을 몇 개 만났는지 비교해요. 같은 날 태어나도 삶의 문이 얼마나 다르게 열리는지 한눈에 보여요.</p>
+<h2>다섯 가지 힘</h2>
+<p>삶은 몸, 살림, 마음, 인연, 솜씨 다섯 가지로 흘러가요. 선택과 사건이 이 다섯 가지를 올리거나 내리고, 결말 화면의 인생 곡선에서 그 흐름을 다시 볼 수 있어요. 하늘은 나이를 따라 새벽에서 한낮, 노을로 바뀌어요.</p>
+<h2>언제 태어날지도 고를 수 있어요</h2>
+<p>"지금" 말고도 "예전 어느 해"(1950~2005년)와 "앞으로 어느 해"(2030~2100년)를 고를 수 있어요. 같은 지구라도 1950년에 태어난 아이는 다섯 살 전에 세상을 떠날 확률이 지금보다 훨씬 높았고, 2100년에는 또 달라질 거라고 UN은 전망해요.</p>
+<h2>모으는 재미</h2>
+<p>살아 본 나라는 나라 도감에 쌓이고, "일곱 지역에서 모두 살기", "백 살까지 살기" 같은 배지 20개를 모을 수 있어요. 날짜마다 정해지는 "오늘의 한 명"은 모든 사람이 같은 사람으로 태어나서 친구와 결과를 비교하기 좋아요.</p>
+<h2>수업이나 모임에서 써 보세요</h2>
+<p>세계 시민 교육, 사회 수업, 인구와 불평등 이야기를 시작할 때 쓰기 좋아요. 학생마다 한 판씩 하고 결말 카드를 나눠 보면, 태어난 곳이 삶에 얼마나 큰 영향을 주는지 자연스럽게 이야기가 열려요. 회원가입이나 설치 없이 휴대폰 브라우저에서 바로 돼요. 다만 죽음, 질병, 가난 같은 내용이 나오니 어린 학생은 어른과 함께 해 주세요.</p>
+<h2>통계는 어디서 왔나요</h2>
+<p>출생 수와 수명은 UN 세계인구전망 2024, 학교·병원·전기·흡연·결혼 같은 생활 통계는 세계은행 세계개발지표(WHO, UNESCO, ILO, UNICEF 등이 모은 자료), 분쟁은 UCDP 자료를 썼어요. 사건과 선택지는 게임을 위해 지어낸 이야기지만, 그 확률과 문장 속 숫자는 이 통계로 계산해요. 빈 값은 같은 지역·소득 그룹의 중앙값으로 채우고 게임 안에 ≈로 표시해요. 자세한 출처와 라이선스는 게임 맨 아래 "데이터 출처"에 있어요.</p>
+<h2>만든 곳과 문의</h2>
+<p>4개 언어(한국어, English, 日本語, 中文)로 무료로 운영해요. 운영비를 위해 첫 화면과 결말 화면에 광고가 나올 수 있어요. 일생을 사는 동안에는 광고가 나오지 않아요. 의견이나 오류는 <a href="https://github.com/randomlife-game/randomlife-game.github.io/issues" target="_blank" rel="noopener">GitHub 이슈</a>로 알려 주세요. 개인정보 이야기는 <a class="pp" href="privacy.html">개인정보처리방침</a>에 있어요.</p>
+</article>
+
+<article data-l="en">
+<h1>About Random Life</h1>
+<p class="lead">Today, somewhere on Earth, two children are born. One is you. The other starts life at the opposite end. Random Life is a free web game where you live both lives side by side in about five minutes.</p>
+<a class="cta" href="./">Be born now →</a>
+<h2>How your birthplace is chosen</h2>
+<p>Your country is drawn in proportion to how many babies are born there each year, so countries with more births come up more often. That is why many lives begin in India, China, Nigeria or Pakistan. Today about 66% of the world's babies are born in low and lower-middle income countries, and about 21% where life expectancy is under 65. About 28 in every 1,000 babies do not reach their first birthday. The map and figures on the game's first screen show exactly this calculation.</p>
+<p>Sex and family wealth are random too. Even inside one country, the family you are born into changes your chances of reaching a school, a clinic or a job.</p>
+<h2>How to play</h2>
+<ol>
+<li><b>Be born</b>: one tap decides your birthplace, sex and family. You can name the child yourself.</li>
+<li><b>Choose at each stage</b>: from childhood to old age you reach crossroads, such as staying in school, moving to the city to learn a trade, or starting a family. Choices your circumstances keep closed are shown with a lock.</li>
+<li><b>See the ending</b>: when the life ends, your choices become a one-page autobiography card you can save or send.</li>
+</ol>
+<p>A life usually takes 5 to 10 minutes. Use the speed button or auto play to reach the end faster.</p>
+<h2>"If it had been elsewhere": the child beside you</h2>
+<p>This is the heart of the game. On the day you are born, a second child of the same sex is born into the opposite circumstances. Each time you reach a crossroads, you see whether the same door was open or locked for them. At the end, the game compares how many closed doors each of you met in a lifetime.</p>
+<h2>Five strengths</h2>
+<p>A life moves through five strengths: Body, Means, Spirit, Bonds and Skill. Choices and events raise or lower them, and the life curve on the ending screen replays how they changed. The sky follows your age, from dawn to noon to dusk.</p>
+<h2>Choose when you are born</h2>
+<p>Besides "now", you can pick "a year in the past" (1950–2005) or "a year to come" (2030–2100). A child born in 1950 was far more likely to die before age five than one born today, and the UN projects that 2100 will differ again.</p>
+<h2>Things to collect</h2>
+<p>Every country you live in fills your atlas, and there are 20 badges to earn, such as living in all seven world regions or reaching 100. "Today's one" is the same person for everyone on a given date, so it is easy to compare with friends.</p>
+<h2>For classrooms and groups</h2>
+<p>It works well to open a conversation about global citizenship, population or inequality. Have each person play one life and share their ending cards. There is no sign-up or install; it runs in a phone browser. The game deals with death, illness and poverty, so younger children should play with an adult.</p>
+<h2>Where the numbers come from</h2>
+<p>Births and lifespans come from UN World Population Prospects 2024; everyday statistics such as schooling, clinics, power, smoking and marriage from the World Bank World Development Indicators (compiled from WHO, UNESCO, ILO, UNICEF and others); and conflict from UCDP. Events and choices are fiction, but their odds and the numbers in the text are computed from these statistics. Missing values are filled with the median of the same region and income group and marked ≈ in the game. Full sources and licences are under "Data sources" at the bottom of the game.</p>
+<h2>Contact</h2>
+<p>The game is free in four languages. To cover running costs, ads may appear on the start and ending screens, never while you are living a life. Send feedback or bug reports through <a href="https://github.com/randomlife-game/randomlife-game.github.io/issues" target="_blank" rel="noopener">GitHub issues</a>. See the <a class="pp" href="privacy.html">privacy policy</a> for how information is handled.</p>
+</article>
+
+<article data-l="ja">
+<h1>ランダム人生について</h1>
+<p class="lead">今日、地球のどこかで二人の子どもが生まれます。一人はあなた、もう一人は正反対の境遇に生まれた子です。ランダム人生は、この二人の一生を5分ほどで並べて生きてみる無料のウェブゲームです。</p>
+<a class="cta" href="./">いま生まれてみる →</a>
+<h2>生まれる場所の決まり方</h2>
+<p>出生地は、国ごとの年間出生数に比例して選ばれます。赤ちゃんが多く生まれる国ほど選ばれやすいので、インド、中国、ナイジェリア、パキスタンなどから始まる人生が多くなります。現在、世界の赤ちゃんの約66%は低所得・低中所得国で生まれ、約21%は平均寿命が65歳に満たない場所で生まれます。1歳を迎えられない赤ちゃんは1,000人に約28人です。ゲームの最初の画面の地図と数字は、この計算をそのまま表しています。</p>
+<p>性別と家庭の経済状況もランダムに決まります。同じ国でも、どんな家に生まれるかで学校、病院、仕事に手が届く可能性が変わります。</p>
+<h2>遊び方</h2>
+<ol>
+<li><b>生まれる</b>：ボタンを押すと出生地、性別、家庭が決まります。名前を自分で付けることもできます。</li>
+<li><b>年代ごとに選ぶ</b>：子ども時代から老年まで分かれ道が現れます。学校を続けるか、仕事を覚えに都会へ出るか、家庭を持つかなどを選びます。境遇のせいで開かない選択肢には鍵が表示されます。</li>
+<li><b>結末を見る</b>：人生が終わると、選んだ道から一枚の自伝カードが作られます。保存したり友だちに送ったりできます。</li>
+</ol>
+<p>一回はふつう5〜10分です。速度ボタンや自動再生で早く最後まで見ることもできます。</p>
+<h2>「別の場所だったら」：隣で一緒に生きる子</h2>
+<p>このゲームのいちばんの特徴です。あなたが生まれた日に、同じ性別で正反対の境遇に生まれた子がもう一人決まります。分かれ道に立つたびに、その子には同じ扉が開いていたか、閉ざされていたかを並べて見せます。最後に、二人が一生で出会った閉ざされた扉の数を比べます。</p>
+<h2>五つの力</h2>
+<p>人生は体、暮らし、心、縁、腕前の五つで流れていきます。選択と出来事がこれらを上げ下げし、結末画面の人生曲線でその流れを振り返れます。空は年齢とともに夜明けから真昼、夕焼けへと変わります。</p>
+<h2>生まれる時代も選べます</h2>
+<p>「いま」のほかに「むかしのある年」（1950〜2005年）と「これからのある年」（2030〜2100年）を選べます。1950年に生まれた子が5歳までに亡くなる確率は今よりずっと高く、国連は2100年にはまた違う姿になると予測しています。</p>
+<h2>集める楽しみ</h2>
+<p>生きてみた国は国の図鑑にたまり、「七つの地域すべてで生きる」「100歳まで生きる」などのバッジが20個あります。日付ごとに決まる「今日の一人」は誰でも同じ人として生まれるので、友だちと結果を比べやすいです。</p>
+<h2>授業や集まりで</h2>
+<p>世界市民教育、社会の授業、人口や格差の話を始めるきっかけに向いています。一人一回ずつ遊んで結末カードを見せ合うと、生まれた場所が人生にどれほど影響するかが自然に話題になります。登録もインストールも不要で、スマートフォンのブラウザですぐ遊べます。死や病気、貧困などの内容があるため、小さなお子さんは大人と一緒に遊んでください。</p>
+<h2>数字の出典</h2>
+<p>出生数と寿命は国連「世界人口推計2024」、学校・病院・電気・喫煙・結婚などの生活統計は世界銀行「世界開発指標」（WHO、UNESCO、ILO、UNICEFなどが集めた資料）、紛争はUCDPのデータを使っています。出来事と選択肢は創作ですが、その確率と文中の数字はこれらの統計から計算しています。欠けている値は同じ地域・所得グループの中央値で補い、ゲーム内で≈と表示します。詳しい出典とライセンスはゲーム下部の「データの出典」にあります。</p>
+<h2>お問い合わせ</h2>
+<p>4か国語で無料で運営しています。運営費のため、最初の画面と結末の画面に広告が出ることがあります。人生を生きている間は広告は出ません。ご意見や不具合は <a href="https://github.com/randomlife-game/randomlife-game.github.io/issues" target="_blank" rel="noopener">GitHub Issues</a> へどうぞ。情報の扱いは<a class="pp" href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+</article>
+
+<article data-l="zh">
+<h1>关于随机人生</h1>
+<p class="lead">今天，地球上的某个地方有两个孩子出生。一个是你，另一个出生在完全相反的境遇里。随机人生是一款免费网页游戏，让你用五分钟左右并排过完这两个人的一生。</p>
+<a class="cta" href="./">现在出生 →</a>
+<h2>出生地是怎么决定的</h2>
+<p>出生地按各国每年出生的婴儿数量按比例抽取。婴儿出生越多的国家越容易被抽中，所以很多人生从印度、中国、尼日利亚、巴基斯坦等国开始。按目前的数据，全球约66%的婴儿出生在低收入和中低收入国家，约21%出生在预期寿命不足65岁的地方。每1,000名婴儿中约有28名活不到一岁。游戏首页的地图和数字展示的正是这个计算。</p>
+<p>性别和家庭条件也是随机决定的。即使在同一个国家，出生在什么样的家庭，也会改变你接触学校、医院和工作的机会。</p>
+<h2>怎么玩</h2>
+<ol>
+<li><b>出生</b>：点一下按钮，决定出生地、性别和家庭。也可以自己给孩子起名。</li>
+<li><b>每个年龄段做选择</b>：从童年到老年会遇到岔路，比如继续上学、去城里学手艺、组建家庭等。因境遇而无法打开的选项会显示一把锁。</li>
+<li><b>看结局</b>：人生结束时，你的选择会变成一张一页纸的自传卡片，可以保存或发给朋友。</li>
+</ol>
+<p>一局通常需要5到10分钟。也可以用速度按钮或自动播放更快地看到结局。</p>
+<h2>“如果在别处”：身旁一起长大的孩子</h2>
+<p>这是游戏最大的特点。在你出生的那天，还会有一个同性别、境遇完全相反的孩子出生。每当你站在岔路口，都会并排显示同一扇门对那个孩子是打开还是锁上。最后比较两人一生中遇到的关上的门有多少。</p>
+<h2>五种力量</h2>
+<p>人生由身体、生计、心境、人缘、本事五种力量推动。选择和事件会让它们升降，结局页面的人生曲线可以回看这些变化。天空随年龄从黎明变到正午，再到黄昏。</p>
+<h2>还可以选择出生的年代</h2>
+<p>除了“现在”，还可以选择“过去的某一年”（1950–2005年）和“未来的某一年”（2030–2100年）。1950年出生的孩子在五岁前夭折的概率远高于今天，而联合国预测2100年又会不同。</p>
+<h2>收集的乐趣</h2>
+<p>活过的国家会收进国家图鉴，还有“在七大地区都生活过”“活到100岁”等20枚徽章。按日期决定的“今日一人”对所有人都是同一个人，方便和朋友比较结果。</p>
+<h2>适合课堂和聚会</h2>
+<p>很适合用来开启关于世界公民、人口和不平等的讨论。每人玩一局再分享结局卡片，自然就会聊到出生地对人生的影响有多大。无需注册或安装，手机浏览器即可游玩。游戏涉及死亡、疾病和贫困等内容，年幼的孩子请在成人陪同下游玩。</p>
+<h2>数据来源</h2>
+<p>出生数和寿命来自联合国《世界人口展望2024》；上学、医院、电力、吸烟、婚姻等生活统计来自世界银行《世界发展指标》（由WHO、UNESCO、ILO、UNICEF等汇编）；冲突数据来自UCDP。事件和选项是虚构的，但其概率和文中的数字都由这些统计计算得出。缺失值用同一地区和收入组的中位数补充，并在游戏中标注≈。详细出处和许可见游戏底部的“数据来源”。</p>
+<h2>联系我们</h2>
+<p>游戏以四种语言免费运营。为了支付运营费用，开始页面和结局页面可能会显示广告，游玩人生的过程中不会显示。意见或错误请通过 <a href="https://github.com/randomlife-game/randomlife-game.github.io/issues" target="_blank" rel="noopener">GitHub Issues</a> 告诉我们。信息的处理方式见<a class="pp" href="privacy.html">隐私政策</a>。</p>
+</article>
+</main>
+<script>
+(function(){
+  var ok=["ko","en","ja","zh"], q=new URLSearchParams(location.search).get("l"), saved=null;
+  try{saved=JSON.parse(localStorage.getItem("lang"))}catch(e){}
+  var l=ok.indexOf(q)>=0?q:ok.indexOf(saved)>=0?saved:"ko";
+  document.documentElement.lang=l;
+  document.querySelectorAll("[data-l]").forEach(function(a){a.classList.toggle("on",a.getAttribute("data-l")===l)});
+  document.querySelectorAll("nav.lang a").forEach(function(a){a.classList.toggle("on",a.getAttribute("data-k")===l)});
+  var t={ko:"게임 소개 · 랜덤인생게임",en:"About · Random Life",ja:"ゲーム紹介 · ランダム人生",zh:"游戏介绍 · 随机人生"};
+  var h={ko:"← 랜덤인생게임",en:"← Random Life",ja:"← ランダム人生",zh:"← 随机人生"};
+  document.title=t[l]; var home=document.getElementById("home"); home.textContent=h[l]; if(l!=="ko"){ home.href="./?l="+l; document.querySelectorAll("a.cta,a.pp").forEach(function(a){a.href=a.getAttribute("href").replace(/(\?|$)/,function(){return "?l="+l})}); }
+})();
+</script>
+<noscript><style>[data-l="ko"]{display:block}</style></noscript>
+</body>
+</html>
