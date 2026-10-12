@@ -592,6 +592,10 @@ Object.assign(UI,{
  hp_gm:["할머니가 {cause} 세상을 떠났어요.","Your grandmother died {cause}.","祖母が{cause}亡くなりました。","祖母{cause}离世了。"],
  hp_gf:["할아버지가 {cause} 세상을 떠났어요.","Your grandfather died {cause}.","祖父が{cause}亡くなりました。","祖父{cause}离世了。"],
  hp_mom:["어머니가 {cause} 세상을 떠났어요.","Your mother died {cause}.","母が{cause}亡くなりました。","母亲{cause}离世了。"],
+ hp_sib:["동생 하나가 다섯 살을 넘기지 못하고 세상을 떠났어요.","One of your younger siblings died before turning five.","弟妹の一人が5歳を迎えられずに亡くなりました。","你的一个弟弟或妹妹没能活过五岁。"],
+ hp_elec:["{y}년, 집에 처음으로 전기가 들어왔어요.","In {y}, electricity reached your home for the first time.","{y}年、家に初めて電気が通りました。","{y}年，家里第一次通了电。"],
+ hp_net:["{y}년, 처음으로 인터넷에 접속했어요.","In {y}, you went online for the first time.","{y}年、初めてインターネットにつながりました。","{y}年，你第一次上了网。"],
+ hp_city:["{y}년, 일자리를 찾아 도시로 이사했어요.","In {y}, you moved to the city for work.","{y}年、仕事を求めて都会へ引っ越しました。","{y}年，你为了工作搬到了城市。"],
  hp_dad:["아버지가 {cause} 세상을 떠났어요.","Your father died {cause}.","父が{cause}亡くなりました。","父亲{cause}离世了。"],
  cg:{comm:["감염병·출산·영양 문제","infections, childbirth and malnutrition","感染症・出産・栄養の問題","传染病、分娩和营养问题"],ncd:["만성질환","chronic diseases","慢性疾患","慢性病"],inj:["사고와 폭력","accidents and violence","事故と暴力","事故与暴力"]},
  cause_share:["{place}에서 세상을 떠나는 사람 100명 중 약 {n}명이 {g} 때문이에요(WHO).","Of every 100 deaths in {place}, about {n} are from {g} (WHO).","{place}で亡くなる人100人中、約{n}人が{g}によるものです（WHO）。","在{place}，每100例死亡中约有{n}例源于{g}（WHO）。"]
@@ -708,7 +712,7 @@ const EV=[
   ch:[{l:["학원에 다닌다","Go to cram school","塾に通う","去上补习班"],req:G=>G.s.w>=40,why:["학원비가 필요해요","It costs tuition money","塾の月謝が必要です","需要补习费"],fx:{e:10,j:-3,w:-4},res:["공부 습관이 일찍 잡혔습니다.","You built study habits early.","勉強の習慣が早くから身につきました。","你早早养成了学习习惯。"]},
       {l:["도서관에서 책을 빌려 읽는다","Borrow and read books at the library","図書館で本を借りて読む","在图书馆借书读"],fx:{e:6,j:3},res:["도서관이 놀이터가 됐습니다.","The library became your playground.","図書館が遊び場になりました。","图书馆成了你的游乐场。"]},
       {l:["친구들과 뛰어논다","Run around with friends","友だちと駆け回る","和朋友疯玩"],fx:{r:8,h:3,e:-1},res:["해가 질 때까지 놀았습니다.","You played until sunset.","日が暮れるまで遊びました。","你玩到太阳落山。"]}]},
- {s:1,
+ {s:1,ok:G=>G.sibs>0,
   t:["동생이 태어났습니다.","A younger sibling is born.","弟か妹が生まれました。","弟弟或妹妹出生了。"],
   ch:[{l:["동생을 열심히 돌본다","Look after the baby eagerly","弟妹を一生懸命世話する","认真照顾弟妹"],fx:{r:8,j:3,e:-2},res:["든든한 형 누나가 됐습니다.","You became a dependable older sibling.","頼もしい兄や姉になりました。","你成了可靠的哥哥姐姐。"]},
       {l:["내 몫을 지키려 투정을 부린다","Throw tantrums to protect your share","自分の分を守ろうとわがままを言う","为了守住自己那份而耍脾气"],fx:{r:-3,j:2},res:["한동안 집안이 시끄러웠습니다.","The house was noisy for a while.","しばらく家の中が騒がしくなりました。","家里吵闹了一阵子。"]}]},
@@ -1573,7 +1577,8 @@ function fxDeltas(fx){
   const t=Object.entries(fx).filter(([,v])=>v).map(([k,v])=>`<span class="dl ${v>0?"up":"dn"}">${STAT_ICON[STATKEYS.indexOf(k)]} ${names[STATKEYS.indexOf(k)]} ${v>0?"+":""}${v}</span>`);
   return t.length?`<div class="deltas">${t.join("")}</div>`:"";
 }
-function applyFx(fx){ if(fx) for(const k in fx) G.s[k]=clamp(G.s[k]+fx[k]); }
+// 오르는 폭은 높을수록 줄어요(한 줄기만 100에 붙어 결말이 한쪽으로 쏠리지 않게)
+function applyFx(fx){ if(fx) for(const k in fx){ const d=fx[k]; G.s[k]=clamp(G.s[k]+(d>0?d*clamp((108-G.s[k])/50,.2,1):d)); } }
 const friend=(()=>{
   try{
     const p=new URLSearchParams(location.search);
@@ -1885,21 +1890,29 @@ function familyEvents(g){
   out.push({a:die(g.mAge,"f"),k:"hp_mom",age:0,fx:{j:-8,r:-3}});
   out.push({a:die(g.fAge,"m"),k:"hp_dad",age:0,fx:{j:-7,r:-2}});
   for(const e of out) if(!e.age) e.age=e.a+(e.k==="hp_mom"?g.mAge:g.fAge);
+  const Y=g.year, adj=[1.6,1,.5,.2][g.famTier];
+  // 형제 중 누군가 다섯 살을 넘기지 못할 확률: 그 무렵 5세 미만 사망률(UN)
+  for(let i=0;i<Math.min(g.sibs,4);i++){const b=1+Math.floor(rnd()*10); if(rnd()<tsv(iso,"q5",Y+b)/1000){out.push({a:b+1+Math.floor(rnd()*3),k:"hp_sib",nc:1,fx:{j:-6,r:-2}});break}}
+  // 집에 전기·인터넷이 처음 들어온 해: 그 나라 보급률이 오르는 속도를 따라요
+  if(!g.dr.elec){const u=rnd(); for(let a=2;a<70;a+=2){if((100-(covAt(iso,"elec",Y+a)??100))/100*adj<=u*.9){out.push({a,k:"hp_elec",nc:1,fx:{e:3,j:3},go:G=>{G.dr.elec=true}});break}}}
+  const nu=rnd(); for(let a=6;a<70;a++){const y=Y+a; if(y<1995) continue; if(netAt(iso,y)/100>=nu*(adj>1?adj*.8:1)){if(y>1996)out.push({a,k:"hp_net",nc:1,fx:{e:3,r:2}});break}}
+  // 도시로 이사: 그 나라 도시 인구 비율이 늘어난 만큼
+  if(!g.urban){const u0=urbAt(iso,Y)||0,u1=urbAt(iso,Y+30)||u0; if(rnd()<clamp((u1-u0)/Math.max(5,100-u0)*1.5,0,.7)) out.push({a:17+Math.floor(rnd()*16),k:"hp_city",nc:1,fx:{w:3,r:-3},go:G=>{G.urban=true}});}
   return out.filter(e=>e.a>0&&e.a<=110).sort((x,y)=>x.a-y.a);
 }
 function takeHappen(from,to){
   const list=[]; if(!G.kin) return list;
   for(const e of G.kin) if(!e.done&&e.a>from&&e.a<=to&&e.a<G.lifespan){
-    e.done=1; e.cause=e.cause||pickCause(e.age,G.year+e.a,Math.random);
-    if(e.fx) applyFx(e.fx);
-    const k=e.k,c=e.cause; list.push({a:e.a,f:()=>ui(k,{cause:UI.causes[c][LI]})});
+    e.done=1; if(!e.nc) e.cause=e.cause||pickCause(e.age,G.year+e.a,Math.random);
+    if(e.fx) applyFx(e.fx); if(e.go) e.go(G);
+    const k=e.k,c=e.cause,y=G.year+e.a; list.push({a:e.a,ic:{hp_elec:"💡",hp_net:"🌐",hp_city:"🏙️"}[k]||"🕯️",f:()=>ui(k,{cause:c?UI.causes[c][LI]:"",y})});
   }
   return list;
 }
 function passYears(from,to,done){
   const yrs=to-from, fact=pickFact(from,to), hap=takeHappen(from,to);
   ensureDash();
-  for(const h of hap) G.log.push({a:h.a,f:()=>"🕯️ "+h.f()});
+  for(const h of hap) G.log.push({a:h.a,f:()=>h.ic+" "+h.f()});
   if(hap.length){G.hist.push({a:to,...G.s});$("pStats").innerHTML=statsBox();$("pLog").innerHTML=logBox()}
   if(yrs<2&&!fact&&!hap.length) return done();
   view=()=>{topPlay()};
@@ -1981,11 +1994,15 @@ function choose(i){
 }
 
 /* ---------- 결말 ---------- */
+/* 결말 제목: 다섯 줄기를 '보통 인생(모의 플레이 1500판의 중앙값·사분위 폭)'과 비교해 가장 두드러진 쪽으로 정해요 */
+const T_MED={h:47,w:43,j:74,r:82,e:50}, T_IQR={h:26,w:32,j:15,r:16,e:30};
 function titleIdx(age){
-  const s=G.s,score=(s.h+s.w+s.j+s.r+s.e)/5;
   if(age<5) return 0; if(age<18) return 1;
-  if(s.w>=75&&s.j>=60) return 2; if(s.r>=75&&s.j>=60) return 3; if(s.e>=75) return 4; if(s.j>=70) return 5;
-  if(s.w<25&&s.h<35) return 6; if(score>=60) return 7; if(score>=45) return 8; return 9;
+  const z={}; for(const k of STATKEYS) z[k]=(G.s[k]-T_MED[k])/T_IQR[k];
+  const mean=(z.h+z.w+z.j+z.r+z.e)/5;
+  const top=["w","r","e","j"].sort((a,b)=>z[b]-z[a])[0];
+  if(z[top]>=.7) return {w:2,r:3,e:4,j:5}[top];
+  if(mean<=-.55&&z.w<0) return 6; if(mean>=.15) return 7; if(mean>=-.3) return 8; return 9;
 }
 function ending(){
   const age=Math.min(G.lifespan,110), le=G.c[6];
