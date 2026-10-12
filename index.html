@@ -106,6 +106,30 @@
   .log.tl li{border:0;position:relative;padding:6px 0 6px 16px}
   .log.tl li:before{content:"";position:absolute;left:-6px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
   body.px .doc{border-radius:0;border-width:2px;box-shadow:3px 3px 0 var(--line)}
+  .trust{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-size:12px;color:var(--soft);margin:0 0 18px}
+  .live{display:flex;gap:24px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:16px}
+  .live b{display:block;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+  .live span{font-size:12px;color:var(--muted)}
+  .live .dot{width:10px;height:10px;border-radius:50%;background:#c9594c;flex:none;animation:pulse 1.6s infinite}
+  .live>div{flex:1}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(201,89,76,.5)}100%{box-shadow:0 0 0 10px rgba(201,89,76,0)}}
+  .trow{display:grid;grid-template-columns:7.5em 1fr 3.4em;gap:10px;align-items:center;font-size:14px;padding:3px 0}
+  .trow i{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+  .trow u{display:block;height:100%;background:var(--accent);border-radius:4px}
+  .trow u.rest{background:var(--muted)}
+  .trow b{text-align:right;font-variant-numeric:tabular-nums;font-size:13px}
+  .smgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .sm{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+  .smh{padding:8px 10px;font-weight:700;font-size:14px;color:#fff;background:#8a8170}
+  .sm.t1 .smh{background:#c7893a}.sm.t2 .smh{background:#5a8f6a}.sm.t3 .smh{background:#4d6a8a}.sm.t0 .smh{background:#a8553f}
+  .smb{padding:8px 10px;font-size:13px;line-height:1.45}.smb span{font-size:12px;color:var(--muted)}
+  .bigstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 16px}
+  .bigstats>div{background:var(--accent-soft);border-radius:12px;padding:12px}
+  .bigstats b{display:block;font-size:28px;color:var(--accent);line-height:1.1}
+  .bigstats span{font-size:12px;color:var(--soft);line-height:1.4;display:block;margin-top:4px}
+  .faq details{border-top:1px solid var(--line);padding:8px 0}.faq details:first-of-type{border-top:0}
+  .faq summary{cursor:pointer;font-weight:600;font-size:15px}.faq p{margin:6px 0 2px;font-size:14px;color:var(--soft)}
+  @media (max-width:480px){.smgrid{grid-template-columns:1fr}.bigstats{grid-template-columns:1fr}.live{gap:14px}.live b{font-size:22px}.trow{grid-template-columns:6.5em 1fr 3.2em}}
   .langs .sep{flex:1}.langs{align-items:center}
   .nm{width:100%;font:inherit;font-size:20px;font-weight:700;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
   body.px .card,body.px .btn,body.px .stat,body.px .hero,body.px .sky,body.px .map,body.px .fact,body.px .scene,body.px .nm{border-radius:0}
@@ -289,6 +313,22 @@ const UI={
  f_sex:["성별","Sex","性別","性别"],f_country:["태어난 나라","Country","生まれた国","出生国家"],f_area:["사는 곳","Home area","住まい","居住地"],f_fam:["집안 형편","Family means","家計","家境"],
  f_par:["부모님 나이","Parents' ages","両親の年齢","父母年龄"],f_pjob:["부모님 직업","Parents' work","両親の仕事","父母职业"],f_sib:["형제자매","Siblings","きょうだい","兄弟姐妹"],f_le:["이 나라 기대수명","Life expectancy here","この国の平均寿命","当地预期寿命"],
  e_age:["살았던 나이","Age at the end","生きた年数","享年"],e_le:["이 나라 기대수명","Life expectancy here","この国の平均寿命","当地预期寿命"],e_job:["마지막 직업","Last job","最後の仕事","最后的职业"],
+ live_b:["이 페이지를 연 뒤 태어난 아기","babies born since you opened this page","このページを開いてから生まれた赤ちゃん","打开本页后出生的婴儿"],
+ live_d:["그중 첫 돌을 못 넘길 아기(추정)","of them may not reach their first birthday (est.)","そのうち1歳を迎えられない赤ちゃん（推定）","其中可能活不过一岁的婴儿（估算）"],
+ top_h:["어디서 태어날 확률이 높을까요","Where are you most likely to be born","どこで生まれる確率が高い？","你最可能出生在哪里"],
+ top_p:["연간 출생 수 기준이에요. 아이가 많이 태어나는 나라일수록 뽑힐 확률이 높아요.","Based on yearly births. The more babies a country has, the likelier it is to be drawn.","年間の出生数が基準です。赤ちゃんが多い国ほど選ばれやすくなります。","以每年出生人数为准，出生人数越多的国家越容易被抽中。"],
+ top_rest:["나머지 {n}개 나라·지역","The other {n} countries","残り{n}の国と地域","其余{n}个国家和地区"],
+ sm_h:["이런 삶이 시작될 수 있어요","Lives that could begin","こんな人生が始まるかも","可能开始的人生"],
+ sm_p:["무작위로 뽑은 가상의 아기 세 명이에요. 이름은 지어낸 것이고 실제 사람이 아니에요.","Three made-up babies drawn at random. The names are invented, not real people.","ランダムに選んだ架空の赤ちゃん3人です。名前は創作で、実在の人物ではありません。","随机抽取的三个虚构婴儿，名字是编的，并非真实人物。"],
+ sm_re:["다른 아기 보기","Draw three more","別の赤ちゃんを見る","换三个看看"],
+ bs1:["의 아기가 저소득·중하위소득 나라에서 태어나요","of babies are born in low and lower-middle income countries","の赤ちゃんが低所得・低中所得国で生まれます","的婴儿出生在低收入和中低收入国家"],
+ bs2:["의 아기가 기대수명 65세 미만인 나라에서 태어나요","of babies are born where life expectancy is under 65","の赤ちゃんが平均寿命65歳未満の国で生まれます","的婴儿出生在预期寿命不足65岁的国家"],
+ bs3:["명 — 태어난 1000명 중 첫 돌을 못 넘기는 아기(추정)","per 1,000 babies don't reach their first birthday (est.)","人 — 生まれた1000人のうち1歳前に亡くなる赤ちゃん（推定）","人 — 每1000名新生儿中活不过一岁的人数（估算）"],
+ trust:[["무료","회원가입 없음","서버에 저장 안 함","4개 언어"],["Free","No sign-up","Nothing stored on a server","4 languages"],["無料","登録不要","サーバーに保存しない","4言語"],["免费","无需注册","不上传服务器","四种语言"]].map(a=>a),
+ faq_h:["자주 묻는 질문","FAQ","よくある質問","常见问题"],
+ faq:[[["진짜 통계인가요?","Is the data real?","データは本物？","数据是真的吗？"],["나라별 출생 수, 기대수명, 영아사망률, 소득은 세계은행 공개 데이터예요. 이야기와 선택지는 게임을 위해 만든 허구예요.","Country birth counts, life expectancy, infant mortality and income come from World Bank open data. The stories and choices are fiction made for the game.","国別の出生数・平均寿命・乳児死亡率・所得は世界銀行のオープンデータです。出来事と選択肢はゲーム用の創作です。","各国出生人数、预期寿命、婴儿死亡率和收入来自世界银行开放数据，故事与选项是为游戏编写的虚构内容。"]],
+  [["제 기록이 저장되나요?","Is my play saved?","プレイは保存される？","我的记录会被保存吗？"],["이 브라우저에만 언어·속도 같은 설정이 저장되고, 서버로 보내는 정보는 없어요.","Only settings like language and speed stay in this browser. Nothing is sent to a server.","言語や速度などの設定がこのブラウザにだけ残り、サーバーへは何も送りません。","语言、速度等设置只保存在本浏览器中，不会发送到服务器。"]],
+  [["얼마나 걸리나요?","How long does it take?","どのくらいかかる？","要玩多久？"],["보통 5~10분이에요. ⏩ 속도 버튼이나 ▶ 자동으로 더 빨리 끝까지 볼 수도 있어요.","Usually 5 to 10 minutes. Use the ⏩ speed button or ▶ auto to see the whole life faster.","たいてい5〜10分です。⏩速度や▶自動でもっと早く最後まで見られます。","通常 5 到 10 分钟，也可以用 ⏩ 速度或 ▶ 自动更快看完。"]]],
  pass_h:["시간이 흘러가요","Time passes","時が流れます","时间流逝"],
  fact_label:["통계 한 줄","A statistic","統計ひとこと","一条统计"],
  fact_imr:["{place}에서는 아기 1000명 중 약 {n}명이 첫 돌을 넘기지 못해요. 당신은 그 고비를 넘겼어요.","In {place}, about {n} of every 1,000 babies don't reach their first birthday. You made it past that.","{place}では赤ちゃん1000人のうち約{n}人が1歳を迎えられません。あなたはその山を越えました。","在{place}，每1000名婴儿中约有{n}名活不到一岁。你熬过了这一关。"],
@@ -866,6 +906,39 @@ function friendBox(){
   if(!friend) return "";
   return `<div class="card friend"><p style="margin:0">${ui("friend",{place:place(friend.c),sex:UI.sex_adult[LI][friend.s==="m"?0:1],age:friend.a,title:UI.titles[friend.k][LI]})}</p></div>`;
 }
+/* ---------- 시작 화면 구성 요소 ---------- */
+const PAGE_T0=Date.now(), PER_SEC=totalBirths/31557600;
+const IMR_SUM=COUNTRIES.reduce((a,c)=>a+c[5]*((c[7]==null?[45,25,12,4][c[4]]:c[7])/1000),0)/totalBirths;
+const SHARE_LOW=COUNTRIES.filter(c=>c[4]<=1).reduce((a,c)=>a+c[5],0)/totalBirths;
+const SHARE_SHORT=COUNTRIES.filter(c=>c[6]!=null&&c[6]<65).reduce((a,c)=>a+c[5],0)/totalBirths;
+function tickerHTML(){
+  return `<div class="live"><span class="dot"></span><div><b id="tk1">0</b><span>${UI.live_b[LI]}</span></div><div><b id="tk2">0</b><span>${UI.live_d[LI]}</span></div></div>`;
+}
+function bindTicker(){
+  const n1=document.getElementById("tk1"); if(!n1) return;
+  const run=()=>{const a=document.getElementById("tk1"),b=document.getElementById("tk2"); if(!a){clearInterval(t);return}
+    const n=(Date.now()-PAGE_T0)/1000*PER_SEC; a.textContent=Math.floor(n).toLocaleString(); b.textContent=Math.floor(n*IMR_SUM).toLocaleString()};
+  const t=setInterval(run,300); run();
+}
+function topHTML(){
+  const rows=COUNTRIES.slice().sort((a,b)=>b[5]-a[5]).slice(0,8), mx=rows[0][5];
+  const rest=1-rows.reduce((a,c)=>a+c[5],0)/totalBirths;
+  return `<div class="card"><h2>${UI.top_h[LI]}</h2><p class="mut" style="margin:0 0 10px;font-size:13px">${UI.top_p[LI]}</p>`+
+    rows.map(c=>`<div class="trow"><span>${place(c)}</span><i><u style="width:${(c[5]/mx*100).toFixed(1)}%"></u></i><b>${(c[5]/totalBirths*100).toFixed(1)}%</b></div>`).join("")+
+    `<div class="trow"><span>${ui("top_rest",{n:COUNTRIES.length-8})}</span><i><u class="rest" style="width:${(rest*100*0.6).toFixed(1)}%"></u></i><b>${(rest*100).toFixed(1)}%</b></div></div>`;
+}
+let sampleSeed=Math.floor(Math.random()*1e6);
+function smCards(){
+  return [0,1,2].map(i=>{const g=newLife(sampleSeed+i*7919);
+    return `<div class="sm t${g.famTier}"><div class="smh">${g.name}</div><div class="smb">${place(g.c)}<br><span>${UI.sex_child[LI][g.sex==="m"?0:1]} · ${UI.tiers[g.famTier][LI]}</span><br><span>${UI.hh_place[LI][g.urban?0:1]} · ${ui("unit_yr",{n:g.c[6].toFixed(0)})}</span></div></div>`}).join("");
+}
+function samplesHTML(){
+  const cards=smCards();
+  return `<div class="card"><h2>${UI.sm_h[LI]}</h2><p class="mut" style="margin:0 0 10px;font-size:13px">${UI.sm_p[LI]}</p><div class="smgrid" id="smgrid">${cards}</div><button class="btn" id="smre" style="margin-top:12px;text-align:center">${UI.sm_re[LI]}</button></div>`;
+}
+const numsHTML=()=>`<div class="bigstats"><div><b>${Math.round(SHARE_LOW*100)}%</b><span>${UI.bs1[LI]}</span></div><div><b>${Math.round(SHARE_SHORT*100)}%</b><span>${UI.bs2[LI]}</span></div><div><b>${Math.round(IMR_SUM*1000)}</b><span>${UI.bs3[LI]}</span></div></div>`;
+const trustHTML=()=>`<div class="trust">${UI.trust[LI].map(t=>`<span>✓ ${t}</span>`).join("")}</div>`;
+const faqHTML=()=>`<div class="card faq"><h2>${UI.faq_h[LI]}</h2>${UI.faq.map(q=>`<details><summary>${q[0][LI]}</summary><p>${q[1][LI]}</p></details>`).join("")}</div>`;
 function renderStart(){
   view=renderStart; G=null;
   show(`
@@ -873,12 +946,20 @@ function renderStart(){
     <p class="sub">${UI.tagline[LI]}</p>
     <div class="nums"><div><b>${fmtN(totalBirths)}</b><span>${UI.num_b[LI]}</span></div><div><b>${COUNTRIES.length}</b><span>${UI.num_c[LI]}</span></div></div>
     <button class="btn primary big" id="go">${UI.random_go[LI]}</button></div>
+    ${trustHTML()}
     ${friendBox()}
+    ${tickerHTML()}
     ${dailyBox()}
+    ${topHTML()}
+    ${samplesHTML()}
+    ${numsHTML()}
     <ol class="steps">${UI.steps.map((s,i)=>s[LI]).map((t,i)=>`<li><i>${i+1}</i><span>${t}</span></li>`).join("")}</ol>
     <details class="card how"><summary>${UI.how_h[LI]}</summary><p>${UI.how_p[LI]}</p></details>
+    ${faqHTML()}
     ${srcHTML()}
     <p class="note">${UI.note[LI]}</p>`,()=>{
+    bindTicker();
+    document.getElementById("smre").onclick=()=>{sampleSeed=Math.floor(Math.random()*1e6);document.getElementById("smgrid").innerHTML=smCards()};
     document.getElementById("go").onclick=()=>{G=newLife();renderBirth()};
     const dg=document.getElementById("daily"); if(dg) dg.onclick=()=>{G=newLife(dailySeed());renderBirth()};
   },{type:"map",mode:"all",cap:UI.map_caption[LI]});
