@@ -58,6 +58,12 @@
   .friend{border-color:var(--accent);background:var(--accent-soft)}
   .langs{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;margin-bottom:14px}
   .langs button{font-size:13px;background:var(--surface);color:var(--soft);border:1px solid var(--line);border-radius:99px;padding:3px 12px}
+  .langs .sep{flex:1}.langs{align-items:center}
+  .nm{width:100%;font:inherit;font-size:20px;font-weight:700;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+  body.px .card,body.px .btn,body.px .stat,body.px .hero,body.px .sky,body.px .map,body.px .fact,body.px .scene,body.px .nm{border-radius:0}
+  body.px .card,body.px .btn{border-width:2px;box-shadow:3px 3px 0 var(--line)}
+  body.px .bar,body.px .bar i,body.px .ibar,body.px .ibar i{border-radius:0}
+  body.px .sky svg,body.px #world{image-rendering:pixelated}
   .langs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
   #langs{max-width:640px}
   .hero{margin:0 0 16px;border-radius:14px;overflow:hidden;position:relative}
@@ -222,6 +228,12 @@ const UI={
  ind_fert:["여성 1명당 출산 수","Births per woman","女性1人あたりの出生数","每位女性生育数"],
  na:["자료 없음","n/a","データなし","暂无数据"],
  unit_yr:["{n}세","{n} yrs","{n}歳","{n}岁"],
+ name_h:["이름","Name","名前","名字"],
+ name_p:["나라 문화에 맞춰 지은 가상의 이름이에요. 마음대로 바꿔도 돼요.","A made-up name that fits the local culture. Change it if you like.","その土地の文化に合わせた架空の名前です。自由に変えられます。","根据当地文化起的虚构名字，可以随意修改。"],
+ speed_t:["진행 속도","Speed","速度","速度"],
+ auto:["자동","Auto","自動","自动"],auto_t:["선택을 자동으로 이어가요","Play on automatically","自動で進めます","自动进行"],
+ style_t:["그림체 바꾸기","Switch art style","絵柄を切り替え","切换画风"],
+ style_px:["도트","Pixel","ドット","像素"],style_paper:["종이","Paper","紙","纸艺"],
  pass_h:["시간이 흘러가요","Time passes","時が流れます","时间流逝"],
  fact_label:["통계 한 줄","A statistic","統計ひとこと","一条统计"],
  fact_imr:["{place}에서는 아기 1000명 중 약 {n}명이 첫 돌을 넘기지 못해요. 당신은 그 고비를 넘겼어요.","In {place}, about {n} of every 1,000 babies don't reach their first birthday. You made it past that.","{place}では赤ちゃん1000人のうち約{n}人が1歳を迎えられません。あなたはその山を越えました。","在{place}，每1000名婴儿中约有{n}名活不到一岁。你熬过了这一关。"],
@@ -488,6 +500,34 @@ const EV=[
 const STAGES=[
  {a:0,b:2,evs:0},{a:3,b:9,evs:3},{a:10,b:18,evs:4},{a:19,b:29,evs:4},{a:30,b:49,evs:4},{a:50,b:64,evs:3},{a:65,b:120,evs:3}
 ];
+/* ---------- 이름 만들기: 문화권별 흔한 음절을 조합한 가상의 이름 (실존 인물 아님) ---------- */
+const NM={
+  ko:{sur:["김","이","박","최","정","강","조","윤","장","임"],m:["민준","서준","도윤","지후","현우","준서","건우","태양"],f:["서연","지우","하윤","수아","지민","예은","채원","다은"]},
+  ja:{sur:["佐藤","鈴木","高橋","田中","伊藤","山本","中村","小林"],m:["蓮","大翔","湊","陽翔","悠真","颯太"],f:["陽葵","凛","結衣","葵","美咲","さくら"]},
+  zh:{sur:["王","李","张","刘","陈","杨","赵","黄"],m:["子轩","浩然","宇航","俊杰","明辉","志强"],f:["欣怡","梓涵","诗琪","雅婷","静怡","丽华"]},
+  en:{sur:["Smith","Brown","Taylor","Wilson","Clark","Walker","Hall","Young"],m:["James","Oliver","Henry","Jack","Lucas","Ethan"],f:["Emma","Olivia","Grace","Lily","Chloe","Ella"]},
+  es:{sur:["García","Rodríguez","López","Martínez","Silva","Santos","Pérez"],m:["Mateo","Santiago","Diego","Lucas","Joaquín","Tomás"],f:["Sofía","Valentina","Camila","Lucía","Isabella","Ximena"]},
+  ar:{sur:["Al-Hassan","Haddad","Mansour","Khalil","Saleh","Nasser"],m:["Omar","Youssef","Ahmed","Karim","Khaled","Tariq"],f:["Layla","Fatima","Noor","Amira","Salma","Huda"]},
+  in:{sur:["Sharma","Patel","Singh","Das","Khan","Reddy","Gupta"],m:["Arjun","Rohan","Aarav","Vikram","Imran","Rahul"],f:["Priya","Ananya","Diya","Meera","Aisha","Sana"]},
+  af:{sur:["Mensah","Okafor","Diallo","Mwangi","Abebe","Nkosi","Traoré"],m:["Kofi","Chidi","Amadou","Baraka","Tendai","Musa"],f:["Amara","Ngozi","Aisha","Zuri","Thandi","Abena"]},
+  ru:{sur:["Ivanov","Petrov","Kowalski","Novak","Popescu","Horvat"],m:["Alexei","Dmitri","Marek","Jan","Nikolai","Stefan"],f:["Anna","Katya","Marta","Olga","Elena","Irina"]},
+  sea:{sur:["Nguyen","Tran","Santos","Reyes","Wijaya","Chai","Lim"],m:["Minh","Budi","Somchai","Jose","Aung","Dara"],f:["Linh","Siti","Mali","Maria","Thida","Dewi"]}
+};
+const CULT={KOR:"ko",PRK:"ko",JPN:"ja",CHN:"zh",TWN:"zh",HKG:"zh",MAC:"zh",SGP:"zh",
+  IND:"in",PAK:"in",BGD:"in",LKA:"in",NPL:"in",AFG:"in",
+  VNM:"sea",THA:"sea",IDN:"sea",PHL:"sea",MMR:"sea",KHM:"sea",LAO:"sea",MYS:"sea",
+  RUS:"ru",UKR:"ru",POL:"ru",BLR:"ru",CZE:"ru",ROU:"ru",BGR:"ru",SRB:"ru",HRV:"ru",SVK:"ru",HUN:"ru",
+  USA:"en",GBR:"en",CAN:"en",AUS:"en",NZL:"en",IRL:"en",DEU:"en",FRA:"en",ITA:"en",NLD:"en",SWE:"en",NOR:"en",DNK:"en",FIN:"en",CHE:"en",AUT:"en",BEL:"en"};
+function cultureOf(c){
+  const iso=c[0]; if(CULT[iso]) return CULT[iso];
+  const r=c[3]; // 0 동아시아 1 유럽 2 중남미 3 중동북아프리카 4 북미 5 남아시아 6 사하라이남
+  return r===2?"es":r===3?"ar":r===5?"in":r===6?"af":r===1?"ru":r===0?"sea":"en";
+}
+function makeName(c,sex,rnd){
+  const k=cultureOf(c), d=NM[k], pick=a=>a[Math.floor(rnd()*a.length)];
+  const given=pick(d[sex]), sur=pick(d.sur);
+  return (k==="ko"||k==="ja"||k==="zh")?sur+given:given+" "+sur;
+}
 /* ---------- 공통 도구 ---------- */
 let rnd=Math.random;
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -582,7 +622,14 @@ function drawWorld(age){
   else if(a<50){ people=fig(330,66,col.s,{extra:pj?`<text x="-10" y="-72" font-size="16">${pj}</text>`:""})+fig(370,62,col.e)+(G.s.r>=45?fig(400,36,col.c):""); }
   else if(a<65){ people=fig(330,64,col.s,{extra:pj?`<text x="-10" y="-70" font-size="16">${pj}</text>`:""})+fig(370,60,col.e)+fig(410,64,col.c); }
   else { people=fig(340,56,"#9a8f86",{extra:`<rect x="14" y="-40" width="3" height="40" fill="${ink}"/>`})+(G.s.r>=50?fig(382,30,col.c)+fig(410,58,col.m):""); }
-  g.innerHTML=back+house+people;
+  g.innerHTML=STYLE==="px"?pixelate(back+house+people):back+house+people;
+}
+/* 도트 그림체: 좌표를 4칸 격자에 맞추고 원은 네모 블록으로 바꿔요 */
+function pixelate(svg){
+  const q=v=>Math.round(parseFloat(v)/4)*4;
+  svg=svg.replace(/<circle cx="([-\d.]+)" cy="([-\d.]+)" r="([-\d.]+)"/g,(m,x,y,r)=>`<rect x="${q(x-r)}" y="${q(y-r)}" width="${Math.max(4,q(r*2))}" height="${Math.max(4,q(r*2))}"`);
+  svg=svg.replace(/<rect ([^>]*?)\/?>/g,m=>m.replace(/\b(x|y|width|height)="([-\d.]+)"/g,(mm,k,v)=>`${k}="${k==="width"||k==="height"?Math.max(2,q(v)):q(v)}"`).replace(/ rx="[^"]*"/,""));
+  return svg.replace(/<g /g,'<g shape-rendering="crispEdges" ');
 }
 function setSky(age,ended){
   drawWorld(age);
@@ -663,15 +710,41 @@ function setLang(l,keep){
   if(!keep) store.set("lang",l);
   if(view) view();
 }
-function langBar(){
-  return `<div class="langs">${LANGS.map(([c,n])=>`<button data-lang="${c}" class="${c===LANG?"on":""}">${n}</button>`).join("")}</div>`;
+const SPEEDS=[1,2,4];
+let SPEED=SPEEDS.includes(store.get("speed"))?store.get("speed"):1, AUTO=false, STYLE=store.get("style")==="px"?"px":"paper";
+const sp=ms=>ms/SPEED;
+function ctrlBar(){
+  return `<button data-ctl="speed" title="${UI.speed_t[LI]}">⏩ ${SPEED}×</button><button data-ctl="auto" class="${AUTO?"on":""}" title="${UI.auto_t[LI]}">▶ ${UI.auto[LI]}</button><button data-ctl="style" class="${STYLE==="px"?"on":""}" title="${UI.style_t[LI]}">🎮 ${STYLE==="px"?UI.style_px[LI]:UI.style_paper[LI]}</button>`;
 }
-function bindLang(){ langEl.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>setLang(b.dataset.lang)); }
+function langBar(){
+  return `<div class="langs">${ctrlBar()}<span class="sep"></span>${LANGS.map(([c,n])=>`<button data-lang="${c}" class="${c===LANG?"on":""}">${n}</button>`).join("")}</div>`;
+}
+function bindLang(){
+  langEl.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
+  langEl.querySelectorAll("[data-ctl]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.ctl;
+    if(k==="speed"){SPEED=SPEEDS[(SPEEDS.indexOf(SPEED)+1)%SPEEDS.length];store.set("speed",SPEED)}
+    if(k==="auto"){AUTO=!AUTO}
+    if(k==="style"){STYLE=STYLE==="px"?"paper":"px";store.set("style",STYLE);applyStyle();if(G)drawWorld(G.shownAge||G.age)}
+    langEl.innerHTML=langBar(); bindLang(); autoStep();
+  });
+}
+function applyStyle(){ document.body.classList.toggle("px",STYLE==="px"); }
+/* 자동 진행: 켜 두면 선택 가능한 보기 중 하나를 골라 계속 이어가요 */
+let autoT=0;
+function autoStep(){
+  clearTimeout(autoT); if(!AUTO) return;
+  autoT=setTimeout(()=>{
+    if(!AUTO) return;
+    const c=document.getElementById("cont"); if(c){c.click();return}
+    const bs=[...app.querySelectorAll("button[data-i]")]; if(bs.length){bs[Math.floor(Math.random()*bs.length)].click()}
+  },sp(1400));
+}
 function show(html,bind,hero){
   langEl.innerHTML=langBar(); bindLang();
   if(hero&&hero.type==="sky"){ if(!document.getElementById("sky")){heroEl.innerHTML=heroHTML(hero);paintSky(sky.t)} setSky(hero.age,hero.ended); }
   else heroEl.innerHTML=heroHTML(hero);
-  app.innerHTML=html; if(bind) bind(); }
+  app.innerHTML=html; if(bind) bind(); autoStep(); }
 
 /* ---------- 출생 ---------- */
 function weightedBirth(){
@@ -705,6 +778,7 @@ function newLife(seed){
   };
   g.pjob=parentJob(g);
   g.hist.push({a:0,...g.s});
+  g.name=makeName(g.c,g.sex,rnd);
   rnd=Math.random;
   return g;
 }
@@ -777,12 +851,16 @@ function renderBirth(){
     <div class="card"><h2>${UI.who_h[LI]}</h2>
       <div class="big">${UI.sex_child[LI][G.sex==="m"?0:1]} · ${UI.tiers[G.famTier][LI]}</div>
       <p style="margin-bottom:0;color:var(--soft)">${ui("who_p",{job:G.pjob.n[LI]})}</p></div>
+    <div class="card"><h2>${UI.name_h[LI]}</h2>
+      <input id="nm" class="nm" maxlength="24" value="${G.name.replace(/"/g,"&quot;")}" aria-label="${UI.name_h[LI]}">
+      <p style="margin:6px 0 0;font-size:12px;color:var(--soft)">${UI.name_p[LI]}</p></div>
     <div class="card"><h2>${UI.hh_h[LI]}</h2>
       <p style="margin:0;color:var(--soft)">${UI.hh_place[LI][G.urban?0:1]} · ${G.sibs?ui("hh_sib",{n:G.sibs}):UI.hh_sib0[LI]}<br>${ui("hh_par",{m:G.mAge,f:G.fAge})}</p></div>
     ${countryCard(c)}
     ${statsHTML()}
     <button class="btn primary" id="next">${UI.start_life[LI]}</button>`,()=>{
     document.getElementById("next").onclick=()=>{
+      const nv=document.getElementById("nm").value.trim(); if(nv) G.name=nv.slice(0,24);
       G.log.push({a:0,f:()=>ui("born_log",{place:place(G.c),sex:UI.sex_child[LI][G.sex==="m"?0:1]})});
       startStage();
     };
@@ -847,7 +925,7 @@ function passYears(from,to,done){
     <div class="bar"><i id="pbar" style="width:0"></i></div>
     <div id="pfact"></div><p class="mut" style="font-size:12px;margin:10px 0 0">${UI.tap_skip[LI]}</p></div>`,()=>{
       document.querySelector(".pass").onclick=go;
-      const dur=Math.min(1500,Math.max(500,yrs*70)), t0=performance.now();
+      const dur=sp(Math.min(1500,Math.max(500,yrs*70))), t0=performance.now();
       timer=setInterval(()=>{
         const u=clamp((performance.now()-t0)/dur,0,1);
         document.getElementById("pa").textContent=Math.round(from+yrs*u);
@@ -855,13 +933,13 @@ function passYears(from,to,done){
         if(u>=1){clearInterval(timer);
           if(fact){const txt=fact();G.log.push({a:to,f:()=>"📊 "+fact()});
             document.getElementById("pfact").innerHTML=`<div class="fact"><span>${UI.fact_label[LI]}</span>${txt}</div>`;
-            setTimeout(go,3200);
-          } else setTimeout(go,250);
+            setTimeout(go,sp(3200));
+          } else setTimeout(go,sp(250));
         }
       },60);
     },{type:"sky",age:to});
 }
-const stageHead=()=>`<div class="age">${UI.stages[G.stageIdx][LI]} · ${ui("age_n",{n:G.age})} · ${place(G.c)}${G.job?` · ${G.job.n[LI]}`:""}</div>`;
+const stageHead=()=>`<div class="age">${G.name?G.name+" · ":""}${UI.stages[G.stageIdx][LI]} · ${ui("age_n",{n:G.age})} · ${place(G.c)}${G.job?` · ${G.job.n[LI]}`:""}</div>`;
 function showEvent(){
   view=showEvent;
   const e=cur.e;
@@ -982,7 +1060,8 @@ function renderEnding(){
 /* ---------- 자서전 카드 ---------- */
 function bioLines(info){
   const key=G.bio.slice().sort((a,b)=>b.imp-a.imp).slice(0,G.job?2:3).sort((a,b)=>a.a-b.a);
-  const lines=[ui("card_born",{place:place(G.c),tier:UI.tiers[G.famTier][LI]})];
+  const lines=[]; if(G.name) lines.push("· "+G.name);
+  lines.push(ui("card_born",{place:place(G.c),tier:UI.tiers[G.famTier][LI]}));
   if(G.job) lines.push(ui("card_job",{job:G.job.n[LI]}));
   for(const k of key) if(!k.job) lines.push(ui("card_choice",{a:k.a,l:tr(k.l,G)}));
   lines.push(ui("card_end",{age:info.age,cause:info.causeTxt}));
@@ -1031,7 +1110,7 @@ function saveCard(){
   const saved=store.get("lang");
   const nav=(navigator.language||"ko").toLowerCase();
   const guess=nav.startsWith("ko")?"ko":nav.startsWith("ja")?"ja":nav.startsWith("zh")?"zh":nav.startsWith("en")?"en":"ko";
-  view=renderStart; setLang(LANGS.some(x=>x[0]===q)?q:saved||guess,true);
+  applyStyle(); view=renderStart; setLang(LANGS.some(x=>x[0]===q)?q:saved||guess,true);
 })();
 </script>
 </body>
