@@ -58,6 +58,26 @@
   .friend{border-color:var(--accent);background:var(--accent-soft)}
   .langs{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;margin-bottom:14px}
   .langs button{font-size:13px;background:var(--surface);color:var(--soft);border:1px solid var(--line);border-radius:99px;padding:3px 12px}
+  .wrap{max-width:680px}
+  .intro{text-align:center;padding:8px 0 20px}
+  .intro h1{font-size:36px;letter-spacing:-.02em;margin:6px 0 6px}
+  .intro .sub{font-size:16px;margin:0 auto 18px;max-width:30em}
+  .nums{display:flex;justify-content:center;gap:28px;margin:0 0 20px}
+  .nums b{display:block;font-size:28px;line-height:1.1;color:var(--accent)}
+  .nums span{font-size:12px;color:var(--muted)}
+  .btn.big{font-size:18px;padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(168,116,42,.28)}
+  .card.daily{background:transparent;border-style:dashed}
+  .steps{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:8px}
+  .steps li{display:flex;gap:12px;align-items:center;font-size:14px;color:var(--soft)}
+  .steps i{flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-style:normal;font-weight:700;display:grid;place-items:center;font-size:13px}
+  details.how summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:15px}
+  details.how p{margin:10px 0 0;font-size:14px;color:var(--soft)}
+  .hud{position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0 2px;margin:0 0 6px}
+  .hud .age{margin-bottom:4px;font-size:14px;color:var(--ink);font-weight:600}
+  .lifebar{height:3px;background:var(--line);border-radius:2px;margin:0 0 8px;overflow:hidden}
+  .lifebar i{display:block;height:100%;background:var(--accent)}
+  .hud .stats{margin-bottom:8px}
+  #next{position:sticky;bottom:12px;z-index:5;box-shadow:0 6px 18px rgba(0,0,0,.22)}
   .langs .sep{flex:1}.langs{align-items:center}
   .nm{width:100%;font:inherit;font-size:20px;font-weight:700;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
   body.px .card,body.px .btn,body.px .stat,body.px .hero,body.px .sky,body.px .map,body.px .fact,body.px .scene,body.px .nm{border-radius:0}
@@ -234,6 +254,9 @@ const UI={
  auto:["자동","Auto","自動","自动"],auto_t:["선택을 자동으로 이어가요","Play on automatically","自動で進めます","自动进行"],
  style_t:["그림체 바꾸기","Switch art style","絵柄を切り替え","切换画风"],
  style_px:["도트","Pixel","ドット","像素"],style_paper:["종이","Paper","紙","纸艺"],
+ num_b:["명이 해마다 태어나요","babies are born each year","人が毎年生まれます","名婴儿每年出生"],
+ num_c:["개 나라와 지역","countries and territories","の国と地域","个国家和地区"],
+ steps:[["출생지와 집안이 무작위로 정해져요","Birthplace and family are drawn at random","出生地と家庭がランダムに決まります","出生地和家境随机决定"],["나이대마다 선택을 하며 살아요","Make choices at every stage of life","年代ごとに選択して生きます","在每个人生阶段做出选择"],["결말 카드를 만들어 친구에게 보여줘요","Get an ending card to share with friends","結末カードを友だちに見せよう","生成结局卡片分享给朋友"]],
  pass_h:["시간이 흘러가요","Time passes","時が流れます","时间流逝"],
  fact_label:["통계 한 줄","A statistic","統計ひとこと","一条统计"],
  fact_imr:["{place}에서는 아기 1000명 중 약 {n}명이 첫 돌을 넘기지 못해요. 당신은 그 고비를 넘겼어요.","In {place}, about {n} of every 1,000 babies don't reach their first birthday. You made it past that.","{place}では赤ちゃん1000人のうち約{n}人が1歳を迎えられません。あなたはその山を越えました。","在{place}，每1000名婴儿中约有{n}名活不到一岁。你熬过了这一关。"],
@@ -794,10 +817,10 @@ function applyFx(fx){ if(fx) for(const k in fx) G.s[k]=clamp(G.s[k]+fx[k]); }
 
 function dailyBox(){
   const prev=store.get("daily"), done=prev&&prev.date===todayStr();
-  return `<div class="card"><h2>${ui("daily_h",{d:todayStr()})}</h2>
+  return `<div class="card daily"><h2>${ui("daily_h",{d:todayStr()})}</h2>
     <p style="margin-top:0">${ui("daily_p")}</p>
     ${done?`<p class="res">${ui("daily_rec",{t:prev.text&&prev.text[LI]||""})}</p>`:""}
-    <button class="btn primary" id="daily">${ui(done?"daily_again":"daily_go")}</button></div>`;
+    <button class="btn" id="daily">${ui(done?"daily_again":"daily_go")}</button></div>`;
 }
 const friend=(()=>{
   try{
@@ -814,13 +837,14 @@ function friendBox(){
 function renderStart(){
   view=renderStart; G=null;
   show(`
-    <h1>${UI.title[LI]}</h1>
+    <div class="intro"><h1>${UI.title[LI]}</h1>
     <p class="sub">${UI.tagline[LI]}</p>
+    <div class="nums"><div><b>${fmtN(totalBirths)}</b><span>${UI.num_b[LI]}</span></div><div><b>${COUNTRIES.length}</b><span>${UI.num_c[LI]}</span></div></div>
+    <button class="btn primary big" id="go">${UI.random_go[LI]}</button></div>
     ${friendBox()}
-    <div class="card"><h2>${UI.how_h[LI]}</h2><p>${UI.how_p[LI]}</p>
-      <p style="color:var(--muted);font-size:14px;margin-bottom:0">${ui("how_n",{n:fmtN(totalBirths),k:COUNTRIES.length})}</p></div>
     ${dailyBox()}
-    <button class="btn primary" id="go">${UI.random_go[LI]}</button>
+    <ol class="steps">${UI.steps.map((s,i)=>s[LI]).map((t,i)=>`<li><i>${i+1}</i><span>${t}</span></li>`).join("")}</ol>
+    <details class="card how"><summary>${UI.how_h[LI]}</summary><p>${UI.how_p[LI]}</p></details>
     ${srcHTML()}
     <p class="note">${UI.note[LI]}</p>`,()=>{
     document.getElementById("go").onclick=()=>{G=newLife();renderBirth()};
@@ -939,11 +963,12 @@ function passYears(from,to,done){
       },60);
     },{type:"sky",age:to});
 }
+const hud=p=>`<div class="hud">${stageHead()}<div class="lifebar"><i style="width:${Math.min(100,G.age)}%"></i></div>${statsHTML(p)}</div>`;
 const stageHead=()=>`<div class="age">${G.name?G.name+" · ":""}${UI.stages[G.stageIdx][LI]} · ${ui("age_n",{n:G.age})} · ${place(G.c)}${G.job?` · ${G.job.n[LI]}`:""}</div>`;
 function showEvent(){
   view=showEvent;
   const e=cur.e;
-  show(`${stageHead()}${statsHTML()}
+  show(`${hud()}
     <div class="card ev"><div class="scene" style="background:${sceneBG(G.age)}"><span class="emo">${EVICON[EV.indexOf(e)]||"✨"}</span><span class="stg">${STAGE_ICON[G.stageIdx]} ${UI.stages[G.stageIdx][LI]}</span></div><div class="q">${tr(e.t,G)}</div>
       ${cur.ch.map((c,i)=>{
         if(c.req&&!c.req(G)){
@@ -973,7 +998,7 @@ function choose(i){
   if(G.s.h<=10&&G.age>5){ G.lifespan=Math.min(G.lifespan,G.age+Math.floor(rnd()*6)); G.cause=G.cause||"health"; }
   G.hist.push({a:G.age,...G.s});
   const dead=G.age>=G.lifespan, fx=ch.fx;
-  view=()=>{show(`${stageHead()}${statsHTML(prevS)}
+  view=()=>{show(`${hud(prevS)}
     <div class="card ev"><div class="res pop">${tr(res,G)}${fxText(fx)}</div>
       <button class="btn primary" id="cont">${dead?"…":UI.cont[LI]}</button></div>`,()=>{
         document.getElementById("cont").onclick=()=>dead?ending():nextEvent();
