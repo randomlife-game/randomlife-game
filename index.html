@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>랜덤인생게임 · Random Life</title>
+<meta name="description" content="80억 명 중 한 명으로 무작위로 태어나 일생을 살아 보는 게임 · Be born as one of 8 billion and live a whole life · 80億人の中の一人として生まれ、一生を生きるゲーム · 成为80亿人中的一个，过完一生">
+<meta property="og:type" content="website">
+<meta property="og:title" content="랜덤인생게임 · Random Life · ランダム人生 · 随机人生">
+<meta property="og:description" content="Who will you be out of 8 billion? 80억 명 중 당신은 누가 될까요? 80億人の中で、あなたは誰になる？ 80亿人里，你会成为谁？">
+<meta property="og:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
+<meta property="og:url" content="https://randomlife-game.github.io/randomlife-game/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
+<style>
+  :root{
+    --bg:#f5f2ea; --surface:#fff; --ink:#1f1d19; --soft:#58534a; --muted:#8c8578;
+    --line:#ddd6c6; --accent:#a8742a; --accent-soft:#efe0c3;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#14120f; --surface:#1e1b16; --ink:#ede7da; --soft:#c3bba9; --muted:#8a8170;
+      --line:#383025; --accent:#d3a352; --accent-soft:#33290f; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Noto Sans JP","Noto Sans SC","Malgun Gothic",system-ui,sans-serif;line-height:1.6}
+  .wrap{max-width:640px;margin:0 auto;padding:20px 16px 64px}
+  h1{font-size:26px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 24px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+  .card h2{font-size:15px;color:var(--accent);margin:0 0 8px;letter-spacing:.02em}
+  .big{font-size:22px;font-weight:700;margin:2px 0 6px}
+  .q{font-size:18px;margin-bottom:6px}
+  button,.btn{font:inherit;cursor:pointer}
+  .btn{display:block;width:100%;text-align:left;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:8px;text-decoration:none}
+  .btn:hover,.btn:focus-visible{border-color:var(--accent);background:var(--accent-soft);outline:none}
+  .primary{background:var(--accent);color:#fff;border:0;text-align:center;font-weight:700;padding:14px}
+  .primary:hover{background:var(--accent);filter:brightness(1.1)}
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;font-size:12px;color:var(--soft)}
+  .stat b{display:block;font-size:17px;color:var(--ink)}
+  .bar{height:4px;background:var(--line);border-radius:2px;margin-top:4px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--accent)}
+  .age{font-size:13px;color:var(--muted);margin-bottom:8px}
+  .res{border-left:3px solid var(--accent);padding:4px 12px;margin:12px 0;color:var(--soft)}
+  .log{font-size:14px;color:var(--soft);margin:0;padding:0;list-style:none}
+  .log li{padding:5px 0;border-bottom:1px dashed var(--line)}
+  .log li span{color:var(--accent);font-weight:700;margin-right:8px;font-variant-numeric:tabular-nums}
+  .log li span.mut,.mut{color:var(--muted);font-weight:400}
+  .tag{display:inline-block;font-size:12px;background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:2px 10px;margin:0 4px 4px 0}
+  .fx{font-size:12px;color:var(--muted);margin-top:6px}
+  .note{font-size:12px;color:var(--muted);margin-top:24px}
+  .btn.locked{opacity:.55;border-style:dashed;cursor:not-allowed}
+  .btn.locked:hover{background:var(--surface);border-color:var(--line)}
+  canvas{width:100%;height:auto;border-radius:12px;border:1px solid var(--line);display:block}
+  .row{display:flex;gap:8px}.row .btn{text-align:center}
+  .sns{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-top:8px}
+  .sns .btn{text-align:center;margin:0}
+  .friend{border-color:var(--accent);background:var(--accent-soft)}
+  .langs{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;margin-bottom:14px}
+  .langs button{font-size:13px;background:var(--surface);color:var(--soft);border:1px solid var(--line);border-radius:99px;padding:3px 12px}
+  .langs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  @media (max-width:420px){.stats{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+/* 국가 데이터: World Bank Open Data (CC BY 4.0) — [iso3, -, -, 지역, 소득, 추정출생수, 기대수명, 영아사망(천명당), 1인당GDP(PPP)] */
+const NAMES={"ABW":["아루바","Aruba","アルバ","阿鲁巴"],"AFG":["아프가니스탄","Afghanistan","アフガニスタン","阿富汗"],"AGO":["앙골라","Angola","アンゴラ","安哥拉"],"ALB":["알바니아","Albania","アルバニア","阿尔巴尼亚"],"AND":["안도라","Andorra","アンドラ","安道尔"],"ARE":["아랍에미리트","United Arab Emirates","アラブ首長国連邦","阿拉伯联合酋长国"],"ARG":["아르헨티나","Argentina","アルゼンチン","阿根廷"],"ARM":["아르메니아","Armenia","アルメニア","亚美尼亚"],"ASM":["아메리칸 사모아","American Samoa","米領サモア","美属萨摩亚"],"ATG":["앤티가 바부다","Antigua & Barbuda","アンティグア・バーブーダ","安提瓜和巴布达"],"AUS":["오스트레일리아","Australia","オーストラリア","澳大利亚"],"AUT":["오스트리아","Austria","オーストリア","奥地利"],"AZE":["아제르바이잔","Azerbaijan","アゼルバイジャン","阿塞拜疆"],"BDI":["부룬디","Burundi","ブルンジ","布隆迪"],"BEL":["벨기에","Belgium","ベルギー","比利时"],"BEN":["베냉","Benin","ベナン","贝宁"],"BFA":["부르키나파소","Burkina Faso","ブルキナファソ","布基纳法索"],"BGD":["방글라데시","Bangladesh","バングラデシュ","孟加拉国"],"BGR":["불가리아","Bulgaria","ブルガリア","保加利亚"],"BHR":["바레인","Bahrain","バーレーン","巴林"],"BHS":["바하마","Bahamas","バハマ","巴哈马"],"BIH":["보스니아 헤르체고비나","Bosnia & Herzegovina","ボスニア・ヘルツェゴビナ","波斯尼亚和黑塞哥维那"],"BLR":["벨라루스","Belarus","ベラルーシ","白俄罗斯"],"BLZ":["벨리즈","Belize","ベリーズ","伯利兹"],"BMU":["버뮤다","Bermuda","バミューダ","百慕大"],"BOL":["볼리비아","Bolivia","ボリビア","玻利维亚"],"BRA":["브라질","Brazil","ブラジル","巴西"],"BRB":["바베이도스","Barbados","バルバドス","巴巴多斯"],"BRN":["브루나이","Brunei","ブルネイ","文莱"],"BTN":["부탄","Bhutan","ブータン","不丹"],"BWA":["보츠와나","Botswana","ボツワナ","博茨瓦纳"],"CAF":["중앙 아프리카 공화국","Central African Republic","中央アフリカ共和国","中非共和国"],"CAN":["캐나다","Canada","カナダ","加拿大"],"CHE":["스위스","Switzerland","スイス","瑞士"],"CHI":["채널 제도","Channel Islands","チャンネル諸島","海峡群岛"],"CHL":["칠레","Chile","チリ","智利"],"CHN":["중국","China","中国","中国"],"CIV":["코트디부아르","Côte d’Ivoire","コートジボワール","科特迪瓦"],"CMR":["카메룬","Cameroon","カメルーン","喀麦隆"],"COD":["콩고-킨샤사","Congo - Kinshasa","コンゴ民主共和国(キンシャサ)","刚果（金）"],"COG":["콩고-브라자빌","Congo - Brazzaville","コンゴ共和国(ブラザビル)","刚果（布）"],"COL":["콜롬비아","Colombia","コロンビア","哥伦比亚"],"COM":["코모로","Comoros","コモロ","科摩罗"],"CPV":["카보베르데","Cape Verde","カーボベルデ","佛得角"],"CRI":["코스타리카","Costa Rica","コスタリカ","哥斯达黎加"],"CUB":["쿠바","Cuba","キューバ","古巴"],"CUW":["퀴라소","Curaçao","キュラソー","库拉索"],"CYM":["케이맨 제도","Cayman Islands","ケイマン諸島","开曼群岛"],"CYP":["키프로스","Cyprus","キプロス","塞浦路斯"],"CZE":["체코","Czechia","チェコ","捷克"],"DEU":["독일","Germany","ドイツ","德国"],"DJI":["지부티","Djibouti","ジブチ","吉布提"],"DMA":["도미니카","Dominica","ドミニカ国","多米尼克"],"DNK":["덴마크","Denmark","デンマーク","丹麦"],"DOM":["도미니카 공화국","Dominican Republic","ドミニカ共和国","多米尼加共和国"],"DZA":["알제리","Algeria","アルジェリア","阿尔及利亚"],"ECU":["에콰도르","Ecuador","エクアドル","厄瓜多尔"],"EGY":["이집트","Egypt","エジプト","埃及"],"ERI":["에리트리아","Eritrea","エリトリア","厄立特里亚"],"ESP":["스페인","Spain","スペイン","西班牙"],"EST":["에스토니아","Estonia","エストニア","爱沙尼亚"],"ETH":["에티오피아","Ethiopia","エチオピア","埃塞俄比亚"],"FIN":["핀란드","Finland","フィンランド","芬兰"],"FJI":["피지","Fiji","フィジー","斐济"],"FRA":["프랑스","France","フランス","法国"],"FRO":["페로 제도","Faroe Islands","フェロー諸島","法罗群岛"],"FSM":["미크로네시아","Micronesia","ミクロネシア連邦","密克罗尼西亚"],"GAB":["가봉","Gabon","ガボン","加蓬"],"GBR":["영국","United Kingdom","イギリス","英国"],"GEO":["조지아","Georgia","ジョージア","格鲁吉亚"],"GHA":["가나","Ghana","ガーナ","加纳"],"GIB":["지브롤터","Gibraltar","ジブラルタル","直布罗陀"],"GIN":["기니","Guinea","ギニア","几内亚"],"GMB":["감비아","Gambia","ガンビア","冈比亚"],"GNB":["기니비사우","Guinea-Bissau","ギニアビサウ","几内亚比绍"],"GNQ":["적도 기니","Equatorial Guinea","赤道ギニア","赤道几内亚"],"GRC":["그리스","Greece","ギリシャ","希腊"],"GRD":["그레나다","Grenada","グレナダ","格林纳达"],"GRL":["그린란드","Greenland","グリーンランド","格陵兰"],"GTM":["과테말라","Guatemala","グアテマラ","危地马拉"],"GUM":["괌","Guam","グアム","关岛"],"GUY":["가이아나","Guyana","ガイアナ","圭亚那"],"HKG":["홍콩(중국 특별행정구)","Hong Kong SAR China","中華人民共和国香港特別行政区","中国香港特别行政区"],"HND":["온두라스","Honduras","ホンジュラス","洪都拉斯"],"HRV":["크로아티아","Croatia","クロアチア","克罗地亚"],"HTI":["아이티","Haiti","ハイチ","海地"],"HUN":["헝가리","Hungary","ハンガリー","匈牙利"],"IDN":["인도네시아","Indonesia","インドネシア","印度尼西亚"],"IMN":["맨섬","Isle of Man","マン島","马恩岛"],"IND":["인도","India","インド","印度"],"IRL":["아일랜드","Ireland","アイルランド","爱尔兰"],"IRN":["이란","Iran","イラン","伊朗"],"IRQ":["이라크","Iraq","イラク","伊拉克"],"ISL":["아이슬란드","Iceland","アイスランド","冰岛"],"ISR":["이스라엘","Israel","イスラエル","以色列"],"ITA":["이탈리아","Italy","イタリア","意大利"],"JAM":["자메이카","Jamaica","ジャマイカ","牙买加"],"JOR":["요르단","Jordan","ヨルダン","约旦"],"JPN":["일본","Japan","日本","日本"],"KAZ":["카자흐스탄","Kazakhstan","カザフスタン","哈萨克斯坦"],"KEN":["케냐","Kenya","ケニア","肯尼亚"],"KGZ":["키르기스스탄","Kyrgyzstan","キルギス","吉尔吉斯斯坦"],"KHM":["캄보디아","Cambodia","カンボジア","柬埔寨"],"KIR":["키리바시","Kiribati","キリバス","基里巴斯"],"KNA":["세인트키츠 네비스","St. Kitts & Nevis","セントクリストファー・ネーヴィス","圣基茨和尼维斯"],"KOR":["대한민국","South Korea","韓国","韩国"],"KWT":["쿠웨이트","Kuwait","クウェート","科威特"],"LAO":["라오스","Laos","ラオス","老挝"],"LBN":["레바논","Lebanon","レバノン","黎巴嫩"],"LBR":["라이베리아","Liberia","リベリア","利比里亚"],"LBY":["리비아","Libya","リビア","利比亚"],"LCA":["세인트루시아","St. Lucia","セントルシア","圣卢西亚"],"LIE":["리히텐슈타인","Liechtenstein","リヒテンシュタイン","列支敦士登"],"LKA":["스리랑카","Sri Lanka","スリランカ","斯里兰卡"],"LSO":["레소토","Lesotho","レソト","莱索托"],"LTU":["리투아니아","Lithuania","リトアニア","立陶宛"],"LUX":["룩셈부르크","Luxembourg","ルクセンブルク","卢森堡"],"LVA":["라트비아","Latvia","ラトビア","拉脱维亚"],"MAC":["마카오(중국 특별행정구)","Macao SAR China","中華人民共和国マカオ特別行政区","中国澳门特别行政区"],"MAF":["생마르탱","St. Martin","サン・マルタン","法属圣马丁"],"MAR":["모로코","Morocco","モロッコ","摩洛哥"],"MCO":["모나코","Monaco","モナコ","摩纳哥"],"MDA":["몰도바","Moldova","モルドバ","摩尔多瓦"],"MDG":["마다가스카르","Madagascar","マダガスカル","马达加斯加"],"MDV":["몰디브","Maldives","モルディブ","马尔代夫"],"MEX":["멕시코","Mexico","メキシコ","墨西哥"],"MHL":["마셜 제도","Marshall Islands","マーシャル諸島","马绍尔群岛"],"MKD":["북마케도니아","North Macedonia","北マケドニア","北马其顿"],"MLI":["말리","Mali","マリ","马里"],"MLT":["몰타","Malta","マルタ","马耳他"],"MMR":["미얀마","Myanmar (Burma)","ミャンマー (ビルマ)","缅甸"],"MNE":["몬테네그로","Montenegro","モンテネグロ","黑山"],"MNG":["몽골","Mongolia","モンゴル","蒙古"],"MNP":["북마리아나제도","Northern Mariana Islands","北マリアナ諸島","北马里亚纳群岛"],"MOZ":["모잠비크","Mozambique","モザンビーク","莫桑比克"],"MRT":["모리타니","Mauritania","モーリタニア","毛里塔尼亚"],"MUS":["모리셔스","Mauritius","モーリシャス","毛里求斯"],"MWI":["말라위","Malawi","マラウイ","马拉维"],"MYS":["말레이시아","Malaysia","マレーシア","马来西亚"],"NAM":["나미비아","Namibia","ナミビア","纳米比亚"],"NCL":["뉴칼레도니아","New Caledonia","ニューカレドニア","新喀里多尼亚"],"NER":["니제르","Niger","ニジェール","尼日尔"],"NGA":["나이지리아","Nigeria","ナイジェリア","尼日利亚"],"NIC":["니카라과","Nicaragua","ニカラグア","尼加拉瓜"],"NLD":["네덜란드","Netherlands","オランダ","荷兰"],"NOR":["노르웨이","Norway","ノルウェー","挪威"],"NPL":["네팔","Nepal","ネパール","尼泊尔"],"NRU":["나우루","Nauru","ナウル","瑙鲁"],"NZL":["뉴질랜드","New Zealand","ニュージーランド","新西兰"],"OMN":["오만","Oman","オマーン","阿曼"],"PAK":["파키스탄","Pakistan","パキスタン","巴基斯坦"],"PAN":["파나마","Panama","パナマ","巴拿马"],"PER":["페루","Peru","ペルー","秘鲁"],"PHL":["필리핀","Philippines","フィリピン","菲律宾"],"PLW":["팔라우","Palau","パラオ","帕劳"],"PNG":["파푸아뉴기니","Papua New Guinea","パプアニューギニア","巴布亚新几内亚"],"POL":["폴란드","Poland","ポーランド","波兰"],"PRI":["푸에르토리코","Puerto Rico","プエルトリコ","波多黎各"],"PRK":["북한","North Korea","北朝鮮","朝鲜"],"PRT":["포르투갈","Portugal","ポルトガル","葡萄牙"],"PRY":["파라과이","Paraguay","パラグアイ","巴拉圭"],"PSE":["팔레스타인 지구","Palestinian Territories","パレスチナ自治区","巴勒斯坦领土"],"PYF":["프랑스령 폴리네시아","French Polynesia","仏領ポリネシア","法属波利尼西亚"],"QAT":["카타르","Qatar","カタール","卡塔尔"],"ROU":["루마니아","Romania","ルーマニア","罗马尼亚"],"RUS":["러시아","Russia","ロシア","俄罗斯"],"RWA":["르완다","Rwanda","ルワンダ","卢旺达"],"SAU":["사우디아라비아","Saudi Arabia","サウジアラビア","沙特阿拉伯"],"SDN":["수단","Sudan","スーダン","苏丹"],"SEN":["세네갈","Senegal","セネガル","塞内加尔"],"SGP":["싱가포르","Singapore","シンガポール","新加坡"],"SLB":["솔로몬 제도","Solomon Islands","ソロモン諸島","所罗门群岛"],"SLE":["시에라리온","Sierra Leone","シエラレオネ","塞拉利昂"],"SLV":["엘살바도르","El Salvador","エルサルバドル","萨尔瓦多"],"SMR":["산마리노","San Marino","サンマリノ","圣马力诺"],"SOM":["소말리아","Somalia","ソマリア","索马里"],"SRB":["세르비아","Serbia","セルビア","塞尔维亚"],"SSD":["남수단","South Sudan","南スーダン","南苏丹"],"STP":["상투메 프린시페","São Tomé & Príncipe","サントメ・プリンシペ","圣多美和普林西比"],"SUR":["수리남","Suriname","スリナム","苏里南"],"SVK":["슬로바키아","Slovakia","スロバキア","斯洛伐克"],"SVN":["슬로베니아","Slovenia","スロベニア","斯洛文尼亚"],"SWE":["스웨덴","Sweden","スウェーデン","瑞典"],"SWZ":["에스와티니","Eswatini","エスワティニ","斯威士兰"],"SXM":["신트마르턴","Sint Maarten","シント・マールテン","荷属圣马丁"],"SYC":["세이셸","Seychelles","セーシェル","塞舌尔"],"SYR":["시리아","Syria","シリア","叙利亚"],"TCA":["터크스 케이커스 제도","Turks & Caicos Islands","タークス・カイコス諸島","特克斯和凯科斯群岛"],"TCD":["차드","Chad","チャド","乍得"],"TGO":["토고","Togo","トーゴ","多哥"],"THA":["태국","Thailand","タイ","泰国"],"TJK":["타지키스탄","Tajikistan","タジキスタン","塔吉克斯坦"],"TKM":["투르크메니스탄","Turkmenistan","トルクメニスタン","土库曼斯坦"],"TLS":["동티모르","Timor-Leste","東ティモール","东帝汶"],"TON":["통가","Tonga","トンガ","汤加"],"TTO":["트리니다드 토바고","Trinidad & Tobago","トリニダード・トバゴ","特立尼达和多巴哥"],"TUN":["튀니지","Tunisia","チュニジア","突尼斯"],"TUR":["튀르키예","Türkiye","トルコ","土耳其"],"TUV":["투발루","Tuvalu","ツバル","图瓦卢"],"TZA":["탄자니아","Tanzania","タンザニア","坦桑尼亚"],"UGA":["우간다","Uganda","ウガンダ","乌干达"],"UKR":["우크라이나","Ukraine","ウクライナ","乌克兰"],"URY":["우루과이","Uruguay","ウルグアイ","乌拉圭"],"USA":["미국","United States","アメリカ合衆国","美国"],"UZB":["우즈베키스탄","Uzbekistan","ウズベキスタン","乌兹别克斯坦"],"VCT":["세인트빈센트그레나딘","St. Vincent & Grenadines","セントビンセント及びグレナディーン諸島","圣文森特和格林纳丁斯"],"VEN":["베네수엘라","Venezuela","ベネズエラ","委内瑞拉"],"VGB":["영국령 버진아일랜드","British Virgin Islands","英領ヴァージン諸島","英属维尔京群岛"],"VIR":["미국령 버진아일랜드","U.S. Virgin Islands","米領ヴァージン諸島","美属维尔京群岛"],"VNM":["베트남","Vietnam","ベトナム","越南"],"VUT":["바누아투","Vanuatu","バヌアツ","瓦努阿图"],"WSM":["사모아","Samoa","サモア","萨摩亚"],"XKX":["코소보","Kosovo","コソボ","科索沃"],"YEM":["예멘","Yemen","イエメン","也门"],"ZAF":["남아프리카","South Africa","南アフリカ","南非"],"ZMB":["잠비아","Zambia","ザンビア","赞比亚"],"ZWE":["짐바브웨","Zimbabwe","ジンバブエ","津巴布韦"]};
+const COUNTRIES=[["ABW",null,null,2,3,827,76.5,null,null],["AFG",null,null,3,0,1534544,66.3,48.3,null],["AGO",null,null,6,1,1452289,64.8,32.1,10251.0],["ALB",null,null,1,2,23731,79.8,8.3,28221.0],["AND",null,null,1,3,572,84.2,2.4,79567.0],["ARE",null,null,3,3,112829,83.1,3.8,null],["ARG",null,null,2,2,508950,77.5,8,32587.0],["ARM",null,null,1,2,34262,78.3,8.5,24754.0],["ASM",null,null,0,3,690,73.0,null,null],["ATG",null,null,2,3,1102,77.8,7,35832.0],["AUS",null,null,0,3,295474,83.1,3.1,71934.0],["AUT",null,null,1,3,77349,82.0,2.8,76778.0],["AZE",null,null,1,2,102470,74.6,12.5,26113.0],["BDI",null,null,6,0,477748,63.8,30.5,1248.0],["BEL",null,null,1,3,109864,82.3,3.1,74676.0],["BEN",null,null,6,1,494803,61.0,45.2,4817.0],["BFA",null,null,6,0,753534,61.3,43.6,3072.0],["BGD",null,null,5,1,3513738,74.9,24.4,10154.0],["BGR",null,null,1,3,53396,75.8,4.6,44451.0],["BHR",null,null,3,3,19204,81.4,7.3,70997.0],["BHS",null,null,2,3,4353,74.7,11.1,null],["BIH",null,null,1,2,24179,78.0,5.5,25814.0],["BLR",null,null,1,2,63602,74.4,1.8,34716.0],["BLZ",null,null,2,2,7655,73.7,10.8,14966.0],["BMU",null,null,4,3,510,82.5,null,null],["BOL",null,null,2,1,264219,68.7,14.2,12873.0],["BRA",null,null,2,2,2575030,76.0,12.3,23433.0],["BRB",null,null,2,3,3137,76.3,9.1,25894.0],["BRN",null,null,0,3,6202,75.5,8.6,92430.0],["BTN",null,null,5,1,9959,73.3,13.7,19594.0],["BWA",null,null,6,2,62516,69.3,32.1,20698.0],["CAF",null,null,6,0,254714,57.7,58.8,1314.0],["CAN",null,null,4,3,370700,82.1,4.7,66746.0],["CHE",null,null,1,3,79104,84.4,3.4,102513.0],["CHI",null,null,1,3,1381,81.2,null,null],["CHL",null,null,2,3,172781,81.4,5.8,37774.0],["CHN",null,null,0,2,9564778,78.0,4.1,29333.0],["CIV",null,null,6,1,1033685,62.1,44.8,8209.0],["CMR",null,null,6,1,994982,64.0,40.2,5788.0],["COD",null,null,6,0,4614848,62.1,56.4,1920.0],["COG",null,null,6,1,197127,66.0,27,7248.0],["COL",null,null,2,2,710561,77.9,10.5,22640.0],["COM",null,null,6,1,24896,67.0,35,4238.0],["CPV",null,null,6,2,6433,76.2,10.6,12165.0],["CRI",null,null,2,3,51530,81.0,9.1,33815.0],["CUB",null,null,2,2,94060,78.3,6.8,null],["CUW",null,null,2,3,1125,77.0,null,null],["CYM",null,null,2,3,880,80.5,null,null],["CYP",null,null,1,3,14393,81.8,4.1,64575.0],["CZE",null,null,1,3,83829,80.0,2.1,60487.0],["DEU",null,null,1,3,676279,80.8,3.1,75407.0],["DJI",null,null,3,1,24747,66.2,43,8452.0],["DMA",null,null,2,2,725,71.3,33.3,22713.0],["DNK",null,null,1,3,57087,82.3,3.5,83218.0],["DOM",null,null,2,2,202761,73.9,27.7,28721.0],["DZA",null,null,3,2,891784,76.5,19.5,18586.0],["ECU",null,null,2,2,270690,77.6,10.9,16757.0],["EGY",null,null,3,1,2473849,71.8,20.8,20204.0],["ERI",null,null,6,0,103521,68.9,24.7,null],["ESP",null,null,1,3,320808,83.9,2.6,59868.0],["EST",null,null,1,3,9702,79.3,1.5,52106.0],["ETH",null,null,6,0,4267370,67.6,34.5,3622.0],["FIN",null,null,1,3,44042,82.3,1.9,65884.0],["FJI",null,null,0,2,16703,67.5,23.5,16338.0],["FRA",null,null,1,3,666587,83.0,3.4,63975.0],["FRO",null,null,1,3,593,83.1,null,null],["FSM",null,null,0,2,2535,67.4,20.3,4604.0],["GAB",null,null,6,2,70274,68.5,25.9,22218.0],["GBR",null,null,1,3,687921,81.4,4.1,64606.0],["GEO",null,null,1,2,44474,74.7,7.5,29414.0],["GHA",null,null,6,1,908165,65.7,27.5,8610.0],["GIB",null,null,1,3,490,83.6,null,null],["GIN",null,null,6,1,502821,60.9,59.8,4935.0],["GMB",null,null,6,0,84381,66.1,32.7,3706.0],["GNB",null,null,6,0,66586,64.3,42.1,3293.0],["GNQ",null,null,6,2,58153,63.9,47.6,16133.0],["GRC",null,null,1,3,68732,81.8,3.2,45264.0],["GRD",null,null,2,2,1349,75.4,16.4,21346.0],["GRL",null,null,1,3,682,70.3,null,null],["GTM",null,null,2,2,384970,72.7,17.2,15197.0],["GUM",null,null,0,3,2924,77.4,null,null],["GUY",null,null,2,3,16636,70.3,23.2,97899.0],["HKG",null,null,0,3,36745,85.4,null,80423.0],["HND",null,null,2,1,237726,73.0,12.8,7871.0],["HRV",null,null,1,3,32172,78.9,4.1,50946.0],["HTI",null,null,2,1,260743,65.1,39,3134.0],["HUN",null,null,1,3,78017,76.7,3.1,49838.0],["IDN",null,null,0,2,4514396,71.3,15.2,17660.0],["IMN",null,null,1,3,698,81.1,null,null],["IND",null,null,5,1,23421848,72.2,23.3,11748.0],["IRL",null,null,1,3,54844,83.0,3.4,155089.0],["IRN",null,null,3,2,1164463,77.9,10.3,19699.0],["IRQ",null,null,3,2,1203732,72.4,20.1,14267.0],["ISL",null,null,1,3,4395,82.8,2.1,83431.0],["ISR",null,null,3,3,188284,83.2,2.7,59717.0],["ITA",null,null,1,3,371169,84.0,2.3,62803.0],["JAM",null,null,2,2,32343,71.6,16.4,13291.0],["JOR",null,null,3,2,236174,78.0,12,12632.0],["JPN",null,null,0,3,703190,84.0,1.8,55422.0],["KAZ",null,null,1,2,406453,74.5,7.4,44293.0],["KEN",null,null,6,1,1553377,63.8,34.2,7016.0],["KGZ",null,null,1,1,142455,72.4,14.8,9220.0],["KHM",null,null,0,1,362314,70.8,16.4,8543.0],["KIR",null,null,0,1,3453,66.6,38.8,3937.0],["KNA",null,null,2,3,549,72.3,13.9,36777.0],["KOR",null,null,0,3,242917,83.6,2.3,63125.0],["KWT",null,null,3,3,48653,84.6,7,56468.0],["LAO",null,null,0,1,164547,69.2,27.2,10383.0],["LBN",null,null,3,1,93591,77.9,15.3,null],["LBR",null,null,6,0,175375,62.3,63.2,1981.0],["LBY",null,null,3,2,123066,71.1,7.9,16521.0],["LCA",null,null,2,2,2018,72.8,15.8,28674.0],["LIE",null,null,1,3,345,84.2,null,null],["LKA",null,null,5,2,219736,77.7,5.2,17065.0],["LSO",null,null,6,1,56247,57.8,56.3,3184.0],["LTU",null,null,1,3,19066,77.2,2.8,56838.0],["LUX",null,null,1,3,6526,83.2,1.9,156542.0],["LVA",null,null,1,3,12750,76.4,2.2,46137.0],["MAC",null,null,0,3,3635,83.3,null,137031.0],["MAF",null,null,2,3,374,80.4,null,null],["MAR",null,null,3,1,630265,75.5,14.7,11112.0],["MCO",null,null,1,3,368,86.5,2.2,null],["MDA",null,null,1,2,25022,71.3,15.1,19996.0],["MDG",null,null,6,0,1037879,63.8,43,1952.0],["MDV",null,null,5,2,5615,81.3,4.7,28555.0],["MEX",null,null,2,2,2045177,75.3,12.1,25868.0],["MHL",null,null,0,2,729,67.1,22.7,8964.0],["MKD",null,null,1,2,16024,76.6,2.5,28029.0],["MLI",null,null,6,0,995353,60.7,47.5,3503.0],["MLT",null,null,3,3,4464,83.0,4.7,72210.0],["MMR",null,null,0,1,905036,67.1,32.8,6012.0],["MNE",null,null,1,2,6979,77.9,1.9,35423.0],["MNG",null,null,0,2,60316,72.4,11.2,20798.0],["MNP",null,null,0,3,527,78.9,null,null],["MOZ",null,null,6,0,1318371,63.8,43.7,1698.0],["MRT",null,null,6,1,180712,68.7,30.2,7676.0],["MUS",null,null,6,2,12811,73.8,13.8,33667.0],["MWI",null,null,6,0,690921,67.6,38,1899.0],["MYS",null,null,0,2,446125,76.8,7,41498.0],["NAM",null,null,6,1,80104,67.5,36.4,11986.0],["NCL",null,null,0,3,4135,78.9,null,null],["NER",null,null,6,0,1155798,61.4,65.6,2177.0],["NGA",null,null,6,1,7719653,54.6,69.8,9532.0],["NIC",null,null,2,1,133843,75.1,9.4,9284.0],["NLD",null,null,1,3,166406,82.0,3.4,87320.0],["NOR",null,null,1,3,54425,83.2,2,104044.0],["NPL",null,null,5,1,562744,70.6,22.2,6175.0],["NRU",null,null,0,3,296,62.3,7.7,14200.0],["NZL",null,null,0,3,58572,82.0,4,57350.0],["OMN",null,null,3,3,92311,80.2,8.3,42295.0],["PAK",null,null,3,1,6993016,67.8,48.2,6573.0],["PAN",null,null,2,3,72682,79.8,12,43902.0],["PER",null,null,2,2,546311,77.9,11,18816.0],["PHL",null,null,0,2,1856913,69.9,21.7,12577.0],["PLW",null,null,0,3,189,69.4,18.6,23052.0],["PNG",null,null,0,1,261536,66.3,31.3,5215.0],["POL",null,null,1,3,251407,78.4,3.6,54262.0],["PRI",null,null,2,3,18154,81.9,null,52196.0],["PRK",null,null,0,0,342766,73.7,13.3,null],["PRT",null,null,1,3,85358,82.4,2.7,53146.0],["PRY",null,null,2,2,138158,74.0,14.5,20181.0],["PSE",null,null,3,1,143460,69.2,17,5000.0],["PYF",null,null,0,3,3022,84.2,null,null],["QAT",null,null,3,3,28236,82.5,4.8,128883.0],["ROU",null,null,1,3,142652,76.5,6,50895.0],["RUS",null,null,1,3,1205512,73.4,4.1,49568.0],["RWA",null,null,6,0,409398,68.0,29.4,4164.0],["SAU",null,null,3,3,610064,79.0,4.7,73784.0],["SDN",null,null,6,0,1704851,66.5,42.9,2192.0],["SEN",null,null,6,1,552813,68.9,28.9,5463.0],["SGP",null,null,0,3,45223,83.3,2.2,163354.0],["SLB",null,null,0,1,22392,70.7,16.4,2788.0],["SLE",null,null,6,0,265476,62.0,54.6,3717.0],["SLV",null,null,2,2,99302,72.3,8.8,14101.0],["SMR",null,null,1,3,143,85.8,1.2,null],["SOM",null,null,6,0,831395,59.0,65.4,1643.0],["SRB",null,null,1,2,60252,76.0,4.6,33910.0],["SSD",null,null,6,0,355913,57.7,71.9,null],["STP",null,null,6,1,6751,69.9,9.2,6388.0],["SUR",null,null,2,2,11005,73.8,14.8,22652.0],["SVK",null,null,1,3,46017,78.4,5.3,49309.0],["SVN",null,null,1,3,16835,82.3,1.8,59245.0],["SWE",null,null,1,3,98549,84.1,2,72529.0],["SWZ",null,null,6,1,29646,64.3,42.2,12529.0],["SXM",null,null,2,3,400,76.5,null,56491.0],["SYC",null,null,6,3,1350,76.3,12.9,35854.0],["SYR",null,null,3,0,594394,72.6,17.7,null],["TCA",null,null,2,3,492,78.2,3,null],["TCD",null,null,6,0,909460,55.2,56.3,2903.0],["TGO",null,null,6,1,275791,62.9,34.8,4079.0],["THA",null,null,0,2,580121,76.6,7.7,26250.0],["TJK",null,null,1,1,272904,71.9,23.5,5923.0],["TKM",null,null,1,2,159234,70.2,30.4,22602.0],["TLS",null,null,0,1,30924,67.9,34.6,4809.0],["TON",null,null,0,2,2386,73.1,7.8,8675.0],["TTO",null,null,2,3,14362,73.6,17,37121.0],["TUN",null,null,3,1,165471,76.7,9.7,15233.0],["TUR",null,null,1,2,944664,77.4,8,45288.0],["TUV",null,null,0,2,209,67.3,16.5,6759.0],["TZA",null,null,6,1,2454996,67.2,28.7,4471.0],["UGA",null,null,6,0,1767640,68.5,35.9,3488.0],["UKR",null,null,1,2,214392,74.7,7.6,18905.0],["URY",null,null,2,3,33170,78.3,6.2,38315.0],["USA",null,null,4,3,3622919,78.9,5.5,90027.0],["UZB",null,null,1,1,948568,72.5,12.8,13601.0],["VCT",null,null,2,2,1199,71.4,10.2,22799.0],["VEN",null,null,2,1,433457,72.7,21.2,null],["VGB",null,null,2,3,326,77.4,11.4,null],["VIR",null,null,2,3,1152,80.8,null,null],["VNM",null,null,0,2,1361420,74.7,12,18088.0],["VUT",null,null,0,1,9284,71.7,14.4,4525.0],["WSM",null,null,0,2,5483,71.8,12.3,9319.0],["XKX",null,null,1,2,18765,78.2,8,19263.0],["YEM",null,null,3,0,1437021,69.4,33.8,null],["ZAF",null,null,6,2,1197825,66.3,24.2,15906.0],["ZMB",null,null,6,1,716584,66.5,34.6,4379.0],["ZWE",null,null,6,1,506829,63.1,62.4,6470.0]];
+/* ---------- 언어 ---------- */
+const LANGS=[["ko","한국어"],["en","English"],["ja","日本語"],["zh","中文"]];
+let LANG="ko", LI=0;
+const REGIONS=[
+ ["동아시아·태평양","East Asia & Pacific","東アジア・太平洋","东亚及太平洋"],
+ ["유럽·중앙아시아","Europe & Central Asia","ヨーロッパ・中央アジア","欧洲及中亚"],
+ ["중남미·카리브해","Latin America & Caribbean","中南米・カリブ海","拉丁美洲及加勒比"],
+ ["중동·북아프리카","Middle East & North Africa","中東・北アフリカ","中东及北非"],
+ ["북아메리카","North America","北米","北美"],
+ ["남아시아","South Asia","南アジア","南亚"],
+ ["사하라 이남 아프리카","Sub-Saharan Africa","サハラ以南アフリカ","撒哈拉以南非洲"]];
+const INCOMES=[
+ ["저소득국","Low-income country","低所得国","低收入国家"],
+ ["중하위소득국","Lower-middle-income country","低中所得国","中低收入国家"],
+ ["중상위소득국","Upper-middle-income country","高中所得国","中高收入国家"],
+ ["고소득국","High-income country","高所得国","高收入国家"]];
+const tr=(x,G)=>{const a=typeof x==="function"?x(G):x;return Array.isArray(a)?a[LI]:a};
+const sub=(s,p)=>s.replace(/\{(\w+)\}/g,(m,k)=>p&&k in p?p[k]:m);
+const UI={
+ title:["랜덤인생게임","Random Life","ランダム人生","随机人生"],
+ tagline:["지구에 태어나는 아기 한 명이 되어, 그 사람의 일생을 살아 봅니다.","Be born as one baby on Earth, and live that person's whole life.","地球に生まれる赤ちゃん一人になって、その人の一生を生きてみよう。","成为地球上诞生的一个婴儿，去过完他的一生。"],
+ how_h:["어떻게 정해지나요","How it works","どう決まる？","如何决定"],
+ how_p:["출생지는 세계은행 통계로 계산한 <b>국가별 연간 출생 수</b>에 비례해 뽑힙니다. 아이가 많이 태어나는 나라일수록 당첨 확률이 높습니다. 성별과 가정 형편은 무작위로 정해지고, 이후 나이대마다 선택을 하며 인생이 흘러갑니다. 형편에 따라 열리지 않는 선택지도 있습니다.",
+  "Your birthplace is drawn in proportion to each country's <b>annual number of births</b>, estimated from World Bank statistics. Countries with more babies are more likely to be picked. Sex and family wealth are random, then you make choices at each stage of life. Some choices stay closed to you, depending on where and how you were born.",
+  "生まれる場所は、世界銀行の統計から計算した<b>国ごとの年間出生数</b>に比例して選ばれます。赤ちゃんが多く生まれる国ほど当たりやすくなります。性別と家庭の経済状況はランダムで、その後は年代ごとに選択をしていきます。生まれによっては選べない選択肢もあります。",
+  "出生地按世界银行统计推算的<b>各国年出生人数</b>比例抽取，出生人数越多的国家越容易被抽中。性别与家庭条件随机决定，之后在每个人生阶段做出选择。根据出身，有些选项根本不会为你打开。"],
+ how_n:["연간 총 {n}명의 출생 · {k}개 국가·지역","{n} births a year · {k} countries and territories","年間の出生数 合計{n}人 ・ {k}の国と地域","全球每年出生约{n}人 · {k}个国家和地区"],
+ daily_h:["오늘의 한 명 · {d}","Today's One Person · {d}","今日の一人 ・ {d}","今日一人 · {d}"],
+ daily_p:["오늘은 누구나 같은 사람으로 태어나요. 같은 출발에서 어떤 선택을 했는지 서로 비교해 보세요.","Everyone is born as the same person today. Compare the choices you each make from the same start.","今日は誰もが同じ人として生まれます。同じスタートでどんな選択をしたか、比べてみましょう。","今天所有人都会成为同一个人。比一比从同一起点出发，大家做了怎样的选择。"],
+ daily_rec:["오늘의 기록: {t}","Today's result: {t}","今日の記録：{t}","今日记录：{t}"],
+ daily_go:["오늘의 한 명으로 태어나기","Be born as today's person","今日の一人として生まれる","成为今日这个人"],
+ daily_again:["오늘의 한 명으로 다시 살아 보기","Live today's person again","今日の一人でもう一度生きる","再活一次今日这个人"],
+ random_go:["무작위로 태어나기","Be born at random","ランダムに生まれる","随机出生"],
+ note:["사건과 선택지는 게임을 위해 단순화한 허구입니다. 국가 통계(출생 수·기대수명·영아사망률·소득 수준)만 실제 데이터에 기반합니다. 출처: World Bank Open Data, CC BY 4.0.","Events and choices are simplified fiction made for the game. Only the national statistics (births, life expectancy, infant mortality, income level) come from real data. Source: World Bank Open Data, CC BY 4.0.","出来事や選択肢はゲームのために単純化したフィクションです。国の統計（出生数・平均寿命・乳児死亡率・所得水準）のみ実データに基づきます。出典：World Bank Open Data（CC BY 4.0）。","事件和选项是为游戏简化的虚构内容，只有国家统计数据（出生数、预期寿命、婴儿死亡率、收入水平）来自真实数据。来源：World Bank Open Data，CC BY 4.0。"],
+ friend:["친구가 {place}에서 {sex}으로 태어나 {age}세까지 살았어요: “{title}”. 당신은 누가 될까요?","A friend was born in {place} as a {sex} and lived to {age}: “{title}”. Who will you be?","友だちは{place}に{sex}として生まれ、{age}歳まで生きました：「{title}」。あなたは誰になる？","朋友出生在{place}，是{sex}，活到了{age}岁：“{title}”。你会成为谁？"],
+ sex_adult:[["남성","여성"],["man","woman"],["男性","女性"],["男性","女性"]],
+ sex_child:[["남자아이","여자아이"],["boy","girl"],["男の子","女の子"],["男孩","女孩"]],
+ born_h:["당신은 태어났습니다","You were born","あなたは生まれました","你出生了"],
+ place_h:["출생지","Birthplace","出生地","出生地"],
+ born_share:["전 세계 신생아 중 약 <b>{p}%</b>가 이곳에서 태어납니다. 이 나라의 기대수명은 <b>{le}세</b>입니다.","About <b>{p}%</b> of all newborns arrive here. Life expectancy in this country is <b>{le} years</b>.","世界の新生児の約<b>{p}%</b>がここで生まれます。この国の平均寿命は<b>{le}歳</b>です。","全球约<b>{p}%</b>的新生儿出生在这里。这个国家的预期寿命是<b>{le}岁</b>。"],
+ who_h:["나는 누구","Who you are","わたしは誰","我是谁"],
+ who_p:["부모님의 직업: {job}","Your parents work as: {job}.","両親の仕事：{job}。","父母的职业：{job}。"],
+ tiers:[["어려운 형편","a struggling family","苦しい家計","家境困难"],["넉넉하지 않은 집","a modest household","ゆとりのない家","家境一般"],["중산층 가정","a middle-class family","中流の家庭","中产家庭"],["풍족한 가정","a wealthy family","裕福な家庭","富裕家庭"]],
+ start_life:["인생 시작","Start your life","人生をはじめる","开始人生"],
+ born_log:["{place}에서 {sex}로 태어났다","Born in {place} as a {sex}","{place}に{sex}として生まれた","出生在{place}，是{sex}"],
+ cont:["계속","Continue","つづける","继续"],
+ stages:[["유아기","Infancy","乳幼児期","婴幼儿期"],["어린 시절","Childhood","子ども時代","童年"],["청소년기","Teen years","思春期","青少年期"],["청년기","Young adulthood","青年期","青年期"],["장년기","Adulthood","壮年期","壮年期"],["중년기","Middle age","中年期","中年期"],["노년기","Old age","老年期","老年期"]],
+ age_n:["{n}세","Age {n}","{n}歳","{n}岁"],
+ stats:[["몸","Body","体","身体"],["살림","Means","暮らし","生计"],["마음","Spirit","心","心境"],["인연","Bonds","縁","人缘"],["솜씨","Skill","腕前","本事"]],
+ job_h:["일자리를 정해야 합니다. {place}의 일자리 시장에서 이런 길이 보입니다.","It is time to choose work. Here is what the job market in {place} offers you.","仕事を決める時が来ました。{place}の労働市場にはこんな道が見えます。","该选择职业了。在{place}的就业市场里，你看到这些出路。"],
+ job_h2:["직업을 바꿀 기회가 찾아옵니다.","A chance to change careers appears.","転職のチャンスが訪れます。","出现了转行的机会。"],
+ job_res:["직업이 정해졌습니다: {job}","You now work as: {job}.","これからの仕事：{job}。","你现在的职业：{job}。"],
+ job_keep:["지금 일을 계속한다","Stay in your current work","今の仕事を続ける","继续现在的工作"],
+ lock_e:["더 많은 배움과 솜씨가 필요해요","It takes more schooling and skill","より多くの学びと腕前が必要です","需要更多的学识和本事"],
+ lock_f:["밑천이나 연줄이 있어야 해요","It takes capital or connections","元手やコネが必要です","需要本钱或人脉"],
+ lock_h:["튼튼한 몸이 필요해요","It takes a strong body","丈夫な体が必要です","需要强健的体魄"],
+ end_h:["인생의 끝","The End of a Life","人生の終わり","人生的终点"],
+ end_s:["결말","Ending","結末","结局"],
+ end_p:["{place}에서 태어난 {sex}이 {cause} {age}세에 생을 마쳤습니다. {cmp}","A {sex} born in {place} passed away at {age}, {cause}. {cmp}","{place}に生まれた{sex}は、{cause}{age}歳で生涯を終えました。{cmp}","出生在{place}的{sex}，{cause}，在{age}岁时离世。{cmp}"],
+ cmp_more:["{place}의 기대수명({le}세)보다 {n}년 더 살았습니다.","That is {n} years more than the life expectancy in {place} ({le}).","{place}の平均寿命（{le}歳）より{n}年長く生きました。","比{place}的预期寿命（{le}岁）多活了{n}年。"],
+ cmp_less:["{place}의 기대수명({le}세)보다 {n}년 일찍 떠났습니다.","That is {n} years short of the life expectancy in {place} ({le}).","{place}の平均寿命（{le}歳）より{n}年早い旅立ちでした。","比{place}的预期寿命（{le}岁）少活了{n}年。"],
+ causes:{full:["천수를 누리고","after a full life","天寿を全うして","寿终正寝"],young:["이른 나이에","far too young","あまりに早く","英年早逝"],years:["세월이 흘러","as the years went by","歳月とともに","随着岁月流逝"],
+  inf:["어린 시절 감염병으로","from an infection in childhood","幼い頃の感染症で","因童年感染病"],war:["폭력과 분쟁 속에서","amid violence and conflict","暴力と紛争の中で","在暴力与冲突之中"],chronic:["만성질환으로","from chronic illness","慢性疾患で","因慢性病"],
+  aging:["노환으로","of old age","老衰で","因衰老"],illness:["노년의 질병으로","from an illness in old age","老年期の病で","因老年疾病"],health:["건강 악화로","from failing health","健康の悪化で","因健康恶化"]},
+ titles:[["너무 짧았던 시작","A Life Barely Begun","あまりに短い始まり","太短暂的开始"],["피어나지 못한 어린 생애","A Childhood Cut Short","咲けなかった幼い命","未能绽放的童年"],["풍요롭고 만족스러운 삶","A Rich and Satisfying Life","豊かで満ち足りた人生","富足而满意的一生"],["사람들에게 사랑받은 삶","A Life Loved by Many","人に愛された人生","被众人爱戴的一生"],["배움으로 세상을 넓힌 삶","A World Widened by Learning","学びで世界を広げた人生","以所学拓宽世界的一生"],["소박하지만 행복했던 삶","Simple, but Happy","素朴でも幸せな人生","朴素却幸福的一生"],["고단했던 한평생","A Hard Life","苦難の多い一生","辛苦的一生"],["무난히 잘 살아낸 삶","A Life Quietly Well Lived","つつがなく生き抜いた人生","平稳度过的一生"],["평범한 사람의 하루하루","The Days of an Ordinary Person","平凡な人の日々","普通人的日日夜夜"],["굴곡이 많았던 삶","A Life of Ups and Downs","浮き沈みの多い人生","起伏跌宕的一生"]],
+ card_h:["자서전 카드","Autobiography card","自伝カード","自传卡片"],
+ card_born:["{place}의 {tier}에서 태어났다.","Born into {tier} in {place}.","{place}の{tier}に生まれた。","出生在{place}，{tier}。"],
+ card_job:["직업: {job}","Work: {job}","仕事：{job}","职业：{job}"],
+ card_choice:["{a}세, {l}","Age {a}: {l}","{a}歳：{l}","{a}岁：{l}"],
+ card_end:["{age}세, {cause} 눈을 감았다.","Died at {age}, {cause}.","{age}歳、{cause}世を去った。","{age}岁，{cause}离世。"],
+ card_foot:["닫혀 있던 선택지 {n}개 · 살아간 해 {age}년","{n} closed choices · {age} years lived","閉ざされた選択肢 {n}個 ・ 生きた年数 {age}年","被关上的选项 {n}个 · 活过 {age}年"],
+ card_sub:["무작위로 태어난 한 사람의 일생","The life of one randomly born person","ランダムに生まれた一人の人生","一个随机出生者的一生"],
+ card_daily:["오늘의 한 명 · {d}","Today's One Person · {d}","今日の一人 ・ {d}","今日一人 · {d}"],
+ save:["이미지 저장·공유","Save or share image","画像を保存・共有","保存/分享图片"],
+ copy:["링크와 글 복사","Copy text & link","文章とリンクをコピー","复制文案和链接"],
+ copied:["복사했어요","Copied","コピーしました","已复制"],
+ share_h:["친구에게 알리기","Tell your friends","友だちに知らせる","告诉朋友"],
+ share_p:["링크를 받은 친구는 당신이 살아 본 인생을 먼저 보고 시작해요.","Friends who open your link first see the life you lived.","リンクを開いた友だちは、あなたが生きた人生を見てから始めます。","打开链接的朋友会先看到你活过的人生。"],
+ share_text:["나는 {place}에서 태어나 {age}세까지 살았어요: “{title}”. 80억 명 중 당신은 누가 될까요?","I was born in {place} and lived to {age}: “{title}”. Out of 8 billion people, who will you be?","{place}に生まれて{age}歳まで生きました：「{title}」。80億人の中で、あなたは誰になる？","我出生在{place}，活到了{age}岁：“{title}”。80亿人里，你会成为谁？"],
+ share_tags:["랜덤인생게임","RandomLife","ランダム人生","随机人生"],
+ share_native:["공유하기","Share","共有","分享"],
+ locked_h:["닫혀 있던 문 {n}개","{n} closed doors","閉ざされていた扉 {n}個","被关上的门 {n}扇"],
+ locked_p:["같은 나이에 다른 형편이었다면 볼 수 있었던 선택지예요.","These are choices you could have seen at the same age with a different start.","同じ年齢でも、違う境遇なら見えていたはずの選択肢です。","同样的年纪，如果出身不同，这些选项本来是看得到的。"],
+ locked_none:["이번 삶에서는 형편 때문에 막힌 선택지가 없었습니다.","In this life, no choices were closed to you by your circumstances.","今回の人生では、境遇のために閉ざされた選択肢はありませんでした。","这一生里，没有因出身而被关上的选项。"],
+ path_h:["걸어온 길","Your path","歩んだ道","走过的路"],
+ died:["생을 마쳤다","Died","生涯を終えた","生命终结"],
+ again:["다시 태어나기","Be born again","もう一度生まれる","再次出生"],
+ again_p:["같은 버튼으로 80억 명 중 또 다른 한 명이 됩니다.","Press it to become another one of the 8 billion.","ボタン一つで、80億人の中のまた別の一人になれます。","再按一次，就会成为80亿人中的另一个人。"],
+ back:["처음으로","Back to start","最初へ","回到开头"]
+};
+const ui=(k,p)=>sub(UI[k][LI],p);
+const ST=()=>UI.stats.map(x=>x[LI]);
+/* ---------- 직업 ---------- */
+// n: 이름, w: 소득 구간별 비중(저·중하·중상·고), e/f/h: 필요한 솜씨/가정 형편(0~3)/몸, fx: 시작 효과
+const JOBS=[
+ {n:["농부","Farmer","農家","农民"],w:[9,6,3,1],fx:{h:-3,w:2,r:3}},
+ {n:["어부","Fisher","漁師","渔民"],w:[3,3,2,1],fx:{h:-3,w:2,j:2}},
+ {n:["목동","Herder","牧畜民","牧民"],w:[3,2,1,0],fx:{h:1,j:3,w:1}},
+ {n:["노점 상인","Street vendor","露天商","摊贩"],w:[6,6,3,1],fx:{w:4,r:4,h:-2}},
+ {n:["가사 도우미","Domestic worker","家政婦","家政工"],w:[4,4,3,2],fx:{w:3,h:-2,r:2}},
+ {n:["건설 노동자","Construction worker","建設作業員","建筑工人"],w:[5,6,5,3],fx:{w:5,h:-5}},
+ {n:["공장 노동자","Factory worker","工場労働者","工厂工人"],w:[3,6,6,3],fx:{w:6,h:-4,j:-2}},
+ {n:["광부","Miner","鉱山労働者","矿工"],w:[2,2,1,0],fx:{w:6,h:-8}},
+ {n:["택시·오토바이 기사","Taxi or motorbike driver","タクシー運転手","出租车司机"],w:[3,5,5,4],fx:{w:5,h:-3,r:2}},
+ {n:["배달 라이더","Delivery rider","配達ライダー","外卖骑手"],w:[0,2,5,6],fx:{w:5,h:-3,j:-1}},
+ {n:["청소 노동자","Cleaner","清掃員","清洁工"],w:[1,2,3,4],fx:{w:3,h:-2}},
+ {n:["요양보호사","Caregiver","介護士","护工"],w:[1,2,4,5],fx:{w:4,r:5,j:2}},
+ {n:["해외 이주 노동자","Overseas migrant worker","出稼ぎ労働者","外出务工者"],w:[3,5,3,1],fx:{w:9,r:-6,h:-3}},
+ {n:["가게 주인","Shop owner","店主","店主"],w:[2,4,5,4],f:1,fx:{w:7,r:4}},
+ {n:["재단사·장인","Craftsperson","職人","手艺人"],w:[3,3,2,2],e:25,fx:{w:4,j:4,e:3}},
+ {n:["정비사","Mechanic","整備士","修理工"],w:[2,4,4,3],e:30,fx:{w:6,e:3}},
+ {n:["전기 기술자","Electrician","電気技師","电工"],w:[1,3,4,4],e:35,fx:{w:7,e:3}},
+ {n:["요리사","Cook","料理人","厨师"],w:[2,3,4,5],e:20,fx:{w:5,j:4,h:-2}},
+ {n:["교사","Teacher","教師","教师"],w:[2,4,5,5],e:50,fx:{w:6,r:6,j:3}},
+ {n:["간호사","Nurse","看護師","护士"],w:[1,3,4,5],e:50,fx:{w:6,r:5,h:-2}},
+ {n:["의사","Doctor","医師","医生"],w:[0,1,3,4],e:75,f:1,fx:{w:15,r:3,h:-3}},
+ {n:["엔지니어","Engineer","エンジニア","工程师"],w:[0,2,4,5],e:60,fx:{w:11,e:5}},
+ {n:["개발자","Software developer","ソフトウェア開発者","软件开发者"],w:[0,1,4,6],e:55,fx:{w:12,e:6,h:-3}},
+ {n:["공무원","Civil servant","公務員","公务员"],w:[1,3,4,4],e:50,fx:{w:7,j:1}},
+ {n:["군인","Soldier","軍人","军人"],w:[2,3,3,3],e:20,h:55,fx:{w:5,h:-3,r:4}},
+ {n:["경찰관","Police officer","警察官","警察"],w:[1,3,3,3],e:35,h:50,fx:{w:6,r:3,h:-2}},
+ {n:["은행원","Bank clerk","銀行員","银行职员"],w:[0,2,4,5],e:55,fx:{w:9}},
+ {n:["회계사","Accountant","会計士","会计师"],w:[0,1,3,4],e:65,fx:{w:11}},
+ {n:["변호사","Lawyer","弁護士","律师"],w:[0,1,2,4],e:75,f:1,fx:{w:13,h:-3}},
+ {n:["연구원","Researcher","研究者","研究员"],w:[0,0,2,4],e:75,fx:{w:8,e:8,j:3}},
+ {n:["기자","Journalist","記者","记者"],w:[0,1,2,3],e:55,fx:{w:5,r:4,j:3,h:-2}},
+ {n:["디자이너","Designer","デザイナー","设计师"],w:[0,1,3,5],e:45,fx:{w:7,j:5}},
+ {n:["음악가·예술가","Artist or musician","芸術家","艺术家"],w:[1,2,2,3],e:20,fx:{w:2,j:9,r:3}},
+ {n:["운동선수","Athlete","アスリート","运动员"],w:[1,1,2,2],h:72,fx:{w:5,h:5,j:5}},
+ {n:["조종사","Pilot","パイロット","飞行员"],w:[0,0,1,2],e:60,f:2,h:60,fx:{w:14,r:-2}},
+ {n:["창업가","Startup founder","起業家","创业者"],w:[0,1,2,4],f:2,fx:{w:9,j:3,h:-4}},
+ {n:["콘텐츠 크리에이터","Content creator","クリエイター","内容创作者"],w:[0,1,3,5],e:25,fx:{w:5,j:5,r:5,h:-2}},
+ {n:["성직자·수행자","Religious worker","聖職者","宗教人士"],w:[1,1,1,1],fx:{j:8,r:6,w:-2}},
+ {n:["정치인","Politician","政治家","政治家"],w:[0,1,1,1],f:2,e:45,fx:{w:9,r:6,j:-3}}
+];
+const jobOk=(j,G)=>(!j.e||G.s.e>=j.e)&&(!j.f||G.famTier>=j.f)&&(!j.h||G.s.h>=j.h);
+const jobW=(j,G)=>j.w[G.c[4]];
+function wsample(arr,n,wf,rf){
+  const pool=arr.slice(),out=[];
+  while(out.length<n&&pool.length){
+    const tot=pool.reduce((s,x)=>s+wf(x),0);let x=rf()*tot,i=0;
+    for(;i<pool.length;i++){x-=wf(pool[i]);if(x<=0)break}
+    out.push(pool.splice(Math.min(i,pool.length-1),1)[0]);
+  }
+  return out;
+}
+function parentJob(G){ // 부모 직업: 형편에 맞는 직업을 가중 추첨(학력 제한은 느슨하게)
+  const pool=JOBS.filter(j=>jobW(j,G)>0&&(j.f||0)<=G.famTier&&(j.e||0)<=40+G.famTier*15);
+  return wsample(pool,1,j=>jobW(j,G)*(G.famTier>=2&&(j.e||0)>=45?2:1),rnd)[0];
+}
+function jobChoices(G,e){
+  const rf=G.daily?mulberry(G.seed+e.jobs*977+G.stageIdx):Math.random;
+  const elig=JOBS.filter(j=>jobW(j,G)>0&&jobOk(j,G)&&j!==G.job);
+  const offers=wsample(elig,e.jobs===1?3:2,j=>jobW(j,G),rf);
+  const locked=JOBS.filter(j=>!jobOk(j,G)&&j.w[Math.min(3,G.c[4]+1)]>0);
+  const ch=offers.map(j=>({l:j.n,fx:j.fx,job:j,res:ui("job_res",{job:j.n[LI]})}));
+  if(locked.length){
+    const j=locked[Math.floor(rf()*locked.length)];
+    const why=(j.f&&G.famTier<j.f)?"lock_f":(j.h&&G.s.h<j.h)?"lock_h":"lock_e";
+    ch.push({l:j.n,req:()=>false,why:UI[why]});
+  }
+  if(e.jobs===2) ch.push({l:UI.job_keep,fx:{w:2},res:UI.job_keep});
+  return ch;
+}
+/* ---------- 사건 ---------- */
+// s: 단계 번호, ok(G): 조건, t: 본문, ch: 선택지 {l, req, why, fx, res, risk:{p,fx,res,die}}  — 문구는 [ko,en,ja,zh]
+const poor=G=>G.famTier===0, rich=G=>G.famTier>=2, lowInc=G=>G.c[4]<=1;
+const pk=(G,a,b)=>lowInc(G)?a:b;
+const nmA=G=>NAMES[G.c[0]];
+const EV=[
+ /* 어린 시절 */
+ {s:1,ok:G=>poor(G)&&lowInc(G),
+  t:["일곱 살이 가까워 옵니다. 학교는 걸어서 한 시간 거리이고, 일손이 필요한 집안 사정도 있습니다.","You are nearing seven. School is an hour's walk away, and your family needs every pair of hands.","七歳が近づいてきました。学校は歩いて一時間の距離で、家には人手も必要です。","你快七岁了。学校要走一个小时，家里也需要人手。"],
+  ch:[{l:["학교에 다닌다","Go to school","学校に通う","去上学"],fx:{e:12,j:3},res:["글을 읽고 쓰기 시작했습니다.","You began to read and write.","読み書きを覚え始めました。","你开始识字写字了。"]},
+      {l:["가족 일을 돕는다","Help with the family work","家の仕事を手伝う","帮家里干活"],fx:{w:6,e:-6,r:4},res:["일찍 철이 들었습니다. 학교는 띄엄띄엄 다닙니다.","You grew up early. School comes only now and then.","早くに大人びました。学校にはときどきしか行けません。","你早早懂事了，学校只能断断续续地去。"]}]},
+ {s:1,
+  t:G=>{const n=G.pjob.n;return[`${n[0]} 일을 하는 부모님이 가끔 아이를 어떻게 키울지 다툽니다.`,`Your parents (work: ${n[1]}) sometimes argue about how to raise you.`,`${n[2]}として働く両親が、ときどき子育てのことで言い争います。`,`做${n[3]}的父母，偶尔会为怎么养育你而争执。`]},
+  ch:[{l:["조용히 방에서 책을 읽는다","Read quietly in your room","部屋で静かに本を読む","在房间里安静地读书"],fx:{e:6,j:-2},res:["책이 가장 가까운 친구가 됐습니다.","Books became your closest friends.","本がいちばん身近な友だちになりました。","书成了你最亲近的朋友。"]},
+      {l:["밖에서 동네 친구들과 논다","Go out and play with the neighborhood kids","外で近所の友だちと遊ぶ","出去和邻居小孩玩"],fx:{r:8,h:3},res:["동네에서 대장 노릇을 했습니다.","You became the leader of the neighborhood.","近所のガキ大将になりました。","你成了街坊小孩里的头儿。"]}]},
+ {s:1,ok:G=>G.famTier<=1,
+  t:["심하게 열이 오릅니다.","You run a dangerously high fever.","ひどい熱が出ます。","你烧得很厉害。"],
+  ch:[{l:["병원에 간다","Go to the hospital","病院に行く","去医院"],req:G=>!(poor(G)&&G.c[4]===0),why:["가까운 병원도, 낼 돈도 없어요","There is no nearby hospital, and no money","近くに病院もなく、お金もありません","附近没有医院，也没有钱"],fx:{h:4,w:-6},
+       res:G=>pk(G,["먼 거리를 업혀서 갔고, 돈이 많이 들었지만 나았습니다.","You were carried a long way, and it cost a lot, but you recovered.","遠い道のりを背負われて行き、お金はかかりましたが回復しました。","被人背着走了很远，花了不少钱，但你好转了。"],["치료를 받고 곧 나았습니다.","You were treated and soon recovered.","治療を受けて、すぐに回復しました。","你接受了治疗，很快痊愈。"]),
+       risk:{p:G=>poor(G)&&lowInc(G)?0.08:0.01,die:"inf"}},
+      {l:["집에서 버틴다","Tough it out at home","家で耐える","在家硬扛"],fx:{h:-5},res:["며칠 앓고 겨우 일어났습니다.","After a few days of suffering, you finally got up.","数日寝込んで、やっと起き上がれました。","病了几天，总算爬了起来。"],risk:{p:G=>poor(G)&&lowInc(G)?0.25:0.05,die:"inf"}},
+      {l:["이웃에게 도움을 구한다","Ask a neighbor for help","近所の人に助けを求める","向邻居求助"],fx:{r:6,h:1},res:["이웃이 약과 죽을 나눠 주었습니다.","A neighbor shared medicine and porridge.","近所の人が薬とお粥を分けてくれました。","邻居分给你药和粥。"],risk:{p:G=>0.15,die:"inf"}}]},
+ {s:1,ok:G=>G.famTier>=1,
+  t:["전학을 가게 됐습니다. 낯선 교실의 첫날.","You are transferring schools. The first day in an unfamiliar classroom.","転校することになりました。見知らぬ教室での初日。","你要转学了，在陌生教室的第一天。"],
+  ch:[{l:["먼저 말을 건다","Speak up first","自分から話しかける","主动搭话"],fx:{r:9,j:2},res:["금방 친구가 생겼습니다.","You quickly made friends.","すぐに友だちができました。","你很快交到了朋友。"]},
+      {l:["눈치를 보며 지낸다","Keep a low profile","様子をうかがって過ごす","察言观色地待着"],fx:{r:-2,e:3},res:["조용히 적응했습니다.","You adjusted quietly.","静かに馴染んでいきました。","你悄悄地适应了。"]}]},
+ {s:1,ok:G=>rich(G),
+  t:["생일에 가족이 작은 파티를 열어 줍니다.","Your family throws you a small birthday party.","誕生日に家族が小さなパーティーを開いてくれます。","生日那天，家人为你办了个小派对。"],
+  ch:[{l:["기쁘게 즐긴다","Enjoy it with joy","楽しむ","开心地享受"],fx:{j:7,r:4},res:["오래 기억에 남을 하루였습니다.","It was a day you would remember for a long time.","いつまでも心に残る一日でした。","那是难忘的一天。"]},
+      {l:["장난감보다 책을 부탁한다","Ask for books instead of toys","おもちゃより本をお願いする","要书不要玩具"],fx:{e:6,j:2},res:["책 몇 권이 세계를 넓혀 줬습니다.","A few books widened your world.","数冊の本が世界を広げてくれました。","几本书拓宽了你的世界。"]}]},
+ {s:1,ok:G=>lowInc(G),
+  t:["마을에는 수도가 없어 매일 물을 길어 와야 합니다.","There is no tap in the village, so water has to be fetched every day.","村には水道がなく、毎日水を汲みに行かなければなりません。","村里没有自来水，每天都得去打水。"],
+  ch:[{l:["아침마다 물동이를 나른다","Carry water every morning","毎朝水がめを運ぶ","每天早上挑水"],fx:{h:-2,r:5,e:-3},res:["하루의 첫 일과가 물 나르기였습니다.","Fetching water was the first task of every day.","一日の最初の仕事は水汲みでした。","打水成了每天的第一件事。"]},
+      {l:["마을 어른들의 우물 모임에 따라간다","Tag along to the elders' gathering at the well","村の大人たちの井戸端の集まりについて行く","跟着村里大人去井边聚会"],fx:{r:7,e:2},res:["어른들의 이야기를 곁에서 들었습니다.","You listened to the grown-ups' stories.","大人たちの話をそばで聞きました。","你在一旁听大人们讲故事。"]}]},
+ {s:1,ok:G=>!lowInc(G),
+  t:["방과 후에 무엇을 할지 고릅니다.","You choose what to do after school.","放課後に何をするか選びます。","你选择放学后做什么。"],
+  ch:[{l:["학원에 다닌다","Go to cram school","塾に通う","去上补习班"],req:G=>G.s.w>=40,why:["학원비가 필요해요","It costs tuition money","塾の月謝が必要です","需要补习费"],fx:{e:10,j:-3,w:-4},res:["공부 습관이 일찍 잡혔습니다.","You built study habits early.","勉強の習慣が早くから身につきました。","你早早养成了学习习惯。"]},
+      {l:["도서관에서 책을 빌려 읽는다","Borrow and read books at the library","図書館で本を借りて読む","在图书馆借书读"],fx:{e:6,j:3},res:["도서관이 놀이터가 됐습니다.","The library became your playground.","図書館が遊び場になりました。","图书馆成了你的游乐场。"]},
+      {l:["친구들과 뛰어논다","Run around with friends","友だちと駆け回る","和朋友疯玩"],fx:{r:8,h:3,e:-1},res:["해가 질 때까지 놀았습니다.","You played until sunset.","日が暮れるまで遊びました。","你玩到太阳落山。"]}]},
+ {s:1,
+  t:["동생이 태어났습니다.","A younger sibling is born.","弟か妹が生まれました。","弟弟或妹妹出生了。"],
+  ch:[{l:["동생을 열심히 돌본다","Look after the baby eagerly","弟妹を一生懸命世話する","认真照顾弟妹"],fx:{r:8,j:3,e:-2},res:["든든한 형 누나가 됐습니다.","You became a dependable older sibling.","頼もしい兄や姉になりました。","你成了可靠的哥哥姐姐。"]},
+      {l:["내 몫을 지키려 투정을 부린다","Throw tantrums to protect your share","自分の分を守ろうとわがままを言う","为了守住自己那份而耍脾气"],fx:{r:-3,j:2},res:["한동안 집안이 시끄러웠습니다.","The house was noisy for a while.","しばらく家の中が騒がしくなりました。","家里吵闹了一阵子。"]}]},
+ /* 청소년기 */
+ {s:2,
+  t:G=>pk(G,["학교에서 진로 이야기가 나옵니다. 주변에는 일찍 일터로 가는 아이도 많습니다.","Talk of the future comes up at school. Many kids around you head to work early.","学校で進路の話が出ます。周りには早くから働きに出る子も多くいます。","学校里开始谈论前途。你身边不少孩子很早就去干活了。"],["학교에서 진로 이야기가 나옵니다. 성적과 학원 이야기가 한창입니다.","Talk of the future comes up at school. Grades and cram schools are all anyone discusses.","学校で進路の話が出ます。成績や塾の話題でもちきりです。","学校里开始谈论前途，成绩和补习班是热门话题。"]),
+  ch:[{l:["공부에 매달린다","Throw yourself into studying","勉強に打ち込む","埋头苦读"],fx:{e:14,h:-4,j:-3},res:["성적은 올랐지만 몸과 마음이 지쳤습니다.","Your grades rose, but body and mind wore out.","成績は上がりましたが、心身が疲れ果てました。","成绩上去了，身心却疲惫不堪。"]},
+      {l:["기술을 배우며 일을 시작한다","Start working while learning a trade","技術を学びながら働き始める","边学手艺边开始工作"],fx:{w:8,e:4,r:3},res:["일찍 손에 익은 기술이 생겼습니다.","You picked up a skill early on.","早くから身についた技術ができました。","你早早练就了一门手艺。"]},
+      {l:["균형 있게 지낸다","Keep a balance","バランスよく過ごす","保持平衡"],fx:{e:6,j:5,r:4},res:["무난한 청소년기를 보냈습니다.","You had an uneventful adolescence.","無難な思春期を過ごしました。","你度过了平稳的青少年时期。"]},
+      {l:["해외 대학에 지원한다","Apply to a university abroad","海外の大学に出願する","申请海外大学"],req:G=>G.famTier>=2||G.s.e>=75,why:["학비와 입학 정보가 있어야 열려요","It takes tuition money and admission know-how","学費と入学情報が必要です","需要学费和入学信息"],fx:{e:16,w:-6,r:-4},res:["낯선 나라의 캠퍼스를 꿈꾸게 됐습니다.","You started dreaming of a campus in a faraway country.","見知らぬ国のキャンパスを夢見るようになりました。","你开始向往异国的校园。"]}]},
+ {s:2,ok:G=>G.famTier<=2&&luck(G,31)<0.6,
+  t:["집안 사정이 갑자기 어려워졌습니다.","Your family's circumstances suddenly turn hard.","家の事情が急に厳しくなりました。","家里的境况忽然变得艰难。"],
+  ch:[{l:["학업을 잠시 접고 일한다","Set school aside and go to work","学業をいったん諦めて働く","暂时放下学业去打工"],fx:{w:10,e:-8,j:-4},res:["가족을 위해 일터로 나갔습니다.","You went to work for your family.","家族のために働きに出ました。","你为了家人走进了工地和店铺。"]},
+      {l:["장학금과 친척 도움을 알아본다","Look into scholarships and help from relatives","奨学金や親戚の助けを探す","打听奖学金和亲戚的帮助"],fx:{e:5,w:-2,r:3},res:["어렵게 학교를 이어 갔습니다.","You managed to stay in school, barely.","苦労しながら学校を続けました。","你艰难地把书念了下去。"],risk:{p:G=>0.35,fx:{e:-8,j:-4},res:["도움은 닿지 않았고 결국 학업을 중단했습니다.","Help never came, and you left school in the end.","助けは届かず、結局学業を中断しました。","帮助没能到来，你最终还是辍学了。"]}}]},
+ {s:2,
+  t:["처음으로 마음이 가는 사람이 생겼습니다.","For the first time, someone catches your heart.","初めて、気になる人ができました。","你第一次有了心动的人。"],
+  ch:[{l:["용기 내어 고백한다","Gather your courage and confess","勇気を出して告白する","鼓起勇气表白"],fx:{r:7,j:6},res:["결과가 어떻든 잊지 못할 경험이 됐습니다.","Whatever the result, it became an unforgettable experience.","結果がどうあれ、忘れられない経験になりました。","不论结果如何，这都成了难忘的经历。"],risk:{p:G=>0.4,fx:{j:-8,r:-3},res:["거절당해 한동안 마음이 쓰렸습니다.","You were turned down and hurt for a while.","断られて、しばらく胸が痛みました。","你被拒绝了，难过了好一阵子。"]}},
+      {l:["혼자 마음에 담아 둔다","Keep it to yourself","一人で胸にしまっておく","把心意藏在心里"],fx:{j:-1,e:3},res:["일기장에만 이름을 적었습니다.","You wrote the name only in your diary.","名前は日記にだけ書きました。","你只在日记里写下了那个名字。"]}]},
+ {s:2,
+  t:["또래들이 위험한 일탈을 함께 하자고 합니다.","Your peers invite you to join in something risky.","同世代の子たちが危ない悪ふざけに誘います。","同龄人邀你一起做危险的出格事。"],
+  ch:[{l:["함께 어울린다","Join them","一緒に加わる","一起去"],fx:{r:6,j:5,h:-5},res:["짜릿했지만 후폭풍이 따랐습니다.","It was thrilling, but there were consequences.","スリルはありましたが、後で痛い目を見ました。","很刺激，但随后付出了代价。"],risk:{p:G=>0.25,fx:{h:-10,e:-8},res:["사고가 나 크게 다쳤습니다.","There was an accident and you were badly hurt.","事故が起きて大けがをしました。","出了事故，你受了重伤。"]}},
+      {l:["거절한다","Refuse","断る","拒绝"],fx:{r:-4,e:4},res:["친구 몇 명을 잃었지만 자신을 지켰습니다.","You lost a few friends but protected yourself.","友だちを何人か失いましたが、自分を守りました。","你失去了几个朋友，却守住了自己。"]}]},
+ {s:2,
+  t:G=>{const n=nmA(G);return pk(G,[`${n[0]}에서는 학교가 멀고 시설이 부족해 선택이 쉽지 않습니다. 상급학교 진학을 준비합니다.`,`In ${n[1]}, schools are far and poorly equipped, so choices are hard. You consider going on to higher school.`,`${n[2]}では学校が遠く設備も足りず、選択は簡単ではありません。進学を考えます。`,`在${n[3]}，学校远、设施少，选择并不容易。你考虑继续升学。`],[`${n[0]}에서는 입시 경쟁이 치열해 선택이 쉽지 않습니다. 상급학교 진학을 준비합니다.`,`In ${n[1]}, entrance competition is fierce, so choices are hard. You prepare to go on to higher school.`,`${n[2]}では受験競争が激しく、選択は簡単ではありません。進学を準備します。`,`在${n[3]}，升学竞争激烈，选择并不容易。你准备继续升学。`])},
+  ch:[{l:["끝까지 도전한다","Go for it to the end","最後まで挑戦する","拼到最后"],fx:{e:12,j:-3,w:-4},res:["고생 끝에 진학의 문턱에 닿았습니다.","After much hardship, you reached the threshold of further study.","苦労の末、進学の入り口にたどり着きました。","历经辛苦，你摸到了升学的门槛。"],risk:{p:G=>poor(G)?0.45:0.2,fx:{e:-2,j:-6},res:["원하는 곳에 가지 못해 낙담했습니다.","You didn't get into the place you wanted and felt crushed.","希望の進学先に行けず、落ち込みました。","没能进入想去的学校，你很沮丧。"]}},
+      {l:["현실적인 길을 택한다","Take the realistic path","現実的な道を選ぶ","选择现实的路"],fx:{w:6,e:3},res:["안정적인 직업 훈련 쪽으로 방향을 잡았습니다.","You steered toward stable vocational training.","安定した職業訓練の方へ舵を切りました。","你转向了稳妥的职业培训。"]}]},
+ {s:2,
+  t:["세상과 연결된 화면 하나가 생겼습니다.","A screen that connects you to the world comes into your life.","世界とつながる画面が一つ手に入りました。","你有了一块连接世界的屏幕。"],
+  ch:[{l:["온라인 강의를 듣는다","Take online lessons","オンライン講義を受ける","听网课"],req:G=>G.c[4]>=2||G.s.w>=45,why:["기기와 안정적인 인터넷이 필요해요","It takes a device and a stable connection","端末と安定したネット回線が必要です","需要设备和稳定的网络"],fx:{e:10,j:2},res:["집에서도 먼 세계의 수업을 들었습니다.","From home, you sat in classes from distant places.","家にいながら遠い世界の授業を受けました。","你在家就听到了远方世界的课。"]},
+      {l:["친구 휴대폰으로 잠깐씩 본다","Borrow a friend's phone for short looks","友だちの携帯を借りて少しだけ見る","借朋友的手机偶尔看看"],fx:{e:3,r:4},res:["짧은 시간이었지만 많은 걸 알게 됐습니다.","The time was short, but you learned a lot.","短い時間でしたが、多くのことを知りました。","时间虽短，你却学到了很多。"]},
+      {l:["책과 필기만으로 공부한다","Study with only books and notes","本とノートだけで勉強する","只靠书和笔记学习"],fx:{e:5,h:1},res:["느리지만 꾸준히 쌓았습니다.","It was slow, but you built it up steadily.","遅くても着実に積み上げました。","虽然慢，却一点点稳稳积累。"]}]},
+ {s:2,ok:G=>G.s.e>=40,
+  t:["학교에서 큰 대회와 교류 프로그램 소식이 들려옵니다.","News of a big competition and an exchange program reaches your school.","学校に大きな大会と交流プログラムの知らせが届きます。","学校传来了大型比赛和交流项目的消息。"],
+  ch:[{l:["교환학생으로 떠난다","Leave as an exchange student","交換留学生として旅立つ","去做交换生"],req:G=>G.s.w>=60,why:["체류 비용을 댈 수 있어야 해요","It takes money to live abroad","滞在費を出せることが必要です","需要付得起在外生活的费用"],fx:{e:12,r:-4,j:6},res:["다른 나라의 교실에서 한 해를 보냈습니다.","You spent a year in a classroom in another country.","他の国の教室で一年を過ごしました。","你在另一个国家的教室里度过了一年。"]},
+      {l:["국내 대회에 도전한다","Enter a domestic competition","国内の大会に挑戦する","参加国内比赛"],fx:{e:8,j:4},res:["입상은 못 했지만 자신감을 얻었습니다.","You didn't place, but you gained confidence.","入賞はできませんでしたが、自信がつきました。","虽然没得奖，却收获了自信。"]}]},
+ /* 청년기 */
+ {s:3,jobs:1,t:G=>UI.job_h.map(x=>sub(x,{place:NAMES[G.c[0]][UI.job_h.indexOf(x)]})),ch:[]},
+ {s:3,
+  t:["결혼이나 동거 이야기가 오갑니다.","Talk of marriage or moving in together comes up.","結婚や同居の話が持ち上がります。","谈起了结婚或同居。"],
+  ch:[{l:["함께하기로 한다","Decide to build a life together","一緒になることにする","决定在一起"],fx:{r:14,j:6,w:-4},res:["가정을 이뤘습니다.","You started a household.","家庭を築きました。","你们组成了家庭。"]},
+      {l:["아직은 혼자가 좋다","Prefer to stay on your own for now","まだ一人がいい","暂时还想一个人"],fx:{j:3,w:4,r:-3},res:["자기 시간을 더 쌓기로 했습니다.","You chose to build more time for yourself.","自分の時間をもっと積み重ねることにしました。","你决定先多积累属于自己的时间。"]}]},
+ {s:3,
+  t:["몸이 보내는 이상 신호가 느껴집니다.","Your body sends worrying signals.","体が異変のサインを送ってきます。","你的身体发出了异常的信号。"],
+  ch:[{l:["검진을 받는다","Get a checkup","検診を受ける","去做检查"],fx:{h:6,w:-3},res:["일찍 발견해 큰 문제를 막았습니다.","You caught it early and avoided a bigger problem.","早く見つかって、大きな問題を防げました。","发现得早，避免了大问题。"]},
+      {l:["일이 바빠 미룬다","Put it off because work is busy","仕事が忙しくて先延ばしにする","工作太忙，先拖着"],fx:{w:3,h:-6},res:["잠깐 괜찮아진 듯했습니다.","It seemed fine for a while.","しばらくは大丈夫なように見えました。","一时似乎没事了。"],risk:{p:G=>lowInc(G)?0.12:0.06,fx:{h:-14},res:["병이 깊어졌습니다.","The illness grew worse.","病気が深刻になりました。","病情加重了。"]}}]},
+ {s:3,ok:G=>G.s.e>=45,
+  t:["큰 기회가 찾아옵니다. 해외 연수·장학·이민 중 하나입니다.","A big chance arrives: overseas training, a scholarship, or emigration.","大きなチャンスが訪れます。海外研修、奨学金、移住のいずれかです。","一个大机会出现了：海外研修、奖学金或移民。"],
+  ch:[{l:["붙잡는다","Grab it","つかみ取る","抓住它"],fx:{e:10,w:8,r:-5},res:["세상이 훨씬 넓어졌습니다.","Your world grew much wider.","世界がずっと広がりました。","世界一下子宽阔了许多。"]},
+      {l:["가족 곁에 남는다","Stay near your family","家族のそばに残る","留在家人身边"],fx:{r:8,j:3},res:["익숙한 사람들 곁이 편했습니다.","Being among familiar people felt right.","慣れ親しんだ人たちのそばは心地よいものでした。","待在熟悉的人身边令人安心。"]}]},
+ {s:3,ok:G=>G.c[4]<=1&&luck(G,32)<0.35,
+  t:["분쟁과 불안이 사회를 뒤흔듭니다.","Conflict and unrest shake society.","紛争と不安が社会を揺さぶります。","冲突与动荡撼动着社会。"],
+  ch:[{l:["안전한 곳으로 피신한다","Flee to somewhere safe","安全な場所へ避難する","逃往安全的地方"],fx:{w:-10,h:2,r:-4},res:["가진 것을 두고 떠났습니다.","You left what you owned behind.","持っていたものを置いて旅立ちました。","你抛下了所有家当离开。"]},
+      {l:["버티며 일상을 지킨다","Stay and hold onto daily life","耐えて日常を守る","留下来守住日常"],fx:{j:-4,r:6},res:["이웃과 서로 의지했습니다.","You leaned on your neighbors and they on you.","隣人と支え合いました。","你和邻居们互相依靠。"],risk:{p:G=>0.18,fx:{h:-18},res:["크게 다쳤습니다.","You were badly hurt.","大けがをしました。","你受了重伤。"],die:"war"}}]},
+ {s:3,
+  t:["독립해서 살 곳을 구해야 합니다.","You need to find a place of your own.","独り立ちして住む場所を探さなければなりません。","你得找个自己的住处了。"],
+  ch:[{l:["작은 월셋방을 얻는다","Rent a small room","小さな賃貸の部屋を借りる","租一间小屋"],fx:{w:-4,j:2},res:["좁지만 내 공간이 생겼습니다.","It was cramped, but it was yours.","狭いけれど、自分の空間ができました。","虽然窄，却是属于你的空间。"]},
+      {l:["가족이 보증금을 대 준다","Your family covers the deposit","家族が保証金を出してくれる","家人替你付押金"],req:G=>G.famTier>=2,why:["보증금을 댈 사람이 있어야 해요","Someone has to be able to pay the deposit","保証金を出してくれる人が必要です","需要有人能替你付押金"],fx:{w:6,j:4},res:["좋은 동네에서 출발했습니다.","You started out in a good neighborhood.","良い街でスタートを切りました。","你从一个好社区起步。"]},
+      {l:["친구들과 방 하나를 나눠 쓴다","Share one room with friends","友だちと一部屋をシェアする","和朋友合住一间房"],fx:{r:8,w:-1,j:-1},res:["북적이지만 외롭지 않았습니다.","It was crowded, but you were never lonely.","騒がしいけれど、寂しくはありませんでした。","虽然拥挤，却并不孤单。"]}]},
+ {s:3,
+  t:["작게라도 내 일을 시작할 기회가 보입니다.","You see a chance to start something of your own, however small.","小さくても自分の事業を始めるチャンスが見えます。","你看到了哪怕再小也能自己创业的机会。"],
+  ch:[{l:["대출을 받아 가게를 연다","Take a loan and open a shop","融資を受けて店を開く","贷款开一家店"],req:G=>G.s.w>=40,why:["담보나 신용이 있어야 해요","It takes collateral or credit","担保や信用が必要です","需要抵押或信用"],fx:{w:10,j:3},res:["가게 문을 열었습니다.","You opened your shop.","店を開きました。","你的店开张了。"],risk:{p:G=>0.4,fx:{w:-14,j:-6},res:["빚만 남기고 문을 닫았습니다.","It closed, leaving only debt.","借金だけを残して店を閉めました。","店关了门，只剩下债。"]}},
+      {l:["동료들과 작은 모임으로 시작한다","Start small with a group of peers","仲間と小さな集まりから始める","和同伴从小组起步"],fx:{r:8,w:3},res:["적은 돈으로 조금씩 키워 갔습니다.","You grew it bit by bit on little money.","わずかなお金で少しずつ育てていきました。","你用很少的钱一点点把它做大。"]},
+      {l:["월급 생활에 만족한다","Be content with a steady wage","月給暮らしに満足する","满足于领薪水的生活"],fx:{w:4,j:2},res:["안정이 가장 큰 자산이었습니다.","Stability was your greatest asset.","安定が最大の財産でした。","安稳就是你最大的财富。"]}]},
+ /* 장년기 */
+ {s:4,
+  t:["아이를 키우며 살림이 빠듯해집니다.","Raising a child, your household budget grows tight.","子育てをしながら、家計が苦しくなります。","养孩子让家里的开销变得紧巴巴。"],
+  ch:[{l:["일을 더 늘린다","Take on more work","仕事を増やす","多接活干"],fx:{w:10,h:-6,r:-3},res:["쉴 틈이 사라졌습니다.","Your rest time disappeared.","休む暇がなくなりました。","你没了歇口气的空闲。"]},
+      {l:["가족과 시간을 우선한다","Put time with family first","家族との時間を優先する","优先陪伴家人"],fx:{r:10,j:6,w:-4},res:["집에 웃음이 늘었습니다.","There was more laughter at home.","家に笑顔が増えました。","家里的笑声多了。"]}]},
+ {s:4,
+  t:["직장·사업에서 큰 결정을 해야 합니다.","A major decision awaits you at work or in business.","仕事や事業で大きな決断を迫られます。","你在工作或生意上必须做出重大决定。"],
+  ch:[{l:["모험을 건다","Take a gamble","冒険に賭ける","冒险一搏"],fx:{w:15,j:3},res:["위험을 감수한 보상이 돌아왔습니다.","The risk you took paid off.","リスクを取った見返りがありました。","冒的险得到了回报。"],risk:{p:G=>0.4,fx:{w:-16,j:-8},res:["크게 손해를 보았습니다.","You took a heavy loss.","大きな損失を被りました。","你遭受了巨大的损失。"]}},
+      {l:["안정을 택한다","Choose stability","安定を選ぶ","选择稳妥"],fx:{w:5,j:1},res:["큰 변화 없이 흘러갔습니다.","Things went on without big changes.","大きな変化なく過ぎていきました。","日子没有大变化地过去了。"]}]},
+ {s:4,
+  t:["부모님이 아프십니다.","Your parents fall ill.","両親が病気になりました。","父母病倒了。"],
+  ch:[{l:["곁에서 돌본다","Care for them in person","そばで看病する","守在身边照顾"],fx:{r:9,w:-8,j:-2},res:["힘들었지만 후회는 남지 않았습니다.","It was hard, but you have no regrets.","大変でしたが、後悔は残りませんでした。","虽然辛苦，却没有遗憾。"]},
+      {l:["돈을 보내고 일에 집중한다","Send money and focus on work","お金を送って仕事に集中する","寄钱，专心工作"],fx:{w:3,r:-6},res:["마음 한구석이 계속 무거웠습니다.","A corner of your heart stayed heavy.","心のどこかがずっと重いままでした。","心里始终有一块沉甸甸的。"]}]},
+ {s:4,
+  t:["예상치 못한 큰 사건이 닥칩니다.","An unexpected, major event strikes.","予想外の大きな出来事が襲いかかります。","一件意想不到的大事降临了。"],
+  ch:[{l:["주변에 도움을 청한다","Ask those around you for help","周りに助けを求める","向身边的人求助"],fx:{r:7,j:2},res:["사람들이 기꺼이 손을 내밀었습니다.","People gladly reached out a hand.","人々が喜んで手を差し伸べてくれました。","大家乐意伸出了援手。"]},
+      {l:["혼자 해결하려 한다","Try to handle it alone","一人で解決しようとする","想独自解决"],fx:{h:-5,j:-3,w:2},res:["스스로 버텨 냈지만 지쳤습니다.","You pulled through alone, but you were worn out.","自力で乗り切りましたが、疲れ果てました。","你独自撑了过来，却精疲力竭。"]}]},
+ {s:4,ok:G=>G.s.h<70,
+  t:["몸과 마음이 번아웃에 빠집니다.","Body and mind sink into burnout.","心身が燃え尽きてしまいます。","身心陷入了倦怠。"],
+  ch:[{l:["휴식을 취한다","Take a rest","休息をとる","好好休息"],req:G=>G.s.w>=30||G.c[4]>=3,why:["쉬면 생계가 끊겨요","Resting means losing your income","休めば生活が成り立ちません","一休息生计就断了"],fx:{h:8,j:7,w:-5},res:["잠시 멈춘 덕에 다시 걸을 힘이 생겼습니다.","Pausing gave you the strength to walk again.","少し立ち止まったおかげで、また歩く力が湧きました。","停一停，让你重新有了走下去的力气。"]},
+      {l:["계속 달린다","Keep running","走り続ける","继续硬撑"],fx:{w:6,h:-9},res:["성과는 났지만 몸이 상했습니다.","You got results, but your body paid for it.","成果は出ましたが、体を壊しました。","成绩有了，身体却垮了。"],risk:{p:G=>0.08,fx:{h:-15},res:["쓰러져 병원에 실려 갔습니다.","You collapsed and were taken to the hospital.","倒れて病院に運ばれました。","你倒下了，被送进医院。"]}}]},
+ {s:4,
+  t:["아이의 교육 방향을 정해야 합니다.","You must decide how your child will be educated.","子どもの教育方針を決めなければなりません。","你得决定孩子的教育方向。"],
+  ch:[{l:["사교육과 유학까지 지원한다","Pay for extra tutoring, even study abroad","塾や留学まで支援する","支持课外辅导甚至留学"],req:G=>G.s.w>=60,why:["감당할 비용이 필요해요","It takes money you can afford","負担できる費用が必要です","需要负担得起的费用"],fx:{w:-12,r:3,e:3},res:["아이에게 더 넓은 길을 열어 주었습니다.","You opened a wider road for your child.","子どもにより広い道を開いてあげました。","你为孩子打开了更宽的路。"]},
+      {l:["동네 학교에 보내고 곁에서 돌본다","Send them to the local school and stay close","地元の学校に通わせてそばで見守る","送去附近的学校，在身边陪着"],fx:{r:8,j:4},res:["평범하지만 따뜻한 성장기를 보냈습니다.","They had an ordinary but warm childhood.","平凡だけれど温かい成長期を過ごしました。","孩子度过了平凡却温暖的成长期。"]},
+      {l:["일을 줄이고 직접 가르친다","Cut back work and teach them yourself","仕事を減らして自分で教える","减少工作，亲自教孩子"],fx:{r:9,w:-6,e:3},res:["아이와의 시간이 길어졌습니다.","You spent far more time with your child.","子どもと過ごす時間が長くなりました。","你陪孩子的时间变长了。"]}]},
+ {s:4,
+  t:["동네에 닥친 문제를 두고 사람들이 모입니다.","People gather over a problem facing the neighborhood.","地域に降りかかった問題をめぐって人々が集まります。","人们为社区面临的问题聚在一起。"],
+  ch:[{l:["나서서 모임을 이끈다","Step up and lead the meeting","自ら進んで集まりを率いる","站出来主持聚会"],fx:{r:9,j:4,h:-3},res:["이웃들이 믿고 따라 주었습니다.","Your neighbors trusted you and followed.","隣人たちが信頼してついてきてくれました。","邻居们信任你，跟着你走。"]},
+      {l:["지켜보며 의견만 보탠다","Watch and only add your opinion","見守りつつ意見だけ添える","旁观，只提提意见"],fx:{r:2},res:["조용히 힘을 보탰습니다.","You quietly lent a hand.","静かに力を貸しました。","你默默出了一份力。"]}]},
+ /* 중년기 */
+ {s:5,jobs:2,t:UI.job_h2,ch:[],ok:G=>!!G.job&&luck(G,33)<0.85},
+ {s:5,
+  t:["자녀가 독립할 나이가 됐습니다.","Your children are old enough to leave home.","子どもが独立する年頃になりました。","孩子到了该独立的年纪。"],
+  ch:[{l:["모은 것을 지원한다","Support them with what you saved","貯めたものを支援する","用积蓄资助他们"],fx:{r:9,w:-9,j:4},res:["자녀의 첫걸음을 도왔습니다.","You helped with their first steps.","子どもの第一歩を手助けしました。","你帮孩子迈出了第一步。"]},
+      {l:["노후 대비를 우선한다","Prioritize your own retirement","老後の備えを優先する","优先准备养老"],fx:{w:6,r:-3},res:["스스로의 미래를 챙겼습니다.","You looked after your own future.","自分の将来を守りました。","你为自己的未来做了打算。"]}]},
+ {s:5,
+  t:["건강에 빨간불이 켜졌습니다.","Your health sets off a red light.","健康に赤信号が灯りました。","你的健康亮起了红灯。"],
+  ch:[{l:["생활을 바꾼다","Change your lifestyle","生活を変える","改变生活方式"],fx:{h:10,j:2},res:["식단과 운동을 바꾸니 몸이 달라졌습니다.","Changing diet and exercise changed your body.","食事と運動を変えたら、体が変わりました。","调整饮食和运动后，身体变了样。"]},
+      {l:["약으로 버틴다","Get by on medication","薬でしのぐ","靠药物撑着"],fx:{h:-2,w:-3},res:["문제가 미뤄졌을 뿐입니다.","The problem was merely postponed.","問題は先送りされただけでした。","问题只是被推迟了。"],risk:{p:G=>lowInc(G)?0.14:0.08,fx:{h:-18},res:["합병증이 찾아왔습니다.","Complications arrived.","合併症が現れました。","并发症找上门来。"],die:"chronic"}},
+      {l:["정기 검진 프로그램에 등록한다","Sign up for a regular screening program","定期検診プログラムに登録する","登记参加定期体检项目"],req:G=>G.c[4]>=2||G.s.w>=60,why:["검진 제도나 비용이 필요해요","It takes a screening system or the money for it","検診制度や費用が必要です","需要体检制度或费用"],fx:{h:12,w:-3},res:["꾸준한 검진 덕에 문제를 일찍 잡았습니다.","Steady checkups let you catch problems early.","継続的な検診のおかげで、問題を早く見つけられました。","坚持体检让你及早发现了问题。"]}]},
+ {s:5,
+  t:["오랜 친구가 도움을 청합니다.","An old friend asks you for help.","古い友人が助けを求めてきます。","老朋友向你求助。"],
+  ch:[{l:["기꺼이 돕는다","Gladly help","喜んで助ける","乐意帮忙"],fx:{r:9,w:-6,j:3},res:["우정이 더 깊어졌습니다.","Your friendship deepened.","友情がより深まりました。","你们的友情更深了。"]},
+      {l:["정중히 거절한다","Politely decline","丁重に断る","礼貌地拒绝"],fx:{w:2,r:-5},res:["서먹해졌지만 살림은 지켰습니다.","Things grew awkward, but you protected your finances.","気まずくなりましたが、暮らしは守れました。","关系生分了，家底却保住了。"]}]},
+ {s:5,
+  t:["살 곳을 두고 마음이 흔들립니다.","You waver over where to live.","住む場所をめぐって心が揺れます。","你对住在哪里犹豫不决。"],
+  ch:[{l:["넓은 집으로 옮긴다","Move to a bigger home","広い家に引っ越す","搬到更大的房子"],req:G=>G.s.w>=55,why:["집을 살 만한 돈이 필요해요","It takes enough money to buy a home","家を買えるだけのお金が必要です","需要有买房的钱"],fx:{w:-8,j:6,r:3},res:["가족이 편히 쉴 공간이 생겼습니다.","Your family gained a comfortable space to rest.","家族がくつろげる空間ができました。","全家有了可以安心休息的空间。"]},
+      {l:["살던 곳에 그대로 머문다","Stay where you are","住み慣れた場所にとどまる","留在原地"],fx:{r:5,j:2},res:["익숙한 골목이 편안했습니다.","The familiar streets felt comforting.","慣れた路地が心地よかったです。","熟悉的街巷让人安心。"]},
+      {l:["고향으로 돌아간다","Return to your hometown","故郷に帰る","回到故乡"],fx:{j:6,r:6,w:-3},res:["오래 비웠던 고향에서 다시 뿌리를 내렸습니다.","You put down roots again in the hometown you'd left so long.","長く離れていた故郷に、再び根を下ろしました。","你在离开多年的故乡重新扎下了根。"]}]},
+ /* 노년기 */
+ {s:6,
+  t:["은퇴 후 시간이 많아졌습니다.","After retirement, you have a lot more time.","引退後、時間がたっぷりできました。","退休后，你有了很多时间。"],
+  ch:[{l:["취미와 봉사를 시작한다","Take up hobbies and volunteering","趣味とボランティアを始める","开始培养爱好、做志愿者"],fx:{j:9,r:7},res:["새로운 사람들을 만났습니다.","You met new people.","新しい人たちと出会いました。","你认识了新朋友。"]},
+      {l:["집에서 조용히 지낸다","Stay quietly at home","家で静かに過ごす","在家安静度日"],fx:{h:2,j:-2},res:["평온하지만 조금 외롭습니다.","It is peaceful, if a little lonely.","穏やかですが、少し寂しい日々です。","平静，却有一点孤单。"]}]},
+ {s:6,
+  t:G=>pk(G,["연금이 거의 없어 생활이 막막합니다.","With almost no pension, daily life looks bleak.","年金がほとんどなく、生活は先が見えません。","几乎没有养老金，生活前景渺茫。"],["연금과 저축으로 생활을 꾸립니다.","You get by on a pension and savings.","年金と貯金で暮らしを立てます。","你靠养老金和积蓄维持生活。"]),
+  ch:[{l:["가족에게 의지한다","Rely on your family","家族に頼る","依靠家人"],fx:{r:6,w:2,j:-1},res:["가족이 곁을 지켜 주었습니다.","Your family stayed by your side.","家族がそばにいてくれました。","家人一直陪在你身边。"]},
+      {l:["자립을 고집한다","Insist on independence","自立にこだわる","坚持自立"],fx:{w:-3,j:4},res:["어렵지만 당당하게 지냈습니다.","It was hard, but you carried yourself with pride.","大変でしたが、堂々と過ごしました。","虽然艰难，你依然活得挺直腰杆。"]},
+      {l:["돌봄이 있는 시설에 들어간다","Move into a care facility","介護のある施設に入る","住进有护理的机构"],req:G=>G.s.w>=50,why:["입소 비용을 낼 수 있어야 해요","You must be able to pay the entry fees","入居費用を払えることが必要です","需要付得起入住费用"],fx:{h:6,j:-1,w:-10,r:-2},res:["전문 돌봄 속에서 편안히 지냈습니다.","You lived comfortably in professional care.","専門的な介護の中で穏やかに過ごしました。","你在专业护理中安稳度日。"]}]},
+ {s:6,
+  t:["손주가 찾아와 옛이야기를 들려 달라고 합니다.","A grandchild visits and asks you to tell stories of the old days.","孫が訪ねてきて、昔話を聞かせてほしいとせがみます。","孙辈来看你，缠着你讲过去的故事。"],
+  ch:[{l:["살아온 이야기를 들려준다","Tell the story of your life","これまでの人生を語って聞かせる","讲讲自己走过的路"],fx:{j:10,r:8},res:["이야기가 손주의 마음에 남았습니다.","The story stayed in your grandchild's heart.","その話は孫の心に残りました。","故事留在了孙辈的心里。"]},
+      {l:["조용히 웃고 만다","Just smile quietly","静かに笑うだけにする","只是静静地笑笑"],fx:{j:3},res:["그저 곁에 있어 주는 것으로 충분했습니다.","Simply being there was enough.","ただそばにいるだけで十分でした。","光是陪在身边就够了。"]}]},
+ {s:6,ok:G=>G.s.h<65,
+  t:["큰 병이 찾아왔습니다.","A serious illness arrives.","大きな病気がやってきました。","一场重病找上门来。"],
+  ch:[{l:["적극적으로 치료한다","Pursue treatment actively","積極的に治療する","积极治疗"],req:G=>G.s.w>=25||G.c[4]>=2,why:["치료비를 마련할 길이 없어요","There is no way to pay for treatment","治療費を工面する手立てがありません","凑不出治疗费"],fx:{h:6,w:-12},res:["치료비가 컸지만 회복했습니다.","The treatment was costly, but you recovered.","治療費はかさみましたが、回復しました。","治疗费很高，但你康复了。"],risk:{p:G=>0.2,fx:{h:-15},res:["치료에도 병세가 나빠졌습니다.","Despite treatment, your condition worsened.","治療にもかかわらず、病状は悪化しました。","尽管治疗，病情还是恶化了。"],die:"illness"}},
+      {l:["자연스럽게 받아들인다","Accept it as it comes","自然に受け入れる","顺其自然地接受"],fx:{j:5,h:-8},res:["남은 시간을 소중하게 보냈습니다.","You cherished the time that remained.","残された時間を大切に過ごしました。","你珍惜着剩下的时光。"],risk:{p:G=>0.25,fx:{h:-15},res:["병세가 빠르게 깊어졌습니다.","The illness deepened quickly.","病状は急速に進みました。","病情迅速加重。"],die:"aging"}}]},
+ {s:6,
+  t:["남은 시간에 하고 싶은 일을 헤아려 봅니다.","You think over what you want to do with the time left.","残された時間にしたいことを数えてみます。","你盘算着剩下的时间里想做什么。"],
+  ch:[{l:["가고 싶던 곳으로 여행을 떠난다","Travel to the place you always wanted to see","行きたかった場所へ旅に出る","去一直想去的地方旅行"],req:G=>G.s.w>=30,why:["여행 경비가 필요해요","It takes travel money","旅費が必要です","需要旅费"],fx:{j:10,w:-6,h:-1},res:["평생 마음에 둔 풍경을 눈에 담았습니다.","You took in the scenery you'd held in your heart all your life.","生涯胸に抱いてきた風景を目に焼きつけました。","你亲眼看到了一生惦记的风景。"]},
+      {l:["가족을 모아 식사를 한다","Gather the family for a meal","家族を集めて食事をする","把家人聚在一起吃饭"],fx:{r:9,j:6},res:["모두가 오랜만에 한자리에 모였습니다.","Everyone gathered in one place after a long time.","みんなが久しぶりに一堂に会しました。","大家久违地聚在了一起。"]},
+      {l:["짧은 편지를 남긴다","Leave a short letter","短い手紙を残す","留下一封短信"],fx:{j:5,r:5},res:["전하지 못한 말들을 글로 남겼습니다.","You put unspoken words into writing.","伝えられなかった言葉を文章に残しました。","你把没能说出口的话写了下来。"]}]}
+];
+const STAGES=[
+ {a:0,b:2,evs:0},{a:3,b:9,evs:3},{a:10,b:18,evs:4},{a:19,b:29,evs:4},{a:30,b:49,evs:4},{a:50,b:64,evs:3},{a:65,b:120,evs:3}
+];
+/* ---------- 공통 도구 ---------- */
+let rnd=Math.random;
+function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const luck=(G,k)=>G.daily?mulberry(G.seed+k)():Math.random();
+const todayStr=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,v));
+const randn=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+const pick=a=>a[Math.floor(rnd()*a.length)];
+const STATKEYS=["h","w","j","r","e"];
+const app=document.getElementById("app");
+let G=null, view=null;
+const place=c=>NAMES[c[0]][LI];
+const fmtN=n=>{
+  if(LANG==="en") return n>=1e9?(n/1e9).toFixed(1)+" billion":n>=1e6?(n/1e6).toFixed(0)+" million":String(n);
+  if(LANG==="ko") return n>=1e8?(n/1e8).toFixed(1)+"억":n>=1e4?Math.round(n/1e4)+"만":String(n);
+  if(LANG==="ja") return n>=1e8?(n/1e8).toFixed(1)+"億":n>=1e4?Math.round(n/1e4)+"万":String(n);
+  return n>=1e8?(n/1e8).toFixed(1)+"亿":n>=1e4?Math.round(n/1e4)+"万":String(n);
+};
+const totalBirths=COUNTRIES.reduce((s,c)=>s+c[5],0);
+
+/* ---------- 언어 ---------- */
+function setLang(l,keep){
+  if(!LANGS.some(x=>x[0]===l)) l="ko";
+  LANG=l; LI=LANGS.findIndex(x=>x[0]===l);
+  document.documentElement.lang=l; document.title=UI.title[LI];
+  if(!keep) store.set("lang",l);
+  if(view) view();
+}
+function langBar(){
+  return `<div class="langs">${LANGS.map(([c,n])=>`<button data-lang="${c}" class="${c===LANG?"on":""}">${n}</button>`).join("")}</div>`;
+}
+function bindLang(){ app.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>setLang(b.dataset.lang)); }
+function show(html,bind){ app.innerHTML=langBar()+html; bindLang(); if(bind) bind(); window.scrollTo(0,0); }
+
+/* ---------- 출생 ---------- */
+function weightedBirth(){
+  let x=rnd()*totalBirths;
+  for(const c of COUNTRIES){ x-=c[5]; if(x<=0) return c; }
+  return COUNTRIES[0];
+}
+function newLife(seed){
+  rnd=seed?mulberry(seed):Math.random;
+  const c=weightedBirth();
+  const inc=c[4], le=c[6], imr=c[7];
+  const sex=rnd()<0.512?"m":"f";
+  const fam=clamp(Math.round([14,30,50,72][inc]+randn()*17));
+  const famTier=fam<25?0:fam<48?1:fam<70?2:3;
+  const imrP=(imr==null?[45,25,12,4][inc]:imr)/1000;
+  let lifespan;
+  if(rnd()<imrP) lifespan=Math.floor(rnd()*2);
+  else if(rnd()<0.09+(3-inc)*0.02) lifespan=Math.floor(2+rnd()*Math.max(8,le-5));
+  else lifespan=Math.round(clamp(le+7+randn()*10,15,108));
+  if(sex==="f") lifespan=Math.min(110,lifespan+(lifespan>20?2:0));
+  const g={
+    daily:!!seed, seed:seed||0, locked:[], bio:[], date:seed?todayStr():"", job:null,
+    c, sex, fam, famTier, lifespan, age:0, stageIdx:0,
+    s:{h:clamp(60+randn()*10+(inc-1.5)*4),w:clamp(fam),j:clamp(55+randn()*8),r:clamp(50+randn()*12),e:clamp(fam*0.4+10)},
+    log:[], cause:"", ended:null
+  };
+  g.pjob=parentJob(g);
+  rnd=Math.random;
+  return g;
+}
+
+/* ---------- 화면 ---------- */
+function statsHTML(){
+  const names=ST();
+  return `<div class="stats">`+STATKEYS.map((k,i)=>`<div class="stat">${names[i]}<b>${Math.round(G.s[k])}</b><div class="bar"><i style="width:${G.s[k]}%"></i></div></div>`).join("")+`</div>`;
+}
+function fxText(fx){
+  if(!fx) return "";
+  const names=ST();
+  const t=Object.entries(fx).filter(([,v])=>v).map(([k,v])=>`${names[STATKEYS.indexOf(k)]} ${v>0?"+":""}${v}`);
+  return t.length?`<div class="fx">${t.join(" · ")}</div>`:"";
+}
+function applyFx(fx){ if(fx) for(const k in fx) G.s[k]=clamp(G.s[k]+fx[k]); }
+
+function dailyBox(){
+  const prev=store.get("daily"), done=prev&&prev.date===todayStr();
+  return `<div class="card"><h2>${ui("daily_h",{d:todayStr()})}</h2>
+    <p style="margin-top:0">${ui("daily_p")}</p>
+    ${done?`<p class="res">${ui("daily_rec",{t:prev.text&&prev.text[LI]||""})}</p>`:""}
+    <button class="btn primary" id="daily">${ui(done?"daily_again":"daily_go")}</button></div>`;
+}
+const friend=(()=>{
+  try{
+    const p=new URLSearchParams(location.search);
+    const c=COUNTRIES.find(x=>x[0]===p.get("c")), a=+p.get("a"), k=+p.get("k"), s=p.get("s");
+    if(c&&a>=0&&a<=120&&k>=0&&k<UI.titles.length&&(s==="m"||s==="f")) return {c,a,k,s,l:p.get("l")};
+  }catch(e){}
+  return null;
+})();
+function friendBox(){
+  if(!friend) return "";
+  return `<div class="card friend"><p style="margin:0">${ui("friend",{place:place(friend.c),sex:UI.sex_adult[LI][friend.s==="m"?0:1],age:friend.a,title:UI.titles[friend.k][LI]})}</p></div>`;
+}
+function renderStart(){
+  view=renderStart; G=null;
+  show(`
+    <h1>${UI.title[LI]}</h1>
+    <p class="sub">${UI.tagline[LI]}</p>
+    ${friendBox()}
+    <div class="card"><h2>${UI.how_h[LI]}</h2><p>${UI.how_p[LI]}</p>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:0">${ui("how_n",{n:fmtN(totalBirths),k:COUNTRIES.length})}</p></div>
+    ${dailyBox()}
+    <button class="btn primary" id="go">${UI.random_go[LI]}</button>
+    <p class="note">${UI.note[LI]}</p>`,()=>{
+    document.getElementById("go").onclick=()=>{G=newLife();renderBirth()};
+    const dg=document.getElementById("daily"); if(dg) dg.onclick=()=>{G=newLife(dailySeed());renderBirth()};
+  });
+}
+const dailySeed=()=>Number(todayStr().replace(/-/g,""));
+
+function renderBirth(){
+  view=renderBirth;
+  const c=G.c, share=Math.round(c[5]/totalBirths*1000)/10;
+  show(`
+    <h1>${UI.born_h[LI]}</h1>
+    <div class="card"><h2>${UI.place_h[LI]}</h2>
+      <div class="big">${place(c)}</div>
+      <div><span class="tag">${REGIONS[c[3]][LI]}</span><span class="tag">${INCOMES[c[4]][LI]}</span></div>
+      <p style="margin-bottom:0;color:var(--soft)">${ui("born_share",{p:share,le:c[6].toFixed(1)})}</p></div>
+    <div class="card"><h2>${UI.who_h[LI]}</h2>
+      <div class="big">${UI.sex_child[LI][G.sex==="m"?0:1]} · ${UI.tiers[G.famTier][LI]}</div>
+      <p style="margin-bottom:0;color:var(--soft)">${ui("who_p",{job:G.pjob.n[LI]})}</p></div>
+    ${statsHTML()}
+    <button class="btn primary" id="next">${UI.start_life[LI]}</button>`,()=>{
+    document.getElementById("next").onclick=()=>{
+      G.log.push({a:0,f:()=>ui("born_log",{place:place(G.c),sex:UI.sex_child[LI][G.sex==="m"?0:1]})});
+      startStage();
+    };
+  });
+}
+
+/* ---------- 진행 ---------- */
+let queue=[], cur=null;
+function startStage(){
+  const st=STAGES[G.stageIdx];
+  if(!st||G.lifespan<st.a) return ending();
+  if(G.stageIdx===0){
+    G.age=Math.min(2,G.lifespan);
+    if(G.lifespan<=2) return ending();
+    G.stageIdx++; return startStage();
+  }
+  let pool=EV.filter(e=>e.s===G.stageIdx&&(!e.ok||e.ok(G)));
+  const forced=pool.filter(e=>e.jobs===1);
+  pool=pool.filter(e=>e.jobs!==1);
+  const er=G.daily?mulberry(G.seed+G.stageIdx*101):Math.random;
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(er()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  const n=Math.min(st.evs,pool.length+forced.length);
+  const picked=forced.concat(pool.slice(0,n-forced.length));
+  picked.sort((x,y)=>EV.indexOf(x)-EV.indexOf(y)); // 같은 단계 안에서는 정의 순서(직업 결정이 먼저)
+  const end=Math.min(st.b,G.lifespan);
+  queue=picked.map((e,i)=>({e,age:Math.min(end,Math.round(st.a+(end-st.a+1)*(i+0.5)/n))}));
+  nextEvent();
+}
+function nextEvent(){
+  if(!queue.length){
+    const st=STAGES[G.stageIdx];
+    G.age=Math.min(st.b,G.lifespan);
+    if(G.lifespan<=st.b) return ending();
+    G.stageIdx++; return startStage();
+  }
+  cur=queue.shift();
+  G.age=Math.min(cur.age,G.lifespan);
+  if(G.age>=G.lifespan) return ending();
+  cur.ch=cur.e.jobs?jobChoices(G,cur.e):cur.e.ch;
+  cur.logged=false;
+  showEvent();
+}
+const stageHead=()=>`<div class="age">${UI.stages[G.stageIdx][LI]} · ${ui("age_n",{n:G.age})} · ${place(G.c)}${G.job?` · ${G.job.n[LI]}`:""}</div>`;
+function showEvent(){
+  view=showEvent;
+  const e=cur.e;
+  show(`${stageHead()}${statsHTML()}
+    <div class="card"><div class="q">${tr(e.t,G)}</div>
+      ${cur.ch.map((c,i)=>{
+        if(c.req&&!c.req(G)){
+          if(!cur.logged) G.locked.push({a:G.age,l:c.l,why:c.why});
+          return `<button class="btn locked" disabled>🔒 ${tr(c.l,G)}<div class="fx">${tr(c.why,G)}</div></button>`;
+        }
+        return `<button class="btn" data-i="${i}">${tr(c.l,G)}</button>`;
+      }).join("")}
+    </div>`,()=>{
+      cur.logged=true;
+      app.querySelectorAll("button[data-i]").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
+    });
+}
+function choose(i){
+  const e=cur.e, ch=cur.ch[i];
+  applyFx(ch.fx);
+  if(ch.job) G.job=ch.job;
+  let res=ch.res, died=false;
+  if(ch.risk && luck(G,EV.indexOf(e)*7919)<ch.risk.p(G)){
+    applyFx(ch.risk.fx); res=ch.risk.res||res;
+    if(ch.risk.die){ G.lifespan=Math.min(G.lifespan,G.age+(rnd()<0.5?0:1)); G.cause=ch.risk.die; died=true; }
+  }
+  const age=G.age, q=e.t, lab=ch.l;
+  G.log.push({a:age,f:()=>`${tr(q,G)} → ${tr(lab,G)}`});
+  const sum=Object.values(ch.fx||{}).reduce((s,v)=>s+Math.abs(v),0)+(died?30:0)+(ch.job?25:0);
+  G.bio.push({a:age,l:lab,imp:sum,job:!!ch.job});
+  if(G.s.h<=10&&G.age>5){ G.lifespan=Math.min(G.lifespan,G.age+Math.floor(rnd()*6)); G.cause=G.cause||"health"; }
+  const dead=G.age>=G.lifespan, fx=ch.fx;
+  view=()=>show(`${stageHead()}${statsHTML()}
+    <div class="card"><div class="res">${tr(res,G)}${fxText(fx)}</div>
+      <button class="btn primary" id="cont">${dead?"…":UI.cont[LI]}</button></div>`,()=>{
+        document.getElementById("cont").onclick=()=>dead?ending():nextEvent();
+      });
+  view();
+}
+
+/* ---------- 결말 ---------- */
+function titleIdx(age){
+  const s=G.s,score=(s.h+s.w+s.j+s.r+s.e)/5;
+  if(age<5) return 0; if(age<18) return 1;
+  if(s.w>=75&&s.j>=60) return 2; if(s.r>=75&&s.j>=60) return 3; if(s.e>=75) return 4; if(s.j>=70) return 5;
+  if(s.w<25&&s.h<35) return 6; if(score>=60) return 7; if(score>=45) return 8; return 9;
+}
+function ending(){
+  const age=Math.min(G.lifespan,110), le=G.c[6];
+  if(!G.ended){
+    const k=titleIdx(age), diff=age-le;
+    const cause=G.cause||(age>=le?"full":age<le-15?"young":"years");
+    G.ended={age,k,cause,diff};
+    const text=UI.titles[k].map((t,i)=>sub(UI.share_text[i],{place:NAMES[G.c[0]][i],age,title:t}));
+    G.ended.text=text;
+    if(G.daily) store.set("daily",{date:G.date,text:UI.titles[k].map((t,i)=>`${NAMES[G.c[0]][i]} · ${sub(UI.age_n[i],{n:age})} · ${t}`)});
+  }
+  view=renderEnding; renderEnding();
+}
+function lockedHTML(){
+  if(!G.locked.length) return `<div class="card"><h2>${sub(UI.locked_h[LI],{n:0})}</h2><p style="margin:0">${UI.locked_none[LI]}</p></div>`;
+  return `<div class="card"><h2>${ui("locked_h",{n:G.locked.length})}</h2><p style="margin-top:0;color:var(--soft)">${UI.locked_p[LI]}</p><ul class="log">${G.locked.map(x=>`<li><span>${ui("age_n",{n:x.a})}</span>${tr(x.l,G)} <span class="mut">— ${tr(x.why,G)}</span></li>`).join("")}</ul></div>`;
+}
+function endInfo(){
+  const {age,k,cause,diff}=G.ended;
+  const title=UI.titles[k][LI];
+  const cmp=age<5?"":diff>=0?ui("cmp_more",{place:place(G.c),le:G.c[6].toFixed(1),n:Math.round(diff)}):ui("cmp_less",{place:place(G.c),le:G.c[6].toFixed(1),n:Math.round(-diff)});
+  return {age,title,cmp,causeTxt:UI.causes[cause][LI]};
+}
+function shareURL(){
+  const base=location.origin&&location.origin!=="null"?location.origin+location.pathname:"https://randomlife-game.github.io/randomlife-game/";
+  const p=new URLSearchParams({c:G.c[0],s:G.sex,a:G.ended.age,k:G.ended.k,l:LANG});
+  if(G.daily) p.set("d",G.date);
+  return base+"?"+p.toString();
+}
+function shareText(){ return G.ended.text[LI]+" #"+UI.share_tags[LI]; }
+function renderEnding(){
+  const info=endInfo(), {age,title}=info, sex=UI.sex_adult[LI][G.sex==="m"?0:1];
+  const url=shareURL(), txt=shareText(), enc=encodeURIComponent;
+  const links=[
+    ["X","https://twitter.com/intent/tweet?text="+enc(txt)+"&url="+enc(url)],
+    ["Facebook","https://www.facebook.com/sharer/sharer.php?u="+enc(url)+"&quote="+enc(txt)],
+    ["LINE","https://social-plugins.line.me/lineit/share?url="+enc(url)+"&text="+enc(txt)],
+    ["Threads","https://www.threads.net/intent/post?text="+enc(txt+" "+url)],
+    ["Weibo","https://service.weibo.com/share/share.php?url="+enc(url)+"&title="+enc(txt)]
+  ];
+  show(`
+    <h1>${UI.end_h[LI]}</h1>
+    <div class="card"><h2>${UI.end_s[LI]}</h2><div class="big">${title}</div>
+      <p style="color:var(--soft)">${ui("end_p",{place:place(G.c),sex,cause:info.causeTxt,age,cmp:info.cmp})}</p></div>
+    ${statsHTML()}
+    <div class="card"><h2>${UI.card_h[LI]}</h2>
+      <canvas id="card" width="1080" height="1350"></canvas>
+      <div class="row" style="margin-top:10px"><button class="btn" id="savecard">${UI.save[LI]}</button><button class="btn" id="copy">${UI.copy[LI]}</button></div></div>
+    <div class="card"><h2>${UI.share_h[LI]}</h2><p style="margin-top:0;color:var(--soft)">${UI.share_p[LI]}</p>
+      ${navigator.share?`<button class="btn primary" id="native">${UI.share_native[LI]}</button>`:""}
+      <div class="sns">${links.map(([n,u])=>`<a class="btn" target="_blank" rel="noopener" href="${u}">${n}</a>`).join("")}</div></div>
+    ${lockedHTML()}
+    <div class="card"><h2>${UI.path_h[LI]}</h2><ul class="log">${G.log.map(x=>`<li><span>${ui("age_n",{n:x.a})}</span>${x.f()}</li>`).join("")}<li><span>${ui("age_n",{n:age})}</span>${UI.died[LI]}</li></ul></div>
+    <button class="btn primary" id="again">${UI.again[LI]}</button>
+    <p class="note">${UI.again_p[LI]}</p>`,()=>{
+    document.getElementById("again").onclick=()=>renderStart();
+    document.getElementById("savecard").onclick=saveCard;
+    const nb=document.getElementById("native");
+    if(nb) nb.onclick=()=>navigator.share({title:UI.title[LI],text:txt,url}).catch(()=>{});
+    document.getElementById("copy").onclick=async e=>{
+      const full=txt+"\n"+url;
+      try{await navigator.clipboard.writeText(full);e.target.textContent=UI.copied[LI]}catch(_){prompt(UI.copy[LI],full)}
+    };
+    drawCard(info);
+  });
+}
+
+/* ---------- 자서전 카드 ---------- */
+function bioLines(info){
+  const key=G.bio.slice().sort((a,b)=>b.imp-a.imp).slice(0,G.job?2:3).sort((a,b)=>a.a-b.a);
+  const lines=[ui("card_born",{place:place(G.c),tier:UI.tiers[G.famTier][LI]})];
+  if(G.job) lines.push(ui("card_job",{job:G.job.n[LI]}));
+  for(const k of key) if(!k.job) lines.push(ui("card_choice",{a:k.a,l:tr(k.l,G)}));
+  lines.push(ui("card_end",{age:info.age,cause:info.causeTxt}));
+  return lines;
+}
+function wrapText(ctx,text,w){
+  const tokens=LANG==="en"?text.split(/(\s+)/):Array.from(text);
+  const out=[];let line="";
+  for(const t of tokens){
+    if(ctx.measureText(line+t).width>w&&line.trim()){out.push(line.trimEnd());line=t.trim()?t:""}
+    else line+=t;
+  }
+  if(line.trim()) out.push(line.trimEnd());
+  return out;
+}
+function drawCard(info){
+  const cv=document.getElementById("card"); if(!cv) return;
+  const W=1080,H=1350,ctx=cv.getContext("2d");
+  const FF='"Noto Serif KR","Noto Serif JP","Noto Serif SC","Noto Sans KR","Hiragino Mincho ProN","Songti SC","Malgun Gothic",serif';
+  ctx.fillStyle="#f5f2ea";ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle="#a8742a";ctx.lineWidth=4;ctx.strokeRect(48,48,W-96,H-96);
+  ctx.fillStyle="#a8742a";ctx.font=`500 34px ${FF}`;
+  ctx.fillText(G.daily?ui("card_daily",{d:G.date}):UI.title[LI],96,140);
+  ctx.fillStyle="#1f1d19";ctx.font=`700 68px ${FF}`;
+  let y=250; for(const l of wrapText(ctx,info.title,W-192)){ctx.fillText(l,96,y);y+=88}
+  ctx.font=`400 44px ${FF}`;ctx.fillStyle="#3b372f";y+=40;
+  for(const ln of bioLines(info)){ for(const l of wrapText(ctx,ln,W-192)){ctx.fillText(l,96,y);y+=68} y+=22 }
+  ctx.strokeStyle="#ddd6c6";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(96,H-250);ctx.lineTo(W-96,H-250);ctx.stroke();
+  ctx.fillStyle="#8c8578";ctx.font=`400 30px ${FF}`;
+  ctx.fillText(ui("card_foot",{n:G.locked.length,age:info.age}),96,H-190);
+  ctx.fillText(UI.card_sub[LI],96,H-140);
+  ctx.fillText((location.host||"randomlife-game.github.io/randomlife-game"),96,H-96);
+}
+function saveCard(){
+  const cv=document.getElementById("card");
+  cv.toBlob(async b=>{
+    const f=new File([b],"my-life.png",{type:"image/png"});
+    try{ if(navigator.canShare&&navigator.canShare({files:[f]})){ await navigator.share({files:[f],text:shareText(),url:shareURL()}); return; } }catch(_){}
+    const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="my-life.png";a.click();
+  });
+}
+
+/* ---------- 시작 ---------- */
+(function init(){
+  const q=new URLSearchParams(location.search).get("l");
+  const saved=store.get("lang");
+  const nav=(navigator.language||"ko").toLowerCase();
+  const guess=nav.startsWith("ko")?"ko":nav.startsWith("ja")?"ja":nav.startsWith("zh")?"zh":nav.startsWith("en")?"en":"ko";
+  view=renderStart; setLang(LANGS.some(x=>x[0]===q)?q:saved||guess,true);
+})();
+</script>
+</body>
+</html>
