@@ -2,120 +2,325 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f3eee4">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>랜덤인생게임 · Random Life</title>
 <meta name="description" content="80억 명 중 한 명으로 무작위로 태어나 일생을 살아 보는 게임 · Be born as one of 8 billion and live a whole life · 80億人の中の一人として生まれ、一生を生きるゲーム · 成为80亿人中的一个，过完一生">
 <meta property="og:type" content="website">
 <meta property="og:title" content="랜덤인생게임 · Random Life · ランダム人生 · 随机人生">
 <meta property="og:description" content="Who will you be out of 8 billion? 80억 명 중 당신은 누가 될까요? 80億人の中で、あなたは誰になる？ 80亿人里，你会成为谁？">
-<meta property="og:image" content="https://gyeoltaro.github.io/gyeoltaro/og.png">
-<meta property="og:url" content="https://gyeoltaro.github.io/gyeoltaro/">
+<meta property="og:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
+<meta property="og:url" content="https://randomlife-game.github.io/randomlife-game/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://gyeoltaro.github.io/gyeoltaro/og.png">
+<meta name="twitter:image" content="https://randomlife-game.github.io/randomlife-game/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f5f2ea; --surface:#fff; --ink:#1f1d19; --soft:#58534a; --muted:#8c8578;
-    --line:#ddd6c6; --accent:#a8742a; --accent-soft:#efe0c3; --land:#cfc6b2; --hill1:#7a8f5a; --hill2:#58714a; --up:#2f8a57; --dn:#c0453f;
+    --bg:#f3eee4; --bg2:#e9e1d1; --card:#fffdf8; --ink:#1f1a14; --ink2:#4d4539; --mute:#887e6d;
+    --rule:#e2d8c6; --rule2:#cdbfa6; --brand:#c4572a; --brand-soft:#f7e2d3; --cmp:#3f4f86;
+    --up:#2c8754; --dn:#c0453f; --land:#d4c9b4; --hill1:#7a8f5a; --hill2:#58714a;
+    --gx:16px; --r:18px;
+    --ff:"Noto Sans KR","Apple SD Gothic Neo","Noto Sans JP","Hiragino Sans","Noto Sans SC","PingFang SC","Malgun Gothic",system-ui,sans-serif;
+    --shadow:0 1px 0 rgba(40,28,12,.04),0 18px 40px -24px rgba(60,40,15,.35);
+    --sky:linear-gradient(90deg,#ffc98f 0%,#8ec5ff 20%,#5aa9f0 50%,#f3b36b 75%,#d9776b 90%,#2b2f5a 100%);
   }
   @media (prefers-color-scheme: dark){
-    :root{ --bg:#14120f; --surface:#1e1b16; --ink:#ede7da; --soft:#c3bba9; --muted:#8a8170;
-      --line:#383025; --accent:#d3a352; --accent-soft:#33290f; --land:#3a3328; --hill1:#2e3a28; --hill2:#202a1f; --up:#6cc58f; --dn:#e07f78; }
+    :root{ --bg:#15120e; --bg2:#231e17; --card:#1e1a14; --ink:#f1eadc; --ink2:#cbc1ae; --mute:#8f8572;
+      --rule:#332b21; --rule2:#4a3e30; --brand:#e8804b; --brand-soft:#3a2416; --cmp:#a8b6f0;
+      --up:#6cc58f; --dn:#e9877f; --land:#3d3529; --hill1:#2e3a28; --hill2:#202a1f;
+      --shadow:0 18px 40px -24px rgba(0,0,0,.7); }
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Noto Sans JP","Noto Sans SC","Malgun Gothic",system-ui,sans-serif;line-height:1.6}
-  .wrap{max-width:640px;margin:0 auto;padding:20px 16px 64px}
-  h1{font-size:26px;margin:0 0 4px}
-  .sub{color:var(--muted);font-size:14px;margin:0 0 24px}
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
-  .card h2{font-size:15px;color:var(--accent);margin:0 0 8px;letter-spacing:.02em}
-  .big{font-size:22px;font-weight:700;margin:2px 0 6px}
-  .q{font-size:18px;margin-bottom:6px}
-  button,.btn{font:inherit;cursor:pointer}
-  .btn{display:block;width:100%;text-align:left;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:8px;text-decoration:none}
-  .btn:hover,.btn:focus-visible{border-color:var(--accent);background:var(--accent-soft);outline:none}
-  .primary{background:var(--accent);color:#fff;border:0;text-align:center;font-weight:700;padding:14px}
-  .primary:hover{background:var(--accent);filter:brightness(1.1)}
-  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
-  .stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;font-size:12px;color:var(--soft)}
-  .stat b{display:block;font-size:17px;color:var(--ink)}
-  .bar{height:4px;background:var(--line);border-radius:2px;margin-top:4px;overflow:hidden}
-  .bar i{display:block;height:100%;background:var(--accent)}
-  .age{font-size:13px;color:var(--muted);margin-bottom:8px}
-  .res{border-left:3px solid var(--accent);padding:4px 12px;margin:12px 0;color:var(--soft)}
-  .log{font-size:14px;color:var(--soft);margin:0;padding:0;list-style:none}
-  .log li{padding:5px 0;border-bottom:1px dashed var(--line)}
-  .log li span{color:var(--accent);font-weight:700;margin-right:8px;font-variant-numeric:tabular-nums}
-  .log li span.mut,.mut{color:var(--muted);font-weight:400}
-  .tag{display:inline-block;font-size:12px;background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:2px 10px;margin:0 4px 4px 0}
-  .fx{font-size:12px;color:var(--muted);margin-top:6px}
-  .note{font-size:12px;color:var(--muted);margin-top:24px}
-  .btn.locked{opacity:.55;border-style:dashed;cursor:not-allowed}
-  .btn.locked:hover{background:var(--surface);border-color:var(--line)}
-  canvas{width:100%;height:auto;border-radius:12px;border:1px solid var(--line);display:block}
-  .row{display:flex;gap:8px}.row .btn{text-align:center}
-  .sns{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-top:8px}
-  .sns .btn{text-align:center;margin:0}
-  .friend{border-color:var(--accent);background:var(--accent-soft)}
-  .langs{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;margin-bottom:14px}
-  .langs button{font-size:13px;background:var(--surface);color:var(--soft);border:1px solid var(--line);border-radius:99px;padding:3px 12px}
-  .langs .sep{flex:1}.langs{align-items:center}
-  .nm{width:100%;font:inherit;font-size:20px;font-weight:700;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
-  body.px .card,body.px .btn,body.px .stat,body.px .hero,body.px .sky,body.px .map,body.px .fact,body.px .scene,body.px .nm{border-radius:0}
-  body.px .card,body.px .btn{border-width:2px;box-shadow:3px 3px 0 var(--line)}
-  body.px .bar,body.px .bar i,body.px .ibar,body.px .ibar i{border-radius:0}
-  body.px .sky svg,body.px #world{image-rendering:pixelated}
-  .langs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-  #langs{max-width:640px}
-  .hero{margin:0 0 16px;border-radius:14px;overflow:hidden;position:relative}
-  .map{display:block;width:100%;height:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
-  .map .land{fill:none;stroke:var(--land);stroke-width:4.6;stroke-linecap:round}
-  .map .bd{fill:var(--accent);opacity:.35;animation:tw 3.2s ease-in-out infinite}
-  .map .ring{fill:none;stroke:var(--accent);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:ping 2s ease-out infinite}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ff);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  button,select,input{font:inherit;color:inherit}
+  button{cursor:pointer}
+  a{color:var(--brand)}
+  @media (min-width:760px){:root{--gx:28px}}
+  .only-m{display:contents}.only-d{display:none!important}
+  @media (min-width:1000px){.only-m{display:none!important}.only-d{display:flex!important}}
+
+  /* ---------- 위 막대 ---------- */
+  .top{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding-top:env(safe-area-inset-top)}
+  .top-in{max-width:1320px;margin:0 auto;padding:8px calc(var(--gx) + env(safe-area-inset-right)) 8px calc(var(--gx) + env(safe-area-inset-left));display:flex;align-items:center;gap:10px;min-height:58px}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:16px;letter-spacing:-.02em;background:none;border:0;padding:0;white-space:nowrap}
+  .mark{width:28px;height:28px;flex:none;display:block}
+  .sp{flex:1}
+  .seg{display:inline-flex;border:1px solid var(--rule2);border-radius:999px;padding:3px;background:var(--card);gap:2px}
+  .seg button{border:0;background:none;color:var(--ink2);font-size:13px;padding:5px 11px;border-radius:999px;white-space:nowrap}
+  .seg button.on{background:var(--ink);color:var(--bg);font-weight:700}
+  .tbtn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--rule2);background:var(--card);color:var(--ink2);border-radius:999px;font-size:13px;padding:6px 12px;white-space:nowrap;line-height:1.3}
+  .tbtn.on{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:700}
+  .tbtn.ic{padding:6px 10px}
+  select.tbtn{appearance:none;-webkit-appearance:none;padding-right:26px;background-image:linear-gradient(45deg,transparent 50%,var(--mute) 50%),linear-gradient(135deg,var(--mute) 50%,transparent 50%);background-position:calc(100% - 13px) 52%,calc(100% - 9px) 52%;background-size:4px 4px;background-repeat:no-repeat}
+  .ctrls{display:flex;gap:6px;align-items:center}
+  /* 진행 중 위 막대 */
+  .hud-age{display:flex;align-items:baseline;gap:3px;font-weight:900;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+  .hud-age b{font-size:34px}.hud-age small{font-size:14px;font-weight:600;color:var(--ink2);letter-spacing:0}
+  .hud-who{min-width:0;line-height:1.3}
+  .hud-who b{display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:22em}
+  .hud-who span{display:block;font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .daybar{position:relative;height:10px;border-radius:99px;background:var(--sky);flex:1;min-width:120px;max-width:380px;margin:0 8px}
+  .daybar .cov{position:absolute;top:0;bottom:0;right:0;background:var(--bg2);border-radius:0 99px 99px 0;transition:width .6s ease}
+  .daybar .le{position:absolute;top:-4px;width:2px;height:18px;background:var(--ink);opacity:.5;border-radius:2px}
+  .daybar .me{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:var(--card);border:3px solid var(--ink);transform:translate(-50%,-50%);transition:left .6s ease}
+  @media (min-width:1000px){.hud2{display:none}}
+  .hud2{max-width:1320px;margin:0 auto;padding:0 calc(var(--gx) + env(safe-area-inset-right)) 10px calc(var(--gx) + env(safe-area-inset-left))}
+  .hud2 .daybar{max-width:none;margin:2px 0 10px}
+  .mini{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .mini div{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:4px 2px;text-align:center;font-size:11px;color:var(--ink2);position:relative;line-height:1.25}
+  .mini b{display:block;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums}
+
+  /* ---------- 공통 ---------- */
+  .page{max-width:1320px;margin:0 auto;padding:0 calc(var(--gx) + env(safe-area-inset-right)) calc(28px + env(safe-area-inset-bottom)) calc(var(--gx) + env(safe-area-inset-left))}
+  .box{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);padding:18px 20px}
+  .box-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:0 0 12px}
+  .box-h h3{font-size:14.5px;font-weight:800;margin:0;letter-spacing:-.01em}
+  .box-h span{font-size:12px;color:var(--mute);text-align:right}
+  .cap{font-size:12.5px;color:var(--mute);margin:10px 0 0;line-height:1.5}
+  .scn{position:relative;overflow:hidden;background:#8ec5ff}
+  .scn svg{display:block;width:100%;height:100%}
+  .map{display:block;width:100%;height:auto}
+  .map .land{fill:none;stroke:var(--land);stroke-width:4.4;stroke-linecap:round}
+  .map .bd{fill:var(--brand);opacity:.42;animation:tw 3.2s ease-in-out infinite}
+  .map .ring{fill:none;stroke:var(--brand);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:ping 2s ease-out infinite}
   .map .ring.r2{animation-delay:1s}
-  .map .pin{fill:var(--accent);stroke:var(--surface);stroke-width:2}
-  .mapcap{position:absolute;left:0;right:0;bottom:0;padding:18px 12px 8px;font-size:12px;color:var(--soft);background:linear-gradient(transparent,var(--surface) 70%)}
-  .mapcap:empty{display:none}
-  .sky{aspect-ratio:600/170;border-radius:14px;position:relative;overflow:hidden;border:1px solid var(--line)}
-  .sky svg{display:block;width:100%;height:100%}
-  .skycap{position:absolute;left:12px;top:8px;font-size:12px;color:#fff;opacity:.85;text-shadow:0 1px 2px rgba(0,0,0,.35)}
-  .scene{margin:-20px -20px 14px;height:96px;border-radius:14px 14px 0 0;position:relative;display:flex;align-items:center;justify-content:center}
-  .scene .emo{font-size:52px;line-height:1;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25));animation:bob 3s ease-in-out infinite}
-  .scene .stg{position:absolute;left:12px;top:8px;font-size:12px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.4)}
-  .card.ev{overflow:hidden}
-  .stat{position:relative}
-  .stat .si{font-size:18px;line-height:1;margin-bottom:2px}
-  .bar i{transition:width .7s cubic-bezier(.2,.8,.2,1)}
-  .chip{position:absolute;top:-8px;right:-4px;font-size:12px;font-weight:700;padding:1px 7px;border-radius:99px;color:#fff;animation:rise .5s ease both}
+  .map .pin{fill:var(--brand);stroke:var(--card);stroke-width:2}
+  .dock{position:sticky;bottom:0;z-index:15;margin:0 calc(-1*var(--gx));padding:14px var(--gx) calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 32%)}
+  .dock .cta{width:100%}
+  @media (min-width:1000px){.dock.m{display:none}}
+  .cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--brand);color:#fff;border:0;border-radius:14px;padding:17px 28px;font-size:18px;font-weight:800;letter-spacing:-.01em;box-shadow:0 14px 28px -14px var(--brand);transition:transform .15s ease,filter .15s}
+  .cta:hover{filter:brightness(1.06);transform:translateY(-1px)}
+  .cta2{display:inline-flex;flex-direction:column;align-items:flex-start;background:var(--card);color:var(--ink);border:1px solid var(--rule2);border-radius:14px;padding:11px 18px;font-size:15px;font-weight:700;text-align:left;line-height:1.3}
+  .cta2 small{font-size:11.5px;color:var(--mute);font-weight:500}
+  .cta2:hover{border-color:var(--ink)}
+  .go{width:100%;background:var(--ink);color:var(--bg);border:0;border-radius:14px;padding:15px;font-size:16px;font-weight:800;margin-top:4px}
+  .go:hover{filter:brightness(1.15)}
+  .ghost{background:none;border:1px solid var(--rule2);border-radius:12px;padding:10px 14px;font-size:14px;font-weight:600;color:var(--ink)}
+  .ghost:hover{border-color:var(--ink)}
+
+  /* ---------- 시작 화면 ---------- */
+  .hero{display:grid;gap:36px;padding:36px 0 48px;align-items:center}
+  @media (min-width:1000px){.hero{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:64px;padding:56px 0 72px;}}
+  .eyebrow{display:flex;flex-wrap:wrap;gap:6px}
+  .eyebrow span{font-size:12px;color:var(--ink2);border:1px solid var(--rule2);border-radius:999px;padding:3px 10px;background:var(--card)}
+  .h-display{font-size:clamp(40px,6.4vw,86px);line-height:1.06;letter-spacing:-.05em;font-weight:900;margin:22px 0 22px;word-break:keep-all}
+  .h-display em{font-style:normal;color:var(--brand)}
+  .lead{font-size:clamp(16px,1.5vw,19px);color:var(--ink2);max-width:33em;margin:0 0 28px;word-break:keep-all}
+  .cta-row{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+  .counters{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:12px 32px;margin:34px 0 0;padding-top:22px;border-top:1px solid var(--rule)}
+  .counters b{display:block;font-size:clamp(24px,2.6vw,32px);font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1}
+  .counters span{font-size:12.5px;color:var(--mute);display:block;max-width:15em;line-height:1.4;margin-top:3px}
+  .counters .live b{color:var(--brand);display:flex;align-items:center;gap:8px}
+  .counters .live b:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--brand);animation:pulse 1.6s infinite}
+  @media (max-width:520px){.counters{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.counters b{font-size:22px}.counters span{font-size:11.5px}.cta-row>*{width:100%;align-items:center;text-align:center}}
+  .friend{border:1px solid var(--brand);background:var(--brand-soft);border-radius:14px;padding:12px 16px;margin:0 0 20px;font-size:14.5px}
+  .baby{background:var(--card);border:1px solid var(--rule);border-radius:24px;overflow:hidden;box-shadow:var(--shadow)}
+  .baby .scn{aspect-ratio:16/9}
+  .baby-b{padding:18px 22px 20px}
+  .baby-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;color:var(--mute);margin-bottom:4px}
+  .baby-top b{color:var(--brand);font-weight:800;letter-spacing:.02em}
+  .baby-name{font-size:26px;font-weight:900;letter-spacing:-.03em;line-height:1.25}
+  .baby-meta{color:var(--ink2);font-size:14.5px;margin-top:2px}
+  .kv3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+  .kv3>div{background:var(--bg);border-radius:12px;padding:10px 12px;min-width:0}
+  .kv3 small{display:block;font-size:11.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kv3 b{font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .baby-f{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
+  .dots{display:flex;gap:6px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--rule2);transition:background .3s}.dots i.on{background:var(--brand)}
+  .fade{animation:fade .5s ease both}
+  .sec{padding:56px 0;border-top:1px solid var(--rule)}
+  .sec-h{display:flex;justify-content:space-between;align-items:flex-end;gap:12px 24px;margin-bottom:26px;flex-wrap:wrap}
+  .sec-h h2{font-size:clamp(26px,3.2vw,40px);letter-spacing:-.04em;margin:0;font-weight:900;line-height:1.15;word-break:keep-all}
+  .sec-h p{margin:0;color:var(--mute);font-size:14px;max-width:32em}
+  .kick{font-size:12.5px;color:var(--brand);font-weight:800;letter-spacing:.04em;margin:0 0 8px;display:flex;gap:8px;align-items:center}
+  .where{display:grid;gap:16px}
+  @media (min-width:1000px){.where{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr)}}
+  .bars .r{display:grid;grid-template-columns:minmax(5.5em,9em) 1fr 3.8em;gap:12px;align-items:center;font-size:14px;padding:6px 0}
+  .bars .r span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bars i{height:10px;background:var(--bg2);border-radius:99px;overflow:hidden}
+  .bars u{display:block;height:100%;background:var(--brand);border-radius:99px}
+  .bars u.rest{background:var(--mute);opacity:.6}
+  .bars b{text-align:right;font-variant-numeric:tabular-nums;font-size:13.5px}
+  .tiles{display:grid;gap:12px;margin-top:16px}
+  @media (min-width:760px){.tiles{grid-template-columns:repeat(3,1fr)}}
+  .tile{border-radius:var(--r);padding:22px 24px;background:var(--ink);color:var(--bg)}
+  .tile b{font-size:clamp(38px,4vw,52px);font-weight:900;letter-spacing:-.04em;line-height:1;display:block}
+  .tile:nth-child(1) b{color:#ffb98f}.tile:nth-child(2) b{color:#ffd480}.tile:nth-child(3) b{color:#b9c8ff}
+  .tile span{font-size:14px;opacity:.82;display:block;margin-top:10px;word-break:keep-all}
+  .feats{display:grid;gap:16px}
+  @media (min-width:860px){.feats{grid-template-columns:repeat(3,1fr)}}
+  .feat h3{font-size:18px;margin:0 0 6px;letter-spacing:-.02em}
+  .feat p{margin:0;font-size:14.5px;color:var(--ink2);word-break:keep-all}
+  .feat .vis{height:150px;border-radius:12px;margin:0 0 18px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;justify-content:center;gap:8px;padding:16px}
+  .mock{display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid var(--rule);border-radius:10px;padding:9px 12px;font-size:13.5px;font-weight:600}
+  .mock.lk{border-style:dashed;opacity:.6}
+  .mock i{font-style:normal;width:20px;height:20px;border-radius:6px;border:1px solid var(--rule2);display:grid;place-items:center;font-size:11px}
+  .vis .daybar{max-width:none;margin:0;height:16px}
+  .vis .ages{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mute);font-variant-numeric:tabular-nums}
+  .vis .suns{display:flex;justify-content:space-between;font-size:20px}
+  .paper{background:#f7f1e3;color:#3b372f;border:2px solid #c4572a;border-radius:4px;padding:12px 14px;font-family:"Noto Serif KR","Noto Serif JP","Noto Serif SC",serif;font-size:12px;line-height:1.6;align-self:center;width:72%;transform:rotate(-2deg);box-shadow:0 8px 16px -10px rgba(0,0,0,.4)}
+  .paper b{display:block;font-size:15px;color:#1f1d19;margin-bottom:4px}
+  .info3{display:grid;gap:28px}
+  @media (min-width:860px){.info3{grid-template-columns:repeat(3,1fr);gap:40px}}
+  .info3 h3{font-size:16px;margin:0 0 10px}
+  .info3 p{font-size:14px;color:var(--ink2);margin:0 0 8px;word-break:keep-all}
+  .faq details{border-top:1px solid var(--rule);padding:10px 0}.faq details:first-of-type{border-top:0;padding-top:0}
+  .faq summary{cursor:pointer;font-weight:700;font-size:14.5px}.faq p{margin:6px 0 2px}
+  .foot{border-top:1px solid var(--rule);padding:22px 0 0;display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;font-size:12.5px;color:var(--mute)}
+  .foot p{margin:0;max-width:52em}
+
+  /* ---------- 진행 화면 (3단) ---------- */
+  .dash{display:grid;gap:16px;padding:18px 0 8px;grid-template-areas:"b" "a" "c";grid-template-columns:minmax(0,1fr)}
+  @media (min-width:760px){.dash{grid-template-columns:minmax(250px,300px) minmax(0,1fr);grid-template-areas:"a b" "c b";align-items:start}}
+  @media (min-width:1180px){.dash{grid-template-columns:290px minmax(0,1fr) 310px;grid-template-areas:"a b c";gap:20px;padding-top:22px}}
+  .col{display:grid;gap:16px;min-width:0;align-content:start}
+  @media (min-width:1180px){.col{gap:20px}}
+  .ca{grid-area:a}.cb{grid-area:b}.cc{grid-area:c}
+  .scene-card{border-radius:22px;overflow:hidden;border:1px solid var(--rule);position:relative;box-shadow:var(--shadow)}
+  .scene-card .scn{aspect-ratio:16/8}
+  @media (min-width:1180px){.scene-card .scn{aspect-ratio:16/7}}
+  .scene-tag{position:absolute;left:12px;top:12px;font-size:12.5px;color:#fff;background:rgba(20,15,10,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);padding:4px 11px;border-radius:99px;font-weight:600}
+  .scene-tag:empty{display:none}
+  .evc{background:var(--card);border:1px solid var(--rule);border-radius:22px;padding:22px 24px 24px;position:relative}
+  @media (max-width:520px){.evc{padding:18px 16px 18px}}
+  .evc .q{font-size:clamp(18px,1.9vw,22px);font-weight:800;letter-spacing:-.03em;line-height:1.45;margin:0 0 18px;word-break:keep-all}
+  .choices{display:grid;gap:10px}
+  .ch{display:flex;gap:12px;align-items:center;text-align:left;width:100%;background:var(--bg);border:1.5px solid var(--rule);border-radius:14px;padding:14px 16px;color:var(--ink);font-size:15.5px;font-weight:650;line-height:1.4;transition:border-color .15s,background .15s,transform .15s}
+  .ch .n{flex:none;width:28px;height:28px;border-radius:9px;background:var(--card);border:1px solid var(--rule2);display:grid;place-items:center;font-size:12.5px;font-weight:800;color:var(--ink2)}
+  .ch:hover:not(:disabled){border-color:var(--brand);background:var(--brand-soft);transform:translateX(2px)}
+  .ch:hover:not(:disabled) .n{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .ch.locked{opacity:.62;border-style:dashed;cursor:not-allowed;background:transparent}
+  .ch .why{display:block;font-size:12.5px;font-weight:500;color:var(--mute);margin-top:2px}
+  .result{font-size:17px;line-height:1.65;margin:0 0 14px;padding-left:14px;border-left:3px solid var(--brand);word-break:keep-all}
+  .deltas{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}
+  .dl{font-size:12.5px;font-weight:800;padding:4px 10px;border-radius:99px;background:var(--bg2);color:var(--ink2)}
+  .dl.up{background:color-mix(in srgb,var(--up) 15%,transparent);color:var(--up)}
+  .dl.dn{background:color-mix(in srgb,var(--dn) 15%,transparent);color:var(--dn)}
+  .pass{cursor:pointer;text-align:center;padding:10px 0 4px}
+  .pass .pa{font-size:clamp(56px,7vw,84px);font-weight:900;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums;margin:6px 0 16px}
+  .pass .pa small{font-size:20px;font-weight:600;color:var(--mute);letter-spacing:0;margin-left:4px}
+  .pbar{height:6px;background:var(--bg2);border-radius:99px;overflow:hidden}.pbar i{display:block;height:100%;background:var(--sky);background-size:100vw 100%;border-radius:99px}
+  .fact{margin-top:16px;text-align:left;background:var(--brand-soft);border-radius:12px;padding:12px 14px;font-size:14.5px;animation:rise .4s ease both;word-break:keep-all}
+  .fact span{display:block;font-size:11.5px;color:var(--brand);font-weight:800;margin-bottom:3px}
+  .roll{text-align:center;padding:18px 0}
+  .roll .big{font-size:clamp(30px,4vw,44px);font-weight:900;letter-spacing:-.03em;min-height:1.4em}
+  .born-h{font-size:clamp(24px,2.6vw,30px);font-weight:900;letter-spacing:-.04em;margin:0 0 6px}
+  .born-p{color:var(--ink2);margin:0 0 18px;font-size:15px;word-break:keep-all}
+  .nm{width:100%;font-size:22px;font-weight:800;letter-spacing:-.02em;padding:10px 14px;border:1.5px solid var(--rule2);border-radius:12px;background:var(--bg);color:var(--ink)}
+  .nm:focus{outline:none;border-color:var(--brand)}
+  .flab{display:block;font-size:12px;color:var(--mute);margin-bottom:6px;font-weight:600}
+  .fnote{font-size:12.5px;color:var(--mute);margin:6px 0 18px}
+  /* 출생 신고서 */
+  .reg{position:relative;overflow:hidden}
+  .reg .rh{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:2px}
+  .reg .rh b{font-size:14px;letter-spacing:.12em}
+  .reg .rh span{font-size:11.5px;color:var(--mute);font-variant-numeric:tabular-nums}
+  .reg .who{padding-right:84px!important;font-size:21px;font-weight:900;letter-spacing:-.03em;padding:12px 0 8px;border-bottom:1px solid var(--rule);overflow-wrap:anywhere}
+  .reg dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr)}
+  .reg dt,.reg dd{padding:7px 0;border-bottom:1px solid var(--rule);font-size:13.5px;margin:0}
+  .reg dt{color:var(--mute);padding-right:14px;white-space:nowrap}
+  .reg dd{font-weight:650;text-align:right}
+  .reg dl>*:nth-last-child(-n+2){border-bottom:0}
+  .stamp{position:absolute;right:12px;top:40px;width:78px;height:78px;border:3px double var(--brand);border-radius:50%;color:var(--brand);display:grid;place-items:center;transform:rotate(-14deg);font-weight:900;font-size:12px;line-height:1.15;text-align:center;opacity:.75;pointer-events:none;animation:stamp .5s cubic-bezier(.2,1.6,.4,1) both}
+  .stamp small{display:block;font-size:9.5px;font-weight:700;font-variant-numeric:tabular-nums}
+  /* 상태 */
+  .stl{display:grid;gap:10px}
+  .stl .r{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:4px 10px;align-items:center;position:relative}
+  .stl .ic{font-size:18px;line-height:1;grid-row:span 2}
+  .stl .nm2{font-size:13.5px;font-weight:700}
+  .stl .v{font-size:16px;font-weight:900;font-variant-numeric:tabular-nums;text-align:right;display:flex;gap:6px;align-items:center}
+  .stl .bar{grid-column:2/4;height:7px;background:var(--bg2);border-radius:99px;overflow:hidden}
+  .stl .bar i{display:block;height:100%;border-radius:99px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+  .chip{font-size:11px;font-weight:800;padding:1px 7px;border-radius:99px;color:#fff;animation:rise .5s ease both}
   .chip.up{background:var(--up)}.chip.dn{background:var(--dn)}
-  .pop{animation:pop .45s ease both}
-  .ind{margin:10px 0}.il{display:flex;justify-content:space-between;font-size:13px;color:var(--soft)}.il b{color:var(--ink)}
-  .ibar{position:relative;height:6px;background:var(--line);border-radius:3px;margin-top:4px}
-  .ibar i{display:block;height:100%;background:var(--accent);border-radius:3px}
-  .ibar u{position:absolute;top:-3px;width:2px;height:12px;background:var(--ink);opacity:.55;text-decoration:none}
-  .pass{text-align:center;cursor:pointer}
-  .pa{font-size:56px;font-weight:700;line-height:1.1;margin:6px 0 10px;font-variant-numeric:tabular-nums}
-  .pa small{font-size:18px;font-weight:500;color:var(--muted);margin-left:6px}
-  .fact{margin-top:14px;text-align:left;background:var(--accent-soft);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--ink);animation:rise .4s ease both}
-  .fact span{display:block;font-size:11px;color:var(--accent);font-weight:700;margin-bottom:2px}
-  .src a{color:var(--accent)}
-  .roll .big{font-size:30px;text-align:center;padding:14px 0;min-height:72px}
+  .lk-list{list-style:none;margin:0;padding:0;font-size:13.5px}
+  .lk-list li{padding:7px 0;border-top:1px dashed var(--rule2);display:grid;grid-template-columns:auto 1fr;gap:8px}
+  .lk-list li:first-child{border-top:0}
+  .lk-list .a{color:var(--mute);font-size:12px;font-variant-numeric:tabular-nums;padding-top:1px}
+  .lk-list .w{display:block;font-size:12px;color:var(--mute)}
+  .bignum{font-size:34px;font-weight:900;letter-spacing:-.04em;line-height:1;margin:0 0 6px}
+  /* 다른 출발의 아이 */
+  .twin{margin-top:18px;border:1.5px dashed var(--rule2);border-radius:16px;padding:14px 16px;background:color-mix(in srgb,var(--cmp) 5%,transparent)}
+  .tw-h{display:flex;gap:10px;align-items:flex-start}
+  .tw-h b{display:block;font-size:14px;letter-spacing:-.01em}
+  .tw-h span{display:block;font-size:12.5px;color:var(--mute);line-height:1.45}
+  .tw-badge{flex:none;width:30px;height:30px;border-radius:10px;background:var(--cmp);display:grid!important;place-items:center;font-size:15px}
+  .tw-l{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+  .tw-l li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;background:var(--card);border:1px solid var(--rule)}
+  .tw-l li i{font-style:normal;flex:none;width:18px;text-align:center;color:var(--up)}
+  .tw-l li.lk{opacity:.7}.tw-l li.lk i{color:var(--mute)}
+  .tw-l small{display:block;font-weight:500;font-size:12px;color:var(--mute)}
+  .tw-l em{display:table;font-style:normal;font-size:11.5px;font-weight:800;margin-top:4px;padding:2px 8px;border-radius:7px;line-height:1.4}
+  .tw-l li.open{opacity:1;border-color:var(--cmp)}.tw-l li.open em{background:var(--cmp);color:var(--card)}
+  .tw-l li.shut em{background:var(--dn);color:#fff}
+  .tw-none{margin:10px 0 0;font-size:13px;color:var(--ink2)}
+  .tw-who b{display:block;font-size:17px;font-weight:900;letter-spacing:-.02em}.tw-who span{font-size:12.5px;color:var(--mute)}
+  .vs{display:grid;gap:8px;margin-top:12px}
+  .vs>div{display:grid;grid-template-columns:minmax(0,1fr) 70px 22px;gap:8px;align-items:center;font-size:12.5px}
+  .vs span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink2)}
+  .vs i{height:8px;background:var(--bg2);border-radius:99px;overflow:hidden}.vs u{display:block;height:100%;background:var(--brand);border-radius:99px}.vs u.t{background:var(--cmp)}
+  .vs b{text-align:right;font-variant-numeric:tabular-nums}
+  .mock.tw{border-color:var(--cmp);color:var(--cmp)}
+  /* 기록 */
+  .log{list-style:none;margin:0;padding:0;max-height:420px;overflow:auto;overscroll-behavior:contain}
+  .log li{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--rule);font-size:14px;line-height:1.5}
+  .log li:first-child{border-top:0}
+  .log li .a{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;padding-top:2px}
+  .log li.fresh{animation:rise .4s ease both}
+  .log.full{max-height:none}
+  /* 나라 */
+  .ind{margin:0 0 11px}.ind:last-of-type{margin-bottom:0}
+  .il{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--ink2)}.il b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .ibar{position:relative;height:7px;background:var(--bg2);border-radius:99px;margin-top:5px}
+  .ibar i{display:block;height:100%;background:var(--brand);border-radius:99px}
+  .ibar u{position:absolute;top:-3px;width:2px;height:13px;background:var(--cmp);text-decoration:none;border-radius:2px}
+  .legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--ink2);margin-top:8px}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+  .legend u{display:inline-block;width:2px;height:10px;background:var(--cmp);margin-right:5px;vertical-align:-1px}
   .curve{width:100%;height:auto;display:block}
-  .cl{stroke-dasharray:1200;stroke-dashoffset:1200;animation:draw 1.6s ease forwards}
-  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--soft);margin-top:8px}
-  .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
-  #app>*{animation:rise .35s ease both}
+  .cl{stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 1.6s ease forwards}
+  .skel{min-height:140px;background:linear-gradient(90deg,var(--card),var(--bg2),var(--card));background-size:200% 100%;animation:sh 1.2s linear infinite}
+  .mset{display:flex;gap:8px;justify-content:center;padding:6px 0 0}
+  /* ---------- 결말 ---------- */
+  .endhero{display:grid;gap:24px;padding:28px 0 8px;align-items:center}
+  @media (min-width:1000px){.endhero{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;padding:40px 0 12px}}
+  .endhero h1{font-size:clamp(34px,5vw,64px);font-weight:900;letter-spacing:-.05em;line-height:1.08;margin:6px 0 14px;word-break:keep-all}
+  .endhero p.sum{font-size:clamp(15px,1.4vw,18px);color:var(--ink2);margin:0 0 20px;word-break:keep-all}
+  .facts4{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+  @media (min-width:760px){.facts4{grid-template-columns:repeat(4,1fr)}}
+  .facts4>div{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:12px 14px;min-width:0}
+  .facts4 small{display:block;font-size:11.5px;color:var(--mute)}.facts4 b{font-size:17px;letter-spacing:-.02em;overflow-wrap:anywhere}
+  .endhero .scene-card .scn{aspect-ratio:16/10}
+  canvas#card{width:100%;height:auto;border-radius:10px;border:1px solid var(--rule);display:block}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.row2 .ghost{font-size:13px;padding:10px 8px}
+  .sns{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:6px;margin-top:8px}
+  .sns a{text-align:center;text-decoration:none;color:var(--ink);font-size:13.5px;padding:9px 6px}
+
+  /* ---------- 도트 그림체 ---------- */
+  body.px .box,body.px .evc,body.px .scene-card,body.px .baby,body.px .tile,body.px .ch,body.px .cta,body.px .cta2,body.px .go,body.px .ghost,body.px .facts4>div,body.px .kv3>div,body.px .nm,body.px .mini div,body.px .feat .vis{border-radius:0}
+  body.px .box,body.px .evc,body.px .scene-card,body.px .baby{border-width:2px;box-shadow:4px 4px 0 var(--rule2)}
+  body.px .ch{border-width:2px;box-shadow:3px 3px 0 var(--rule)}
+  body.px .stl .bar,body.px .stl .bar i,body.px .ibar,body.px .ibar i,body.px .bars i,body.px .bars u,body.px .daybar,body.px .pbar,body.px .pbar i{border-radius:0}
+  body.px .scn svg{image-rendering:pixelated}
+
   @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  @keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
-  @keyframes bob{50%{transform:translateY(-5px)}}
-  @keyframes tw{50%{opacity:.12}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @keyframes stamp{from{opacity:0;transform:rotate(-14deg) scale(1.8)}to{opacity:.75;transform:rotate(-14deg) scale(1)}}
+  @keyframes tw{50%{opacity:.14}}
   @keyframes ping{from{transform:scale(.6);opacity:.9}to{transform:scale(2.6);opacity:0}}
   @keyframes draw{to{stroke-dashoffset:0}}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--brand) 55%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
+  @keyframes sh{to{background-position:-200% 0}}
+  @keyframes bob{50%{transform:translateY(-3px)}}
+  .rise{animation:rise .35s ease both}
   @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}.cl{stroke-dashoffset:0}}
-  @media (max-width:420px){.stats{gap:5px}.stat{padding:6px 2px;font-size:11px}.stat b{font-size:15px}.chip{right:-2px;padding:0 5px}}
 </style>
 </head>
 <body>
-<div class="wrap"><div id="langs"></div><div id="hero"></div><div id="app"></div></div>
+<header class="top" id="top"></header>
+<main id="app"></main>
 <script>
 /* 국가 데이터: World Bank Open Data (CC BY 4.0) — [iso3, -, -, 지역, 소득, 추정출생수, 기대수명, 영아사망(천명당), 1인당GDP(PPP)] */
 const NAMES={"ABW":["아루바","Aruba","アルバ","阿鲁巴"],"AFG":["아프가니스탄","Afghanistan","アフガニスタン","阿富汗"],"AGO":["앙골라","Angola","アンゴラ","安哥拉"],"ALB":["알바니아","Albania","アルバニア","阿尔巴尼亚"],"AND":["안도라","Andorra","アンドラ","安道尔"],"ARE":["아랍에미리트","United Arab Emirates","アラブ首長国連邦","阿拉伯联合酋长国"],"ARG":["아르헨티나","Argentina","アルゼンチン","阿根廷"],"ARM":["아르메니아","Armenia","アルメニア","亚美尼亚"],"ASM":["아메리칸 사모아","American Samoa","米領サモア","美属萨摩亚"],"ATG":["앤티가 바부다","Antigua & Barbuda","アンティグア・バーブーダ","安提瓜和巴布达"],"AUS":["오스트레일리아","Australia","オーストラリア","澳大利亚"],"AUT":["오스트리아","Austria","オーストリア","奥地利"],"AZE":["아제르바이잔","Azerbaijan","アゼルバイジャン","阿塞拜疆"],"BDI":["부룬디","Burundi","ブルンジ","布隆迪"],"BEL":["벨기에","Belgium","ベルギー","比利时"],"BEN":["베냉","Benin","ベナン","贝宁"],"BFA":["부르키나파소","Burkina Faso","ブルキナファソ","布基纳法索"],"BGD":["방글라데시","Bangladesh","バングラデシュ","孟加拉国"],"BGR":["불가리아","Bulgaria","ブルガリア","保加利亚"],"BHR":["바레인","Bahrain","バーレーン","巴林"],"BHS":["바하마","Bahamas","バハマ","巴哈马"],"BIH":["보스니아 헤르체고비나","Bosnia & Herzegovina","ボスニア・ヘルツェゴビナ","波斯尼亚和黑塞哥维那"],"BLR":["벨라루스","Belarus","ベラルーシ","白俄罗斯"],"BLZ":["벨리즈","Belize","ベリーズ","伯利兹"],"BMU":["버뮤다","Bermuda","バミューダ","百慕大"],"BOL":["볼리비아","Bolivia","ボリビア","玻利维亚"],"BRA":["브라질","Brazil","ブラジル","巴西"],"BRB":["바베이도스","Barbados","バルバドス","巴巴多斯"],"BRN":["브루나이","Brunei","ブルネイ","文莱"],"BTN":["부탄","Bhutan","ブータン","不丹"],"BWA":["보츠와나","Botswana","ボツワナ","博茨瓦纳"],"CAF":["중앙 아프리카 공화국","Central African Republic","中央アフリカ共和国","中非共和国"],"CAN":["캐나다","Canada","カナダ","加拿大"],"CHE":["스위스","Switzerland","スイス","瑞士"],"CHI":["채널 제도","Channel Islands","チャンネル諸島","海峡群岛"],"CHL":["칠레","Chile","チリ","智利"],"CHN":["중국","China","中国","中国"],"CIV":["코트디부아르","Côte d’Ivoire","コートジボワール","科特迪瓦"],"CMR":["카메룬","Cameroon","カメルーン","喀麦隆"],"COD":["콩고-킨샤사","Congo - Kinshasa","コンゴ民主共和国(キンシャサ)","刚果（金）"],"COG":["콩고-브라자빌","Congo - Brazzaville","コンゴ共和国(ブラザビル)","刚果（布）"],"COL":["콜롬비아","Colombia","コロンビア","哥伦比亚"],"COM":["코모로","Comoros","コモロ","科摩罗"],"CPV":["카보베르데","Cape Verde","カーボベルデ","佛得角"],"CRI":["코스타리카","Costa Rica","コスタリカ","哥斯达黎加"],"CUB":["쿠바","Cuba","キューバ","古巴"],"CUW":["퀴라소","Curaçao","キュラソー","库拉索"],"CYM":["케이맨 제도","Cayman Islands","ケイマン諸島","开曼群岛"],"CYP":["키프로스","Cyprus","キプロス","塞浦路斯"],"CZE":["체코","Czechia","チェコ","捷克"],"DEU":["독일","Germany","ドイツ","德国"],"DJI":["지부티","Djibouti","ジブチ","吉布提"],"DMA":["도미니카","Dominica","ドミニカ国","多米尼克"],"DNK":["덴마크","Denmark","デンマーク","丹麦"],"DOM":["도미니카 공화국","Dominican Republic","ドミニカ共和国","多米尼加共和国"],"DZA":["알제리","Algeria","アルジェリア","阿尔及利亚"],"ECU":["에콰도르","Ecuador","エクアドル","厄瓜多尔"],"EGY":["이집트","Egypt","エジプト","埃及"],"ERI":["에리트리아","Eritrea","エリトリア","厄立特里亚"],"ESP":["스페인","Spain","スペイン","西班牙"],"EST":["에스토니아","Estonia","エストニア","爱沙尼亚"],"ETH":["에티오피아","Ethiopia","エチオピア","埃塞俄比亚"],"FIN":["핀란드","Finland","フィンランド","芬兰"],"FJI":["피지","Fiji","フィジー","斐济"],"FRA":["프랑스","France","フランス","法国"],"FRO":["페로 제도","Faroe Islands","フェロー諸島","法罗群岛"],"FSM":["미크로네시아","Micronesia","ミクロネシア連邦","密克罗尼西亚"],"GAB":["가봉","Gabon","ガボン","加蓬"],"GBR":["영국","United Kingdom","イギリス","英国"],"GEO":["조지아","Georgia","ジョージア","格鲁吉亚"],"GHA":["가나","Ghana","ガーナ","加纳"],"GIB":["지브롤터","Gibraltar","ジブラルタル","直布罗陀"],"GIN":["기니","Guinea","ギニア","几内亚"],"GMB":["감비아","Gambia","ガンビア","冈比亚"],"GNB":["기니비사우","Guinea-Bissau","ギニアビサウ","几内亚比绍"],"GNQ":["적도 기니","Equatorial Guinea","赤道ギニア","赤道几内亚"],"GRC":["그리스","Greece","ギリシャ","希腊"],"GRD":["그레나다","Grenada","グレナダ","格林纳达"],"GRL":["그린란드","Greenland","グリーンランド","格陵兰"],"GTM":["과테말라","Guatemala","グアテマラ","危地马拉"],"GUM":["괌","Guam","グアム","关岛"],"GUY":["가이아나","Guyana","ガイアナ","圭亚那"],"HKG":["홍콩(중국 특별행정구)","Hong Kong SAR China","中華人民共和国香港特別行政区","中国香港特别行政区"],"HND":["온두라스","Honduras","ホンジュラス","洪都拉斯"],"HRV":["크로아티아","Croatia","クロアチア","克罗地亚"],"HTI":["아이티","Haiti","ハイチ","海地"],"HUN":["헝가리","Hungary","ハンガリー","匈牙利"],"IDN":["인도네시아","Indonesia","インドネシア","印度尼西亚"],"IMN":["맨섬","Isle of Man","マン島","马恩岛"],"IND":["인도","India","インド","印度"],"IRL":["아일랜드","Ireland","アイルランド","爱尔兰"],"IRN":["이란","Iran","イラン","伊朗"],"IRQ":["이라크","Iraq","イラク","伊拉克"],"ISL":["아이슬란드","Iceland","アイスランド","冰岛"],"ISR":["이스라엘","Israel","イスラエル","以色列"],"ITA":["이탈리아","Italy","イタリア","意大利"],"JAM":["자메이카","Jamaica","ジャマイカ","牙买加"],"JOR":["요르단","Jordan","ヨルダン","约旦"],"JPN":["일본","Japan","日本","日本"],"KAZ":["카자흐스탄","Kazakhstan","カザフスタン","哈萨克斯坦"],"KEN":["케냐","Kenya","ケニア","肯尼亚"],"KGZ":["키르기스스탄","Kyrgyzstan","キルギス","吉尔吉斯斯坦"],"KHM":["캄보디아","Cambodia","カンボジア","柬埔寨"],"KIR":["키리바시","Kiribati","キリバス","基里巴斯"],"KNA":["세인트키츠 네비스","St. Kitts & Nevis","セントクリストファー・ネーヴィス","圣基茨和尼维斯"],"KOR":["대한민국","South Korea","韓国","韩国"],"KWT":["쿠웨이트","Kuwait","クウェート","科威特"],"LAO":["라오스","Laos","ラオス","老挝"],"LBN":["레바논","Lebanon","レバノン","黎巴嫩"],"LBR":["라이베리아","Liberia","リベリア","利比里亚"],"LBY":["리비아","Libya","リビア","利比亚"],"LCA":["세인트루시아","St. Lucia","セントルシア","圣卢西亚"],"LIE":["리히텐슈타인","Liechtenstein","リヒテンシュタイン","列支敦士登"],"LKA":["스리랑카","Sri Lanka","スリランカ","斯里兰卡"],"LSO":["레소토","Lesotho","レソト","莱索托"],"LTU":["리투아니아","Lithuania","リトアニア","立陶宛"],"LUX":["룩셈부르크","Luxembourg","ルクセンブルク","卢森堡"],"LVA":["라트비아","Latvia","ラトビア","拉脱维亚"],"MAC":["마카오(중국 특별행정구)","Macao SAR China","中華人民共和国マカオ特別行政区","中国澳门特别行政区"],"MAF":["생마르탱","St. Martin","サン・マルタン","法属圣马丁"],"MAR":["모로코","Morocco","モロッコ","摩洛哥"],"MCO":["모나코","Monaco","モナコ","摩纳哥"],"MDA":["몰도바","Moldova","モルドバ","摩尔多瓦"],"MDG":["마다가스카르","Madagascar","マダガスカル","马达加斯加"],"MDV":["몰디브","Maldives","モルディブ","马尔代夫"],"MEX":["멕시코","Mexico","メキシコ","墨西哥"],"MHL":["마셜 제도","Marshall Islands","マーシャル諸島","马绍尔群岛"],"MKD":["북마케도니아","North Macedonia","北マケドニア","北马其顿"],"MLI":["말리","Mali","マリ","马里"],"MLT":["몰타","Malta","マルタ","马耳他"],"MMR":["미얀마","Myanmar (Burma)","ミャンマー (ビルマ)","缅甸"],"MNE":["몬테네그로","Montenegro","モンテネグロ","黑山"],"MNG":["몽골","Mongolia","モンゴル","蒙古"],"MNP":["북마리아나제도","Northern Mariana Islands","北マリアナ諸島","北马里亚纳群岛"],"MOZ":["모잠비크","Mozambique","モザンビーク","莫桑比克"],"MRT":["모리타니","Mauritania","モーリタニア","毛里塔尼亚"],"MUS":["모리셔스","Mauritius","モーリシャス","毛里求斯"],"MWI":["말라위","Malawi","マラウイ","马拉维"],"MYS":["말레이시아","Malaysia","マレーシア","马来西亚"],"NAM":["나미비아","Namibia","ナミビア","纳米比亚"],"NCL":["뉴칼레도니아","New Caledonia","ニューカレドニア","新喀里多尼亚"],"NER":["니제르","Niger","ニジェール","尼日尔"],"NGA":["나이지리아","Nigeria","ナイジェリア","尼日利亚"],"NIC":["니카라과","Nicaragua","ニカラグア","尼加拉瓜"],"NLD":["네덜란드","Netherlands","オランダ","荷兰"],"NOR":["노르웨이","Norway","ノルウェー","挪威"],"NPL":["네팔","Nepal","ネパール","尼泊尔"],"NRU":["나우루","Nauru","ナウル","瑙鲁"],"NZL":["뉴질랜드","New Zealand","ニュージーランド","新西兰"],"OMN":["오만","Oman","オマーン","阿曼"],"PAK":["파키스탄","Pakistan","パキスタン","巴基斯坦"],"PAN":["파나마","Panama","パナマ","巴拿马"],"PER":["페루","Peru","ペルー","秘鲁"],"PHL":["필리핀","Philippines","フィリピン","菲律宾"],"PLW":["팔라우","Palau","パラオ","帕劳"],"PNG":["파푸아뉴기니","Papua New Guinea","パプアニューギニア","巴布亚新几内亚"],"POL":["폴란드","Poland","ポーランド","波兰"],"PRI":["푸에르토리코","Puerto Rico","プエルトリコ","波多黎各"],"PRK":["북한","North Korea","北朝鮮","朝鲜"],"PRT":["포르투갈","Portugal","ポルトガル","葡萄牙"],"PRY":["파라과이","Paraguay","パラグアイ","巴拉圭"],"PSE":["팔레스타인 지구","Palestinian Territories","パレスチナ自治区","巴勒斯坦领土"],"PYF":["프랑스령 폴리네시아","French Polynesia","仏領ポリネシア","法属波利尼西亚"],"QAT":["카타르","Qatar","カタール","卡塔尔"],"ROU":["루마니아","Romania","ルーマニア","罗马尼亚"],"RUS":["러시아","Russia","ロシア","俄罗斯"],"RWA":["르완다","Rwanda","ルワンダ","卢旺达"],"SAU":["사우디아라비아","Saudi Arabia","サウジアラビア","沙特阿拉伯"],"SDN":["수단","Sudan","スーダン","苏丹"],"SEN":["세네갈","Senegal","セネガル","塞内加尔"],"SGP":["싱가포르","Singapore","シンガポール","新加坡"],"SLB":["솔로몬 제도","Solomon Islands","ソロモン諸島","所罗门群岛"],"SLE":["시에라리온","Sierra Leone","シエラレオネ","塞拉利昂"],"SLV":["엘살바도르","El Salvador","エルサルバドル","萨尔瓦多"],"SMR":["산마리노","San Marino","サンマリノ","圣马力诺"],"SOM":["소말리아","Somalia","ソマリア","索马里"],"SRB":["세르비아","Serbia","セルビア","塞尔维亚"],"SSD":["남수단","South Sudan","南スーダン","南苏丹"],"STP":["상투메 프린시페","São Tomé & Príncipe","サントメ・プリンシペ","圣多美和普林西比"],"SUR":["수리남","Suriname","スリナム","苏里南"],"SVK":["슬로바키아","Slovakia","スロバキア","斯洛伐克"],"SVN":["슬로베니아","Slovenia","スロベニア","斯洛文尼亚"],"SWE":["스웨덴","Sweden","スウェーデン","瑞典"],"SWZ":["에스와티니","Eswatini","エスワティニ","斯威士兰"],"SXM":["신트마르턴","Sint Maarten","シント・マールテン","荷属圣马丁"],"SYC":["세이셸","Seychelles","セーシェル","塞舌尔"],"SYR":["시리아","Syria","シリア","叙利亚"],"TCA":["터크스 케이커스 제도","Turks & Caicos Islands","タークス・カイコス諸島","特克斯和凯科斯群岛"],"TCD":["차드","Chad","チャド","乍得"],"TGO":["토고","Togo","トーゴ","多哥"],"THA":["태국","Thailand","タイ","泰国"],"TJK":["타지키스탄","Tajikistan","タジキスタン","塔吉克斯坦"],"TKM":["투르크메니스탄","Turkmenistan","トルクメニスタン","土库曼斯坦"],"TLS":["동티모르","Timor-Leste","東ティモール","东帝汶"],"TON":["통가","Tonga","トンガ","汤加"],"TTO":["트리니다드 토바고","Trinidad & Tobago","トリニダード・トバゴ","特立尼达和多巴哥"],"TUN":["튀니지","Tunisia","チュニジア","突尼斯"],"TUR":["튀르키예","Türkiye","トルコ","土耳其"],"TUV":["투발루","Tuvalu","ツバル","图瓦卢"],"TZA":["탄자니아","Tanzania","タンザニア","坦桑尼亚"],"UGA":["우간다","Uganda","ウガンダ","乌干达"],"UKR":["우크라이나","Ukraine","ウクライナ","乌克兰"],"URY":["우루과이","Uruguay","ウルグアイ","乌拉圭"],"USA":["미국","United States","アメリカ合衆国","美国"],"UZB":["우즈베키스탄","Uzbekistan","ウズベキスタン","乌兹别克斯坦"],"VCT":["세인트빈센트그레나딘","St. Vincent & Grenadines","セントビンセント及びグレナディーン諸島","圣文森特和格林纳丁斯"],"VEN":["베네수엘라","Venezuela","ベネズエラ","委内瑞拉"],"VGB":["영국령 버진아일랜드","British Virgin Islands","英領ヴァージン諸島","英属维尔京群岛"],"VIR":["미국령 버진아일랜드","U.S. Virgin Islands","米領ヴァージン諸島","美属维尔京群岛"],"VNM":["베트남","Vietnam","ベトナム","越南"],"VUT":["바누아투","Vanuatu","バヌアツ","瓦努阿图"],"WSM":["사모아","Samoa","サモア","萨摩亚"],"XKX":["코소보","Kosovo","コソボ","科索沃"],"YEM":["예멘","Yemen","イエメン","也门"],"ZAF":["남아프리카","South Africa","南アフリカ","南非"],"ZMB":["잠비아","Zambia","ザンビア","赞比亚"],"ZWE":["짐바브웨","Zimbabwe","ジンバブエ","津巴布韦"]};
@@ -234,6 +439,29 @@ const UI={
  auto:["자동","Auto","自動","自动"],auto_t:["선택을 자동으로 이어가요","Play on automatically","自動で進めます","自动进行"],
  style_t:["그림체 바꾸기","Switch art style","絵柄を切り替え","切换画风"],
  style_px:["도트","Pixel","ドット","像素"],style_paper:["종이","Paper","紙","纸艺"],
+ num_b:["명이 해마다 태어나요","babies are born each year","人が毎年生まれます","名婴儿每年出生"],
+ num_c:["개 나라와 지역","countries and territories","の国と地域","个国家和地区"],
+ steps:[["출생지와 집안이 무작위로 정해져요","Birthplace and family are drawn at random","出生地と家庭がランダムに決まります","出生地和家境随机决定"],["나이대마다 선택을 하며 살아요","Make choices at every stage of life","年代ごとに選択して生きます","在每个人生阶段做出选择"],["결말 카드를 만들어 친구에게 보여줘요","Get an ending card to share with friends","結末カードを友だちに見せよう","生成结局卡片分享给朋友"]],
+ doc_h:["탄생 기록","Birth Record","誕生の記録","出生记录"],end_doc:["인생 정산","Life Summary","人生の決算","人生总结"],
+ f_sex:["성별","Sex","性別","性别"],f_country:["태어난 나라","Country","生まれた国","出生国家"],f_area:["사는 곳","Home area","住まい","居住地"],f_fam:["집안 형편","Family means","家計","家境"],
+ f_par:["부모님 나이","Parents' ages","両親の年齢","父母年龄"],f_pjob:["부모님 직업","Parents' work","両親の仕事","父母职业"],f_sib:["형제자매","Siblings","きょうだい","兄弟姐妹"],f_le:["이 나라 기대수명","Life expectancy here","この国の平均寿命","当地预期寿命"],
+ e_age:["살았던 나이","Age at the end","生きた年数","享年"],e_le:["이 나라 기대수명","Life expectancy here","この国の平均寿命","当地预期寿命"],e_job:["마지막 직업","Last job","最後の仕事","最后的职业"],
+ live_b:["이 페이지를 연 뒤 태어난 아기","babies born since you opened this page","このページを開いてから生まれた赤ちゃん","打开本页后出生的婴儿"],
+ live_d:["그중 첫 돌을 못 넘길 아기(추정)","of them may not reach their first birthday (est.)","そのうち1歳を迎えられない赤ちゃん（推定）","其中可能活不过一岁的婴儿（估算）"],
+ top_h:["어디서 태어날 확률이 높을까요","Where are you most likely to be born","どこで生まれる確率が高い？","你最可能出生在哪里"],
+ top_p:["연간 출생 수 기준이에요. 아이가 많이 태어나는 나라일수록 뽑힐 확률이 높아요.","Based on yearly births. The more babies a country has, the likelier it is to be drawn.","年間の出生数が基準です。赤ちゃんが多い国ほど選ばれやすくなります。","以每年出生人数为准，出生人数越多的国家越容易被抽中。"],
+ top_rest:["나머지 {n}개 나라·지역","The other {n} countries","残り{n}の国と地域","其余{n}个国家和地区"],
+ sm_h:["이런 삶이 시작될 수 있어요","Lives that could begin","こんな人生が始まるかも","可能开始的人生"],
+ sm_p:["무작위로 뽑은 가상의 아기 세 명이에요. 이름은 지어낸 것이고 실제 사람이 아니에요.","Three made-up babies drawn at random. The names are invented, not real people.","ランダムに選んだ架空の赤ちゃん3人です。名前は創作で、実在の人物ではありません。","随机抽取的三个虚构婴儿，名字是编的，并非真实人物。"],
+ sm_re:["다른 아기 보기","Draw three more","別の赤ちゃんを見る","换三个看看"],
+ bs1:["의 아기가 저소득·중하위소득 나라에서 태어나요","of babies are born in low and lower-middle income countries","の赤ちゃんが低所得・低中所得国で生まれます","的婴儿出生在低收入和中低收入国家"],
+ bs2:["의 아기가 기대수명 65세 미만인 나라에서 태어나요","of babies are born where life expectancy is under 65","の赤ちゃんが平均寿命65歳未満の国で生まれます","的婴儿出生在预期寿命不足65岁的国家"],
+ bs3:["명 — 태어난 1000명 중 첫 돌을 못 넘기는 아기(추정)","per 1,000 babies don't reach their first birthday (est.)","人 — 生まれた1000人のうち1歳前に亡くなる赤ちゃん（推定）","人 — 每1000名新生儿中活不过一岁的人数（估算）"],
+ trust:[["무료","회원가입 없음","서버에 저장 안 함","4개 언어"],["Free","No sign-up","Nothing stored on a server","4 languages"],["無料","登録不要","サーバーに保存しない","4言語"],["免费","无需注册","不上传服务器","四种语言"]].map(a=>a),
+ faq_h:["자주 묻는 질문","FAQ","よくある質問","常见问题"],
+ faq:[[["진짜 통계인가요?","Is the data real?","データは本物？","数据是真的吗？"],["나라별 출생 수, 기대수명, 영아사망률, 소득은 세계은행 공개 데이터예요. 이야기와 선택지는 게임을 위해 만든 허구예요.","Country birth counts, life expectancy, infant mortality and income come from World Bank open data. The stories and choices are fiction made for the game.","国別の出生数・平均寿命・乳児死亡率・所得は世界銀行のオープンデータです。出来事と選択肢はゲーム用の創作です。","各国出生人数、预期寿命、婴儿死亡率和收入来自世界银行开放数据，故事与选项是为游戏编写的虚构内容。"]],
+  [["제 기록이 저장되나요?","Is my play saved?","プレイは保存される？","我的记录会被保存吗？"],["이 브라우저에만 언어·속도 같은 설정이 저장되고, 서버로 보내는 정보는 없어요.","Only settings like language and speed stay in this browser. Nothing is sent to a server.","言語や速度などの設定がこのブラウザにだけ残り、サーバーへは何も送りません。","语言、速度等设置只保存在本浏览器中，不会发送到服务器。"]],
+  [["얼마나 걸리나요?","How long does it take?","どのくらいかかる？","要玩多久？"],["보통 5~10분이에요. ⏩ 속도 버튼이나 ▶ 자동으로 더 빨리 끝까지 볼 수도 있어요.","Usually 5 to 10 minutes. Use the ⏩ speed button or ▶ auto to see the whole life faster.","たいてい5〜10分です。⏩速度や▶自動でもっと早く最後まで見られます。","通常 5 到 10 分钟，也可以用 ⏩ 速度或 ▶ 自动更快看完。"]]],
  pass_h:["시간이 흘러가요","Time passes","時が流れます","时间流逝"],
  fact_label:["통계 한 줄","A statistic","統計ひとこと","一条统计"],
  fact_imr:["{place}에서는 아기 1000명 중 약 {n}명이 첫 돌을 넘기지 못해요. 당신은 그 고비를 넘겼어요.","In {place}, about {n} of every 1,000 babies don't reach their first birthday. You made it past that.","{place}では赤ちゃん1000人のうち約{n}人が1歳を迎えられません。あなたはその山を越えました。","在{place}，每1000名婴儿中约有{n}名活不到一岁。你熬过了这一关。"],
@@ -538,21 +766,148 @@ const clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,v));
 const randn=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
 const pick=a=>a[Math.floor(rnd()*a.length)];
 const STATKEYS=["h","w","j","r","e"];
-const app=document.getElementById("app"), langEl=document.getElementById("langs"), heroEl=document.getElementById("hero");
-/* ---------- 시각 연출 ---------- */
-const STAT_ICON=["💪","🪙","🌤️","🤝","🛠️"];
-const STAGE_ICON=["🍼","🎒","🧭","🌱","🏙️","🍂","🌇"];
-const dark=()=>window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches;
-// 하루처럼: 새벽 → 아침 → 한낮 → 오후 → 노을 → 밤 (t = 나이/100)
-const SKY_L=[[0,"#ffd9a8","#fff1d6"],[.2,"#8ec5ff","#d6efff"],[.5,"#5aa9f0","#bfe3ff"],[.75,"#f3b36b","#ffe0b0"],[.9,"#d9776b","#f3b58c"],[1,"#2b2f5a","#6a5a8a"]];
-const SKY_D=[[0,"#3a2a2a","#5a3f33"],[.2,"#1f3b5a","#2d5273"],[.5,"#153a63","#245a86"],[.75,"#5a3a1f","#8a5a2f"],[.9,"#4a2230","#7a3a3a"],[1,"#0d0f24","#23244a"]];
-const hexRGB=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
-function skyColors(t){
-  const L=dark()?SKY_D:SKY_L; t=clamp(t,0,1);
-  let i=0; while(i<L.length-2&&t>L[i+1][0]) i++;
-  const a=L[i],b=L[i+1],u=(t-a[0])/(b[0]-a[0]);
-  const mix=(x,y)=>"rgb("+hexRGB(x).map((v,k)=>Math.round(v+(hexRGB(y)[k]-v)*u)).join(",")+")";
-  return [mix(a[1],b[1]),mix(a[2],b[2])];
+const topEl=document.getElementById("top"), app=document.getElementById("app");
+/* ---------- 새 화면용 문구 ---------- */
+Object.assign(UI,{
+ hero_h:["어디서 태어날지는<br><em>고를 수 없어요.</em>","You don't get to<br><em>choose where you're born.</em>","どこに生まれるかは<br><em>選べない。</em>","出生在哪里，<br><em>由不得你选。</em>"],
+ hero_p:["나라는 세계은행 출생 통계에 비례해 뽑히고, 집안 형편은 그 나라의 소득 수준을 따라요. 같은 나이라도 태어난 곳에 따라 열리는 문이 달라요.",
+  "Your country is drawn in proportion to World Bank birth data, and your family's means follow that country's income level. At the same age, different doors open depending on where you started.",
+  "国は世界銀行の出生統計に比例して選ばれ、家庭の暮らし向きはその国の所得水準に沿います。同じ年齢でも、生まれた場所によって開く扉が違います。",
+  "国家按世界银行的出生统计比例抽取，家境取决于该国的收入水平。即使年龄相同，出身不同，能打开的门也不同。"],
+ per_sec:["1초에 약 {n}명이 태어나요","about {n} babies born every second","1秒に約{n}人が生まれます","每秒约有{n}名婴儿出生"],
+ first_day:["누군가의 첫날","Someone's first day","誰かの最初の日","某个人的第一天"],
+ next_baby:["다음 아기","Next baby","次の赤ちゃん","下一个婴儿"],
+ share_l:["이 나라에서 태어날 확률","Chance of being born here","この国に生まれる確率","出生在这里的概率"],
+ gdp_s:["1인당 소득","Income per person","1人当たり所得","人均收入"],
+ le_s:["평균 수명","Life expectancy","平均寿命","预期寿命"],
+ where_h:["어디서 태어날까요","Where will you be born","どこに生まれる？","你会出生在哪里"],
+ where_p:["점 하나가 한 나라예요. 점이 클수록 해마다 아기가 많이 태어나고, 그만큼 뽑힐 확률도 높아요.","Each dot is a country. Bigger dots mean more births each year, and a higher chance of being drawn.","点ひとつが一つの国です。点が大きいほど毎年多くの赤ちゃんが生まれ、選ばれる確率も高くなります。","每个点代表一个国家。点越大，每年出生的婴儿越多，被抽中的概率也越高。"],
+ diff_h:["이 게임만의 세 가지","Three things you'll only find here","このゲームならではの三つ","这款游戏独有的三点"],
+ f1_h:["형편이 선택지를 바꿔요","Your start changes your options","境遇が選択肢を変える","出身改变你的选项"],
+ f1_p:["같은 나이라도 태어난 집과 나라에 따라 어떤 문은 아예 잠겨 있어요. 잠겼던 선택지는 끝에 모아서 보여 드려요.","At the same age, some doors are simply locked depending on your family and country. The locked ones are gathered and shown at the end.","同じ年齢でも、生まれた家と国によっては最初から閉ざされた扉があります。閉ざされた選択肢は最後にまとめて見せます。","即使年龄相同，根据出生的家庭和国家，有些门从一开始就是锁着的。被锁上的选项会在最后汇总给你看。"],
+ f1_a:["대학에 진학한다","Go to university","大学に進学する","上大学"],
+ f1_b:["일을 배우러 도시로 간다","Move to the city to learn a trade","仕事を覚えに都会へ出る","去城里学手艺"],
+ f2_h:["하루처럼 흐르는 일생","A life that passes like a day","一日のように流れる一生","如一日般流逝的一生"],
+ f2_p:["태어날 때는 새벽, 한창일 때는 한낮, 노년에는 노을. 하늘이 나이를 따라 바뀌어요.","Dawn when you're born, noon in your prime, dusk in old age. The sky follows your age.","生まれた時は夜明け、盛りは真昼、老いては夕焼け。空が年齢とともに変わります。","出生时是黎明，壮年是正午，老年是黄昏。天空随着年龄变化。"],
+ f3_h:["한 장짜리 자서전","A one-page autobiography","一枚の自伝","一页自传"],
+ f3_p:["삶이 끝나면 내가 내린 선택으로 몇 줄짜리 자서전 카드를 만들어요. 저장하거나 친구에게 보낼 수 있어요.","When the life ends, your choices become a short autobiography card you can save or send.","人生が終わると、選んだことから数行の自伝カードを作ります。保存したり友だちに送ったりできます。","人生结束时，你的选择会变成几行字的自传卡片，可以保存或发给朋友。"],
+ f3_t:["숲을 지킨 사람","The One Who Kept the Forest","森を守った人","守护森林的人"],
+ f3_l:["· 시골 마을의 넉넉하지 않은 집에서 태어났다.|· 17세, 학교에 남아 공부를 이어 갔다.|· 81세, 천수를 누리고 눈을 감았다.","· Born into a modest household in a village.|· Age 17: stayed in school.|· Died at 81, after a full life.","・村のゆとりのない家に生まれた。|・17歳、学校に残って学び続けた。|・81歳、天寿を全うした。","· 出生在乡村一个家境一般的家庭。|· 17岁，继续留在学校读书。|· 81岁，寿终正寝。"],
+ stats_h:["지금의 나","Where you stand","いまの自分","现在的我"],
+ log_h:["인생 기록","Life log","人生の記録","人生记录"],
+ log_new:["최근 것부터","Newest first","新しい順","最新在前"],
+ map_h:["태어난 곳","Where you were born","生まれた場所","出生地"],
+ lock_yet:["아직 형편 때문에 막힌 선택지는 없어요.","No choices have been closed to you yet.","まだ境遇のせいで閉ざされた選択肢はありません。","目前还没有因出身被关上的选项。"],
+ f_job:["하는 일","Work","仕事","工作"],
+ stamp:["출생<br>접수","BIRTH<br>FILED","出生<br>受理","出生<br>登记"],
+ leave_q:["이번 삶을 그만두고 처음으로 갈까요?","Leave this life and go back to the start?","この人生をやめて最初に戻りますか？","放弃这一生并回到开头吗？"],
+ born_kick:["0세 · 출생 신고","Age 0 · Birth registration","0歳・出生届","0岁 · 出生登记"],
+ world_avg:["세계 신생아 평균","World newborn average","世界の新生児平均","全球新生儿平均"],
+ auto_on:["자동 진행 중","Auto-playing","自動進行中","自动进行中"],
+ choose_k:["선택","Your choice","選択","选择"],
+ result_k:["결과","What happened","結果","结果"],
+ end_k:["이 사람의 일생","This person's life","この人の一生","这个人的一生"],
+ menu_lang:["언어","Language","言語","语言"],
+ tw_h:["같은 날 태어난 다른 아이","Another child born the same day","同じ日に生まれた別の子","同一天出生的另一个孩子"],
+ tw_p:["같은 선택을 해도 출발이 다르면 열리는 문이 달라요.","Same choices, different start, different doors.","同じ選択でも、出発点が違えば開く扉が違います。","同样的选择，不同的起点，打开的门也不同。"],
+ tw_ev:["같은 나이, {name}에게는","Same age, for {name}","同じ年齢、{name}には","同样的年纪，对{name}来说"],
+ tw_none:["이 일은 {name}에게는 일어나지 않았을 거예요.","This would not have happened to {name}.","この出来事は{name}には起きなかったでしょう。","这件事不会发生在{name}身上。"],
+ tw_open:["당신에게는 잠겼지만 이 아이에게는 열려 있어요","Locked for you, open for them","あなたには閉ざされ、この子には開いている","对你关着，对他们开着"],
+ tw_shut:["당신에게는 열렸지만 이 아이에게는 잠겨 있어요","Open for you, locked for them","あなたには開き、この子には閉ざされている","对你开着，对他们关着"],
+ tw_same:["당신과 같은 선택지를 봐요.","They see the same options as you.","あなたと同じ選択肢が見えます。","他们看到的选项和你一样。"],
+ tw_born:["같은 날, {place}의 {tier}에서 {name}도 태어났어요. 이 아이와 나란히 살아 봅니다.","On the same day, {name} was born into {tier} in {place}. You'll live alongside them.","同じ日、{place}の{tier}に{name}も生まれました。この子と並んで生きていきます。","同一天，{name}也出生在{place}，{tier}。你们将并肩走过一生。"],
+ tw_doors:["닫힌 문","Closed doors","閉ざされた扉","被关上的门"],
+ you:["나","You","わたし","你"],
+ tw_end:["{name}였다면 닫힌 문은 {m}개였어요. 당신은 {n}개였어요.","As {name}, {m} doors would have closed. For you, it was {n}.","{name}なら閉ざされた扉は{m}個。あなたは{n}個でした。","如果是{name}，会有{m}扇门被关上。你是{n}扇。"],
+ tw_feat_h:["옆에서 함께 사는 다른 아이","A second child, living alongside you","隣で一緒に生きるもう一人","在你身旁一起生活的另一个孩子"],
+ tw_feat_p:["같은 날 정반대 형편에서 태어난 아이가 함께 나이 들어요. 매번 그 아이에게는 어떤 문이 열리는지 나란히 보여 드려요.","A child born the same day into the opposite circumstances grows up with you. At every choice you see which doors open for them.","同じ日に正反対の境遇で生まれた子が一緒に年を重ねます。選ぶたびに、その子にはどの扉が開くかを並べて見せます。","一个同一天出生、境遇完全相反的孩子与你一起长大。每次选择时，都会并排显示哪些门为他们打开。"]
+});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+const LOGO=`<svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--ink)"/><circle cx="16" cy="15" r="6" fill="var(--brand)"/><path d="M3 24c4.5-3.6 8.5-4.4 13-2.6s8.6 1.4 13-2.2V29H3z" fill="var(--bg)"/></svg>`;
+function ageParts(n,id){
+  const [pre,post]=UI.age_n[LI].split("{n}");
+  return `${pre.trim()?`<small>${pre.trim()}</small>`:""}<b${id?` id="${id}"`:""}>${n}</b>${post.trim()?`<small>${post.trim()}</small>`:""}`;
+}
+
+/* ---------- 장면: 종이 오림 그림 (하늘은 나이를 따라 하루처럼) ---------- */
+let sceneN=0;
+function sceneInner(g,age){
+  const Y=160, w=g.s.w, skin=g.skin, ink="#4a4036";
+  const fig=(x,h,col,o={})=>`<g transform="translate(${x},${Y})">`+
+    `<rect x="${-h*.12}" y="${-h*.24}" width="${h*.08}" height="${h*.24}" rx="2" fill="${ink}"/><rect x="${h*.04}" y="${-h*.24}" width="${h*.08}" height="${h*.24}" rx="2" fill="${ink}"/>`+
+    `<rect x="${-h*.15}" y="${-h*.66}" width="${h*.3}" height="${h*.46}" rx="${h*.1}" fill="${col}"/>`+
+    `<circle cx="0" cy="${-h*.78}" r="${h*.17}" fill="${o.skin||skin}"/>`+(o.extra||"")+`</g>`;
+  const col={m:"#c9594c",f:"#4f7fb3",s:"#e0a53c",c:"#5aa27a",e:"#8a6fb0"};
+  const hx=150; let house="";
+  if(w<30) house=`<rect x="${hx-30}" y="${Y-30}" width="60" height="30" fill="#b08a5a"/><path d="M${hx-38} ${Y-30}L${hx} ${Y-52}L${hx+38} ${Y-30}Z" fill="#7a5a3a"/><rect x="${hx-6}" y="${Y-18}" width="12" height="18" fill="#5b4330"/>`;
+  else if(w<55) house=`<rect x="${hx-38}" y="${Y-40}" width="76" height="40" fill="#e6d3b0"/><path d="M${hx-46} ${Y-40}L${hx} ${Y-68}L${hx+46} ${Y-40}Z" fill="#b0523f"/><rect x="${hx-8}" y="${Y-24}" width="16" height="24" fill="#7a5a3a"/><rect x="${hx+16}" y="${Y-32}" width="14" height="12" fill="#bfe0f0"/>`;
+  else if(w<75) house=`<rect x="${hx-44}" y="${Y-46}" width="88" height="46" fill="#efe2c4"/><path d="M${hx-52} ${Y-46}L${hx} ${Y-78}L${hx+52} ${Y-46}Z" fill="#a8483b"/><rect x="${hx+22}" y="${Y-96}" width="9" height="26" fill="#8a5a46"/><rect x="${hx-8}" y="${Y-28}" width="16" height="28" fill="#6a4a38"/><rect x="${hx-34}" y="${Y-36}" width="14" height="14" fill="#bfe0f0"/><rect x="${hx+20}" y="${Y-36}" width="14" height="14" fill="#bfe0f0"/>`;
+  else house=`<rect x="${hx-52}" y="${Y-66}" width="104" height="66" fill="#f2e9da"/><rect x="${hx-52}" y="${Y-74}" width="104" height="10" fill="#4d6a8a"/><rect x="${hx-8}" y="${Y-30}" width="16" height="30" fill="#4d6a8a"/>`+[-38,-18,16,36].map(dx=>`<rect x="${hx+dx-6}" y="${Y-54}" width="12" height="14" fill="#bfe0f0"/>`).join("")+`<rect x="${hx-38}" y="${Y-28}" width="14" height="12" fill="#bfe0f0"/><rect x="${hx+26}" y="${Y-28}" width="14" height="12" fill="#bfe0f0"/>`;
+  let back="";
+  if(g.urban){ [[10,60],[48,92],[86,50],[250,70],[468,84],[506,62],[544,98],[584,58]].forEach(([x,h])=>{back+=`<rect x="${x}" y="${Y-h-4}" width="30" height="${h}" fill="rgba(110,120,140,.38)"/>`+(h>70?`<rect x="${x+8}" y="${Y-h+8}" width="5" height="6" fill="rgba(255,240,200,.5)"/><rect x="${x+17}" y="${Y-h+22}" width="5" height="6" fill="rgba(255,240,200,.5)"/>`:"")}); }
+  else { [[40,0],[262,1],[500,0],[570,1]].forEach(([x,k])=>{back+=`<rect x="${x-2}" y="${Y-26}" width="4" height="26" fill="#6b4a33"/><circle cx="${x}" cy="${Y-34}" r="${14+k*4}" fill="#4f8a55"/>`}); back+=`<rect x="226" y="${Y-12}" width="60" height="3" fill="#8a6a45"/><rect x="230" y="${Y-12}" width="3" height="12" fill="#8a6a45"/><rect x="278" y="${Y-12}" width="3" height="12" fill="#8a6a45"/>`; }
+  const a=age, pj=g.job?"💼":"";
+  const hat=pj?{extra:`<text x="-10" y="-72" font-size="16">${pj}</text>`}:{};
+  let people="";
+  if(a<3) people=fig(360,62,col.m)+fig(402,68,col.f)+fig(380,20,col.c);
+  else if(a<10) people=fig(360,60,col.m)+fig(402,66,col.f)+fig(380,36,col.c,{extra:`<rect x="-15" y="-28" width="10" height="14" rx="3" fill="#d07a3c"/>`});
+  else if(a<19) people=fig(370,64,col.f)+fig(415,50,col.c,{extra:`<text x="-8" y="-62" font-size="15">📚</text>`});
+  else if(a<30) people=fig(375,64,col.s,hat);
+  else if(a<50) people=fig(360,66,col.s,hat)+fig(400,62,col.e)+(g.s.r>=45?fig(430,36,col.c):"");
+  else if(a<65) people=fig(360,64,col.s,hat)+fig(400,60,col.e)+fig(440,64,col.c);
+  else people=fig(370,56,"#9a8f86",{extra:`<rect x="14" y="-40" width="3" height="40" fill="${ink}"/>`})+(g.s.r>=50?fig(412,30,col.c)+fig(440,58,col.m):"");
+  const s=back+house+people;
+  return STYLE==="px"?pixelate(s):s;
+}
+function sceneSVG(g,age,opt={}){
+  const id="sg"+(sceneN++), t=opt.t!=null?opt.t:clamp(age/100,0,1);
+  const [a,b]=skyColors(t);
+  const lift=Math.max(0,Math.round(600/(opt.ar||2.6)-220));
+  const [sx,sy]=sunXY(t,lift);
+  const hot=clamp((t-.7)/.3,0,1), night=clamp((t-.88)/.12,0,1);
+  const main=opt.main?' id="msc"':"";
+  const clouds=[[100,48,1],[318,30,.8],[492,58,1.15]].map(([x,y,k])=>`<g opacity="${(.8-night*.6).toFixed(2)}" transform="translate(${x},${y}) scale(${k})"><ellipse cx="0" cy="0" rx="26" ry="9" fill="#fff"/><ellipse cx="-12" cy="-6" rx="13" ry="10" fill="#fff"/><ellipse cx="10" cy="-8" rx="15" ry="12" fill="#fff"/></g>`).join("");
+  const stars=[[60,20-lift*.6],[250,40-lift*.8],[450,10-lift*.4],[60,20],[130,45],[220,15],[310,35],[400,18],[470,42],[540,22],[90,70],[350,60],[510,80],[180,90],[580,60]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.5" fill="#fff"/>`).join("");
+  const inner=g?sceneInner(g,age):"";
+  return `<svg viewBox="0 ${-lift} 600 ${220+lift}" preserveAspectRatio="xMidYMax slice"${main} data-lift="${lift}" role="img"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}" class="k0"/><stop offset="1" stop-color="${b}" class="k1"/></linearGradient></defs>`+
+   `<rect y="${-lift}" width="600" height="${220+lift}" fill="url(#${id})"/><g class="stars" opacity="${night.toFixed(2)}">${stars}</g>`+
+   `<circle class="halo" r="30" cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" fill="#ffd36b" opacity=".25"/><circle class="sun" r="17" cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" fill="rgb(255,${Math.round(211-hot*90)},${Math.round(107-hot*40)})"/>`+
+   `<g class="clouds">${clouds}</g>`+
+   `<g transform="translate(0,50)"><path d="M0 170V122C70 105 120 112 190 124S320 108 400 118 540 112 600 122V170Z" fill="var(--hill1)"/></g>`+
+   `<g transform="translate(0,48)" class="world">${inner}</g>`+
+   `<g transform="translate(0,62)"><path d="M0 160V150C90 140 150 146 230 150S380 140 470 147 560 144 600 147V160Z" fill="var(--hill2)"/></g></svg>`;
+}
+const sunXY=(t,lift)=>{const u=.06+.88*clamp(t,0,1);return [40+520*u,150-(118+lift*.75)*Math.sin(Math.PI*u)]};
+let skyT=0, skyRaf=0;
+function paintMain(t){
+  const sv=document.getElementById("msc"); if(!sv) return;
+  const [a,b]=skyColors(t);
+  sv.querySelector(".k0").setAttribute("stop-color",a); sv.querySelector(".k1").setAttribute("stop-color",b);
+  const [x,y]=sunXY(t,+sv.dataset.lift||0).map(v=>v.toFixed(1));
+  for(const n of sv.querySelectorAll(".sun,.halo")){n.setAttribute("cx",x);n.setAttribute("cy",y)}
+  const hot=clamp((t-.7)/.3,0,1), night=clamp((t-.88)/.12,0,1);
+  sv.querySelector(".sun").setAttribute("fill",`rgb(255,${Math.round(211-hot*90)},${Math.round(107-hot*40)})`);
+  sv.querySelector(".stars").setAttribute("opacity",night.toFixed(2));
+  sv.querySelectorAll(".clouds>g").forEach(c=>c.setAttribute("opacity",(.8-night*.6).toFixed(2)));
+}
+/* 큰 장면: 처음 그릴 때는 이전 하늘에서 시작해 새 나이로 부드럽게 넘어가요 */
+function drawMain(age,dur=900){
+  const el=document.getElementById("pScene"); if(!el||!G) return;
+  if(!document.getElementById("msc")) el.innerHTML=sceneSVG(G,age,{main:1,t:skyT,ar:el.clientWidth/el.clientHeight||2.3});
+  else document.querySelector("#msc .world").innerHTML=sceneInner(G,age);
+  const target=clamp(age/100,0,1), from=skyT;
+  cancelAnimationFrame(skyRaf);
+  if(Math.abs(target-from)<.001){skyT=target;paintMain(target);return}
+  const t0=performance.now();
+  const step=now=>{const u=clamp((now-t0)/sp(dur),0,1),e=1-Math.pow(1-u,3);skyT=from+(target-from)*e;paintMain(skyT);if(u<1) skyRaf=requestAnimationFrame(step)};
+  skyRaf=requestAnimationFrame(step);
+}
+/* 도트 그림체: 좌표를 4칸 격자에 맞추고 원은 네모 블록으로 바꿔요 */
+function pixelate(svg){
+  const q=v=>Math.round(parseFloat(v)/4)*4;
+  svg=svg.replace(/<circle cx="([-\d.]+)" cy="([-\d.]+)" r="([-\d.]+)"/g,(m,x,y,r)=>`<rect x="${q(x-r)}" y="${q(y-r)}" width="${Math.max(4,q(r*2))}" height="${Math.max(4,q(r*2))}"`);
+  svg=svg.replace(/<rect ([^>]*?)\/?>/g,m=>m.replace(/\b(x|y|width|height)="([-\d.]+)"/g,(mm,k,v)=>`${k}="${k==="width"||k==="height"?Math.max(2,q(v)):q(v)}"`).replace(/ rx="[^"]*"/,""));
+  return svg.replace(/<g /g,'<g shape-rendering="crispEdges" ');
 }
 function mapSVG(mode,hl){
   const M=MAP,W=M.cols*6,H=M.rows*6;
@@ -565,118 +920,29 @@ function mapSVG(mode,hl){
   if(mode==="all"){
     for(const c of COUNTRIES){
       const p=M.cen[c[0]]; if(!p) continue; const [x,y]=px(p[0],p[1]);
-      const r=(2+Math.sqrt(c[5]/1e6)*2.4).toFixed(1);
+      const r=(2+Math.sqrt(c[5]/1e6)*2.6).toFixed(1);
       dots+=`<circle class="bd" style="animation-delay:${(c[5]%17)/6}s" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}"/>`;
     }
   } else if(hl){
     const p=M.cen[hl]; if(p){const [x,y]=px(p[0],p[1]);
-      dots=`<circle class="ring" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10"/><circle class="ring r2" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10"/><circle class="pin" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5"/>`;}
+      dots=`<circle class="ring" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10"/><circle class="ring r2" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10"/><circle class="pin" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6"/>`;}
   }
   return `<svg class="map" viewBox="0 0 ${W} ${H}" role="img"><path class="land" d="${land}"/>${dots}</svg>`;
 }
-let sky={t:0,raf:0,built:false};
-function skyHTML(){
-  return `<div class="sky" id="sky"><svg viewBox="0 0 600 170" preserveAspectRatio="xMidYMax slice">
-    <g id="stars" opacity="0">${[[60,20],[130,45],[220,15],[310,35],[400,18],[470,42],[540,22],[90,70],[350,60],[510,70]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.4" fill="#fff"/>`).join("")}</g>
-    <circle id="sun" r="16" cx="40" cy="120" fill="#ffd36b"/><circle id="halo" r="28" cx="40" cy="120" fill="#ffd36b" opacity=".25"/>
-    <g transform="translate(0,20)"><path d="M0 150V122C70 105 120 112 190 124S320 108 400 118 540 112 600 122V150Z" fill="var(--hill1)"/>
-    <path d="M0 150V135C90 124 150 132 230 138S380 126 470 134 560 130 600 134V150Z" fill="var(--hill2)"/></g>
-    <g id="world"></g>
-  </svg><div class="skycap"></div></div>`;
-}
-function paintSky(t){
-  const el=document.getElementById("sky"); if(!el) return;
-  const [a,b]=skyColors(t);
-  el.style.background=`linear-gradient(${a},${b})`;
-  const u=.06+.88*clamp(t,0,1), x=40+520*u, y=140-112*Math.sin(Math.PI*u);
-  for(const id of ["sun","halo"]){const n=document.getElementById(id);n.setAttribute("cx",x.toFixed(1));n.setAttribute("cy",y.toFixed(1));}
-  const hot=clamp((t-.7)/.3,0,1);
-  document.getElementById("sun").setAttribute("fill",`rgb(255,${Math.round(211-hot*90)},${Math.round(107-hot*40)})`);
-  document.getElementById("stars").setAttribute("opacity",clamp((t-.88)/.12,0,1).toFixed(2));
-}
-/* 종이 오림 같은 장면: 집은 살림 수준, 사람들은 나이와 가족에 따라 달라져요 */
-function drawWorld(age){
-  const g=document.getElementById("world"); if(!g||!G) return;
-  const Y=160, w=G.s.w, skin=G.skin, ink="#4a4036";
-  const fig=(x,h,col,o={})=>`<g transform="translate(${x},${Y})${o.flip?" scale(-1,1)":""}">`+
-    `<rect x="${-h*.12}" y="${-h*.24}" width="${h*.08}" height="${h*.24}" rx="2" fill="${ink}"/><rect x="${h*.04}" y="${-h*.24}" width="${h*.08}" height="${h*.24}" rx="2" fill="${ink}"/>`+
-    `<rect x="${-h*.15}" y="${-h*.66}" width="${h*.3}" height="${h*.46}" rx="${h*.1}" fill="${col}"/>`+
-    `<circle cx="0" cy="${-h*.78}" r="${h*.17}" fill="${o.skin||skin}"/>`+(o.extra||"")+`</g>`;
-  const col={m:"#c9594c",f:"#4f7fb3",s:"#e0a53c",c:"#5aa27a",e:"#8a6fb0"};
-  let house="";
-  const hx=120;
-  if(w<30) house=`<rect x="${hx-30}" y="${Y-30}" width="60" height="30" fill="#b08a5a"/><path d="M${hx-38} ${Y-30}L${hx} ${Y-52}L${hx+38} ${Y-30}Z" fill="#7a5a3a"/><rect x="${hx-6}" y="${Y-18}" width="12" height="18" fill="#5b4330"/>`;
-  else if(w<55) house=`<rect x="${hx-38}" y="${Y-40}" width="76" height="40" fill="#e6d3b0"/><path d="M${hx-46} ${Y-40}L${hx} ${Y-68}L${hx+46} ${Y-40}Z" fill="#b0523f"/><rect x="${hx-8}" y="${Y-24}" width="16" height="24" fill="#7a5a3a"/><rect x="${hx+16}" y="${Y-32}" width="14" height="12" fill="#bfe0f0"/>`;
-  else if(w<75) house=`<rect x="${hx-44}" y="${Y-46}" width="88" height="46" fill="#efe2c4"/><path d="M${hx-52} ${Y-46}L${hx} ${Y-78}L${hx+52} ${Y-46}Z" fill="#a8483b"/><rect x="${hx+22}" y="${Y-96}" width="9" height="26" fill="#8a5a46"/><rect x="${hx-8}" y="${Y-28}" width="16" height="28" fill="#6a4a38"/><rect x="${hx-34}" y="${Y-36}" width="14" height="14" fill="#bfe0f0"/><rect x="${hx+20}" y="${Y-36}" width="14" height="14" fill="#bfe0f0"/>`;
-  else house=`<rect x="${hx-52}" y="${Y-66}" width="104" height="66" fill="#f2e9da"/><rect x="${hx-52}" y="${Y-74}" width="104" height="10" fill="#4d6a8a"/><rect x="${hx-8}" y="${Y-30}" width="16" height="30" fill="#4d6a8a"/>`+[-38,-18,16,36].map(dx=>`<rect x="${hx+dx-6}" y="${Y-54}" width="12" height="14" fill="#bfe0f0"/>`).join("")+`<rect x="${hx-38}" y="${Y-28}" width="14" height="12" fill="#bfe0f0"/><rect x="${hx+26}" y="${Y-28}" width="14" height="12" fill="#bfe0f0"/>`;
-  let back="";
-  if(G.urban){ [[20,60],[58,90],[96,50],[300,70],[338,100],[378,56],[430,84],[470,62],[512,94],[552,58]].forEach(([x,h],i)=>{back+=`<rect x="${x}" y="${Y-h-4}" width="30" height="${h}" fill="rgba(110,120,140,.38)"/>`}); }
-  else { [[40,0],[250,1],[480,0],[560,1]].forEach(([x,k])=>{back+=`<rect x="${x-2}" y="${Y-26}" width="4" height="26" fill="#6b4a33"/><circle cx="${x}" cy="${Y-34}" r="${14+k*4}" fill="#4f8a55"/>`}); }
-  const a=age;
-  let people="";
-  const pj=G.job?"💼":"";
-  if(a<3){ people=fig(330,62,col.m)+fig(372,68,col.f)+fig(350,20,col.c,{extra:""}); }
-  else if(a<10){ people=fig(330,60,col.m)+fig(372,66,col.f)+fig(350,36,col.c,{extra:`<rect x="${-6}" y="-28" width="10" height="14" rx="3" fill="#d07a3c" transform="translate(-9,0)"/>`}); }
-  else if(a<19){ people=fig(340,64,col.f)+fig(385,50,col.c,{extra:`<text x="-8" y="-62" font-size="15">📚</text>`}); }
-  else if(a<30){ people=fig(345,64,col.s,{extra:pj?`<text x="-10" y="-70" font-size="16">${pj}</text>`:""}); }
-  else if(a<50){ people=fig(330,66,col.s,{extra:pj?`<text x="-10" y="-72" font-size="16">${pj}</text>`:""})+fig(370,62,col.e)+(G.s.r>=45?fig(400,36,col.c):""); }
-  else if(a<65){ people=fig(330,64,col.s,{extra:pj?`<text x="-10" y="-70" font-size="16">${pj}</text>`:""})+fig(370,60,col.e)+fig(410,64,col.c); }
-  else { people=fig(340,56,"#9a8f86",{extra:`<rect x="14" y="-40" width="3" height="40" fill="${ink}"/>`})+(G.s.r>=50?fig(382,30,col.c)+fig(410,58,col.m):""); }
-  g.innerHTML=STYLE==="px"?pixelate(back+house+people):back+house+people;
-}
-/* 도트 그림체: 좌표를 4칸 격자에 맞추고 원은 네모 블록으로 바꿔요 */
-function pixelate(svg){
-  const q=v=>Math.round(parseFloat(v)/4)*4;
-  svg=svg.replace(/<circle cx="([-\d.]+)" cy="([-\d.]+)" r="([-\d.]+)"/g,(m,x,y,r)=>`<rect x="${q(x-r)}" y="${q(y-r)}" width="${Math.max(4,q(r*2))}" height="${Math.max(4,q(r*2))}"`);
-  svg=svg.replace(/<rect ([^>]*?)\/?>/g,m=>m.replace(/\b(x|y|width|height)="([-\d.]+)"/g,(mm,k,v)=>`${k}="${k==="width"||k==="height"?Math.max(2,q(v)):q(v)}"`).replace(/ rx="[^"]*"/,""));
-  return svg.replace(/<g /g,'<g shape-rendering="crispEdges" ');
-}
-function setSky(age,ended){
-  drawWorld(age);
-  const target=clamp(age/100,0,1), from=sky.t;
-  cancelAnimationFrame(sky.raf);
-  const t0=performance.now(), dur=ended?1200:900;
-  const step=now=>{const u=clamp((now-t0)/dur,0,1),e=1-Math.pow(1-u,3);sky.t=from+(target-from)*e;paintSky(sky.t);if(u<1) sky.raf=requestAnimationFrame(step)};
-  if(from===target||!document.getElementById("sky")){sky.t=target;paintSky(target)}else sky.raf=requestAnimationFrame(step);
-  const cap=document.querySelector(".skycap"); if(cap) cap.textContent=UI.sun_note[LI];
-}
-function heroHTML(h){
-  if(!h) return "";
-  if(h.type==="map") return `<div class="hero">${mapSVG(h.mode,h.iso)}<div class="mapcap">${h.cap||""}</div></div>`;
-  if(h.type==="sky") return `<div class="hero">${skyHTML()}</div>`;
-  return "";
-}
-const sceneBG=age=>{const [a,b]=skyColors(clamp(age/100,0,1));return `linear-gradient(${a},${b})`};
-function statsHTML(prev){
-  const names=ST();
-  return `<div class="stats">`+STATKEYS.map((k,i)=>{
-    const v=Math.round(G.s[k]), pv=prev?Math.round(prev[k]):v, d=v-pv;
-    return `<div class="stat"><div class="si">${STAT_ICON[i]}</div>${names[i]}<b data-to="${v}" data-from="${pv}">${pv}</b><div class="bar"><i data-w="${v}" style="width:${pv}%"></i></div>${d?`<span class="chip ${d>0?"up":"dn"}">${d>0?"+":""}${d}</span>`:""}</div>`;
-  }).join("")+`</div>`;
-}
-function animateStats(){
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    app.querySelectorAll(".bar i[data-w]").forEach(i=>i.style.width=i.dataset.w+"%");
-    app.querySelectorAll(".stat b[data-to]").forEach(b=>{
-      const f=+b.dataset.from,t=+b.dataset.to; if(f===t) return;
-      const t0=performance.now(); const st=now=>{const u=clamp((now-t0)/700,0,1);b.textContent=Math.round(f+(t-f)*u);if(u<1)requestAnimationFrame(st)};requestAnimationFrame(st);
-    });
-  }));
-}
-function curveSVG(){
-  const W=600,H=220,pad=28,mx=Math.max(20,G.ended.age);
-  const X=a=>pad+(W-pad*2)*a/mx, Y=v=>H-pad-(H-pad*2)*v/100;
-  const COL=["#d9534f","#c28a1d","#3f8f6b","#5b6fd6","#8e5bb5"];
-  let g=`<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="var(--line)"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="var(--line)"/>`;
-  [0,25,50,75,100].forEach(v=>{g+=`<line x1="${pad}" x2="${W-pad}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-dasharray="2 4" opacity=".6"/>`});
-  STATKEYS.forEach((k,i)=>{
-    const pts=G.hist.map(h=>`${X(h.a).toFixed(1)},${Y(h[k]).toFixed(1)}`).join(" ");
-    g+=`<polyline class="cl" points="${pts}" fill="none" stroke="${COL[i]}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" style="animation-delay:${i*.15}s"/>`;
-    const l=G.hist[G.hist.length-1];g+=`<circle cx="${X(l.a).toFixed(1)}" cy="${Y(l[k]).toFixed(1)}" r="4" fill="${COL[i]}"/>`;
-  });
-  g+=`<text x="${pad}" y="${H-8}" font-size="11" fill="var(--muted)">0</text><text x="${W-pad}" y="${H-8}" font-size="11" text-anchor="end" fill="var(--muted)">${G.ended.age}</text>`;
-  const names=ST();
-  return `<svg viewBox="0 0 ${W} ${H}" class="curve">${g}</svg><div class="legend">${STATKEYS.map((k,i)=>`<span><i style="background:${COL[i]}"></i>${STAT_ICON[i]} ${names[i]}</span>`).join("")}</div>`;
+
+const STAT_ICON=["💪","🪙","🌤️","🤝","🛠️"];
+const STAT_COL=["#d9534f","#c28a1d","#3f8f6b","#5b6fd6","#8e5bb5"];
+const STAGE_ICON=["🍼","🎒","🧭","🌱","🏙️","🍂","🌇"];
+const dark=()=>window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches;
+const SKY_L=[[0,"#ffd9a8","#fff1d6"],[.1,"#f7c9b0","#ffe9cf"],[.14,"#a9cff5","#ffe7cc"],[.2,"#8ec5ff","#d6efff"],[.5,"#5aa9f0","#bfe3ff"],[.75,"#f3b36b","#ffe0b0"],[.9,"#d9776b","#f3b58c"],[1,"#2b2f5a","#6a5a8a"]];
+const SKY_D=[[0,"#3a2a2a","#5a3f33"],[.12,"#3b3346","#5a4038"],[.2,"#1f3b5a","#2d5273"],[.5,"#153a63","#245a86"],[.75,"#5a3a1f","#8a5a2f"],[.9,"#4a2230","#7a3a3a"],[1,"#0d0f24","#23244a"]];
+const hexRGB=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+function skyColors(t){
+  const L=dark()?SKY_D:SKY_L; t=clamp(t,0,1);
+  let i=0; while(i<L.length-2&&t>L[i+1][0]) i++;
+  const a=L[i],b=L[i+1],u=(t-a[0])/(b[0]-a[0]);
+  const mix=(x,y)=>"rgb("+hexRGB(x).map((v,k)=>Math.round(v+(hexRGB(y)[k]-v)*u)).join(",")+")";
+  return [mix(a[1],b[1]),mix(a[2],b[2])];
 }
 const EVICON=["🎒","🏠","🤒","🏫","🎂","🪣","📚","👶","🧭","📉","💌","🛵","🎓","📱","✈️","💼","💍","🩺","🌍","🕊️","🔑","🏪","🍼","🎲","🏥","⚡","🔥","✏️","🗣️","🔄","🪺","🚨","🤝","🏡","🌇","🪙","👧","💊","🕯️"];
 
@@ -690,19 +956,20 @@ const fmtN=n=>{
 };
 const totalBirths=COUNTRIES.reduce((s,c)=>s+c[5],0);
 const WORLD=(()=>{const f=i=>{let s=0,w=0;for(const c of COUNTRIES){if(c[i]!=null){s+=c[i]*c[5];w+=c[5]}}return s/w};return{gdp:f(8),le:f(6),imr:f(7),fert:f(9)}})();
-function countryCard(c){
+const shareOf=c=>Math.round(c[5]/totalBirths*1000)/10;
+function indRows(c){
   const rows=[
     ["ind_gdp",c[8],WORLD.gdp,80000,v=>"$"+Math.round(v).toLocaleString()],
     ["ind_le",c[6],WORLD.le,90,v=>ui("unit_yr",{n:v.toFixed(1)})],
     ["ind_imr",c[7],WORLD.imr,100,v=>v.toFixed(1)],
     ["ind_fert",c[9],WORLD.fert,7,v=>v.toFixed(2)]];
-  return `<div class="card"><h2>${ui("ctry_h",{place:place(c)})}</h2>`+rows.map(([k,v,w,mx,f])=>
+  return rows.map(([k,v,w,mx,f])=>
     `<div class="ind"><div class="il"><span>${UI[k][LI]}</span><b>${v==null?UI.na[LI]:f(v)}</b></div><div class="ibar"><i style="width:${v==null?0:Math.min(100,v/mx*100)}%"></i><u style="left:${Math.min(100,w/mx*100)}%"></u></div></div>`).join("")+
-    `<p class="mut" style="font-size:12px;margin:8px 0 0">${UI.ctry_vs[LI]}</p></div>`;
+    `<div class="legend"><span><i style="background:var(--brand)"></i>${place(c)}</span><span><u></u>${UI.world_avg[LI]}</span></div>`;
 }
-const srcHTML=()=>`<div class="card src"><h2>${UI.src_h[LI]}</h2><p style="margin:0;font-size:13px;color:var(--soft)">${UI.src_p[LI]} <a href="https://data.worldbank.org/" target="_blank" rel="noopener">data.worldbank.org</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></p></div>`;
+const srcP=()=>`${UI.src_p[LI]} <a href="https://data.worldbank.org/" target="_blank" rel="noopener">data.worldbank.org</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>`;
 
-/* ---------- 언어 ---------- */
+/* ---------- 언어·설정 ---------- */
 function setLang(l,keep){
   if(!LANGS.some(x=>x[0]===l)) l="ko";
   LANG=l; LI=LANGS.findIndex(x=>x[0]===l);
@@ -713,23 +980,57 @@ function setLang(l,keep){
 const SPEEDS=[1,2,4];
 let SPEED=SPEEDS.includes(store.get("speed"))?store.get("speed"):1, AUTO=false, STYLE=store.get("style")==="px"?"px":"paper";
 const sp=ms=>ms/SPEED;
-function ctrlBar(){
-  return `<button data-ctl="speed" title="${UI.speed_t[LI]}">⏩ ${SPEED}×</button><button data-ctl="auto" class="${AUTO?"on":""}" title="${UI.auto_t[LI]}">▶ ${UI.auto[LI]}</button><button data-ctl="style" class="${STYLE==="px"?"on":""}" title="${UI.style_t[LI]}">🎮 ${STYLE==="px"?UI.style_px[LI]:UI.style_paper[LI]}</button>`;
-}
-function langBar(){
-  return `<div class="langs">${ctrlBar()}<span class="sep"></span>${LANGS.map(([c,n])=>`<button data-lang="${c}" class="${c===LANG?"on":""}">${n}</button>`).join("")}</div>`;
-}
-function bindLang(){
-  langEl.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
-  langEl.querySelectorAll("[data-ctl]").forEach(b=>b.onclick=()=>{
+const langSeg=()=>`<div class="seg" role="group" aria-label="${UI.menu_lang[LI]}">${LANGS.map(([c,n])=>`<button data-lang="${c}" class="${c===LANG?"on":""}">${n}</button>`).join("")}</div>`;
+const langSel=()=>`<select class="tbtn" data-lsel aria-label="${UI.menu_lang[LI]}">${LANGS.map(([c,n])=>`<option value="${c}"${c===LANG?" selected":""}>${n}</option>`).join("")}</select>`;
+const styleBtn=()=>`<button class="tbtn${STYLE==="px"?" on":""}" data-ctl="style" title="${UI.style_t[LI]}">${STYLE==="px"?"👾":"✂️"} ${STYLE==="px"?UI.style_px[LI]:UI.style_paper[LI]}</button>`;
+const speedBtn=()=>`<button class="tbtn" data-ctl="speed" title="${UI.speed_t[LI]}">⏩ ${SPEED}×</button>`;
+const autoBtn=()=>`<button class="tbtn${AUTO?" on":""}" data-ctl="auto" title="${UI.auto_t[LI]}">${AUTO?"⏸":"▶"} ${UI.auto[LI]}</button>`;
+function bindCtl(root){
+  root.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
+  root.querySelectorAll("[data-lsel]").forEach(s=>s.onchange=()=>setLang(s.value));
+  root.querySelectorAll("[data-home]").forEach(b=>b.onclick=()=>{ if(MODE==="play"&&!confirm(UI.leave_q[LI])) return; AUTO=false; renderStart(); });
+  root.querySelectorAll("[data-ctl]").forEach(b=>b.onclick=()=>{
     const k=b.dataset.ctl;
     if(k==="speed"){SPEED=SPEEDS[(SPEEDS.indexOf(SPEED)+1)%SPEEDS.length];store.set("speed",SPEED)}
     if(k==="auto"){AUTO=!AUTO}
-    if(k==="style"){STYLE=STYLE==="px"?"paper":"px";store.set("style",STYLE);applyStyle();if(G)drawWorld(G.shownAge||G.age)}
-    langEl.innerHTML=langBar(); bindLang(); autoStep();
+    if(k==="style"){STYLE=STYLE==="px"?"paper":"px";store.set("style",STYLE);applyStyle();restyle()}
+    root.querySelectorAll("[data-ctl]").forEach(x=>{const kk=x.dataset.ctl;x.outerHTML=kk==="speed"?speedBtn():kk==="auto"?autoBtn():styleBtn()});
+    bindCtl(root); autoStep();
   });
 }
 function applyStyle(){ document.body.classList.toggle("px",STYLE==="px"); }
+function restyle(){
+  if(G&&document.getElementById("msc")) document.querySelector("#msc .world").innerHTML=sceneInner(G,G.shownAge||0);
+  if(MODE==="start") paintBaby();
+  if(MODE==="end"&&view) view();
+}
+let MODE="start";
+function topStart(){
+  topEl.innerHTML=`<div class="top-in"><button class="brand" data-home>${LOGO}<span>${UI.title[LI]}</span></button><span class="sp"></span><div class="ctrls">${styleBtn()}<span class="only-d">${langSeg()}</span><span class="only-m">${langSel()}</span></div></div>`;
+  bindCtl(topEl);
+}
+function dayBar(age){
+  const a=clamp(age,0,100), le=clamp(G.c[6],0,100);
+  return `<div class="daybar" title="${UI.sun_note[LI]}"><i class="cov" style="width:${100-a}%"></i><i class="le" style="left:${le}%" title="${UI.ind_le[LI]} ${G.c[6].toFixed(1)}"></i><i class="me" style="left:${a}%"></i></div>`;
+}
+function topPlay(){
+  const a=G.shownAge||0;
+  const who=`${place(G.c)} · ${UI.stages[G.stageIdx][LI]}${G.job?` · ${G.job.n[LI]}`:""}`;
+  topEl.innerHTML=`<div class="top-in">
+    <button class="brand only-d" data-home title="${UI.back[LI]}">${LOGO}</button>
+    <div class="hud-age" id="hAge">${ageParts(a)}</div>
+    <div class="hud-who"><b>${esc(G.name)}</b><span>${who}</span></div>
+    <span class="only-d" style="flex:1;display:flex;justify-content:center">${dayBar(a)}</span>
+    <span class="sp only-m"></span>
+    <div class="ctrls">${speedBtn()}${autoBtn()}<span class="only-d" style="gap:6px">${styleBtn()}${langSel()}</span><button class="tbtn ic" data-home title="${UI.back[LI]}" aria-label="${UI.back[LI]}">✕</button></div>
+  </div><div class="hud2">${dayBar(a)}<div class="mini" id="hMini">${miniStats()}</div></div>`;
+  bindCtl(topEl);
+}
+const miniStats=()=>ST().map((n,i)=>`<div>${STAT_ICON[i]} ${n}<b>${Math.round(G.s[STATKEYS[i]])}</b></div>`).join("");
+function hudAge(a){
+  const b=document.querySelector("#hAge b"); if(b) b.textContent=a;
+  document.querySelectorAll(".top .daybar").forEach(d=>{const x=clamp(a,0,100);d.querySelector(".cov").style.width=(100-x)+"%";d.querySelector(".me").style.left=x+"%"});
+}
 /* 자동 진행: 켜 두면 선택 가능한 보기 중 하나를 골라 계속 이어가요 */
 let autoT=0;
 function autoStep(){
@@ -740,11 +1041,6 @@ function autoStep(){
     const bs=[...app.querySelectorAll("button[data-i]")]; if(bs.length){bs[Math.floor(Math.random()*bs.length)].click()}
   },sp(1400));
 }
-function show(html,bind,hero){
-  langEl.innerHTML=langBar(); bindLang();
-  if(hero&&hero.type==="sky"){ if(!document.getElementById("sky")){heroEl.innerHTML=heroHTML(hero);paintSky(sky.t)} setSky(hero.age,hero.ended); }
-  else heroEl.innerHTML=heroHTML(hero);
-  app.innerHTML=html; if(bind) bind(); autoStep(); }
 
 /* ---------- 출생 ---------- */
 function weightedBirth(){
@@ -752,12 +1048,12 @@ function weightedBirth(){
   for(const c of COUNTRIES){ x-=c[5]; if(x<=0) return c; }
   return COUNTRIES[0];
 }
-function newLife(seed){
+function newLife(seed,force){
   rnd=seed?mulberry(seed):Math.random;
-  const c=weightedBirth();
+  const c=force&&force.c||weightedBirth();
   const inc=c[4], le=c[6], imr=c[7];
-  const sex=rnd()<0.512?"m":"f";
-  const fam=clamp(Math.round([14,30,50,72][inc]+randn()*17));
+  let sex=rnd()<0.512?"m":"f"; if(force&&force.sex) sex=force.sex;
+  let fam=clamp(Math.round([14,30,50,72][inc]+randn()*17)); if(force&&force.fam!=null) fam=force.fam;
   const famTier=fam<25?0:fam<48?1:fam<70?2:3;
   const imrP=(imr==null?[45,25,12,4][inc]:imr)/1000;
   let lifespan;
@@ -782,23 +1078,56 @@ function newLife(seed){
   rnd=Math.random;
   return g;
 }
-
-/* ---------- 화면 ---------- */
-function fxText(fx){
+/* 같은 날 정반대 형편에서 태어난 아이: 내가 고른 만큼 같이 변하고, 출발만 달라요 */
+function makeTwin(g){
+  const r=mulberry(Math.abs(hashStr(g.name+g.c[0]+g.seed))+11);
+  const up=g.c[4]<=1||g.famTier<=1;
+  const pool=COUNTRIES.filter(c=>c[0]!==g.c[0]&&(up?c[4]===3:c[4]===0));
+  let x=r()*pool.reduce((a,c)=>a+c[5],0), c=pool[0];
+  for(const k of pool){x-=k[5];if(x<=0){c=k;break}}
+  const t=newLife(Math.floor(r()*1e9)+1,{c,sex:g.sex,fam:up?Math.round(78+r()*15):Math.round(6+r()*14)});
+  t.urban=up; t.s0={...t.s}; t.locked=0;
+  return t;
+}
+function syncTwin(){
+  const T=G.twin; if(!T) return null;
+  const g0=G.hist[0];
+  for(const k of STATKEYS) T.s[k]=clamp(T.s0[k]+(G.s[k]-g0[k]));
+  T.age=G.age; T.stageIdx=G.stageIdx; T.job=G.job;
+  return T;
+}
+function twinHTML(){
+  const T=syncTwin(); if(!T) return "";
+  const e=cur.e, nm=esc(T.name);
+  const head=`<div class="tw-h"><span class="tw-badge">🔀</span><div><b>${ui("tw_ev",{name:nm})}</b><span>${place(T.c)} · ${UI.tiers[T.famTier][LI]}</span></div></div>`;
+  if(e.ok&&!e.jobs&&!e.ok(T)) return `<div class="twin">${head}<p class="tw-none">${ui("tw_none",{name:nm})}</p></div>`;
+  if(!cur.tch) cur.tch=e.jobs?jobChoices(T,e):e.ch;
+  const mine=new Map(cur.ch.map(c=>[c.l,!(c.req&&!c.req(G))]));
+  let diff=0;
+  const rows=cur.tch.map(c=>{
+    const open=!(c.req&&!c.req(T)), lab=tr(c.l,T), me=mine.get(c.l);
+    const flag=me===false&&open?"open":me===true&&!open?"shut":"";
+    if(flag) diff++;
+    return `<li class="${open?"":"lk"} ${flag}"><i>${open?"✓":"🔒"}</i><span>${lab}${!open?`<small>${tr(c.why,T)}</small>`:""}${flag?`<em>${UI[flag==="open"?"tw_open":"tw_shut"][LI]}</em>`:""}</span></li>`;
+  }).join("");
+  if(!cur.twLogged){cur.twLogged=true;T.locked+=cur.tch.filter(c=>c.req&&!c.req(T)).length}
+  return `<div class="twin">${head}<ul class="tw-l">${rows}</ul>${diff?"":`<p class="tw-none">${UI.tw_same[LI]}</p>`}</div>`;
+}
+function twinBox(){
+  const T=syncTwin(); if(!T) return "";
+  const n=G.locked.length, m=T.locked, mx=Math.max(1,n,m);
+  return `<div class="box twbox"><div class="box-h"><h3>🔀 ${UI.tw_h[LI]}</h3></div>
+    <div class="tw-who"><b>${esc(T.name)}</b><span>${place(T.c)} · ${UI.tiers[T.famTier][LI]} · ${UI.hh_place[LI][T.urban?0:1]}</span></div>
+    <div class="vs"><div><span>${UI.you[LI]} · ${place(G.c)}</span><i><u style="width:${n/mx*100}%"></u></i><b>${n}</b></div><div><span>${esc(T.name.split(" ")[0])} · ${place(T.c)}</span><i><u class="t" style="width:${m/mx*100}%"></u></i><b>${m}</b></div></div>
+    <p class="cap">${UI.tw_doors[LI]} · ${UI.tw_p[LI]}</p></div>`;
+}
+function fxDeltas(fx){
   if(!fx) return "";
   const names=ST();
-  const t=Object.entries(fx).filter(([,v])=>v).map(([k,v])=>`${names[STATKEYS.indexOf(k)]} ${v>0?"+":""}${v}`);
-  return t.length?`<div class="fx">${t.join(" · ")}</div>`:"";
+  const t=Object.entries(fx).filter(([,v])=>v).map(([k,v])=>`<span class="dl ${v>0?"up":"dn"}">${STAT_ICON[STATKEYS.indexOf(k)]} ${names[STATKEYS.indexOf(k)]} ${v>0?"+":""}${v}</span>`);
+  return t.length?`<div class="deltas">${t.join("")}</div>`:"";
 }
 function applyFx(fx){ if(fx) for(const k in fx) G.s[k]=clamp(G.s[k]+fx[k]); }
-
-function dailyBox(){
-  const prev=store.get("daily"), done=prev&&prev.date===todayStr();
-  return `<div class="card"><h2>${ui("daily_h",{d:todayStr()})}</h2>
-    <p style="margin-top:0">${ui("daily_p")}</p>
-    ${done?`<p class="res">${ui("daily_rec",{t:prev.text&&prev.text[LI]||""})}</p>`:""}
-    <button class="btn primary" id="daily">${ui(done?"daily_again":"daily_go")}</button></div>`;
-}
 const friend=(()=>{
   try{
     const p=new URLSearchParams(location.search);
@@ -807,64 +1136,205 @@ const friend=(()=>{
   }catch(e){}
   return null;
 })();
-function friendBox(){
-  if(!friend) return "";
-  return `<div class="card friend"><p style="margin:0">${ui("friend",{place:place(friend.c),sex:UI.sex_adult[LI][friend.s==="m"?0:1],age:friend.a,title:UI.titles[friend.k][LI]})}</p></div>`;
+
+/* ---------- 시작 화면 ---------- */
+const PAGE_T0=Date.now(), PER_SEC=totalBirths/31557600;
+const IMR_SUM=COUNTRIES.reduce((a,c)=>a+c[5]*((c[7]==null?[45,25,12,4][c[4]]:c[7])/1000),0)/totalBirths;
+const SHARE_LOW=COUNTRIES.filter(c=>c[4]<=1).reduce((a,c)=>a+c[5],0)/totalBirths;
+const SHARE_SHORT=COUNTRIES.filter(c=>c[6]!=null&&c[6]<65).reduce((a,c)=>a+c[5],0)/totalBirths;
+const dailySeed=()=>Number(todayStr().replace(/-/g,""));
+let sampleSeed=Math.floor(Math.random()*1e6), babyK=0, babyT=0, tickT=0;
+function babyOf(k){ return newLife(sampleSeed+k*7919); }
+function paintBaby(){
+  const el=document.getElementById("baby"); if(!el) return;
+  const g=babyOf(babyK), c=g.c;
+  el.querySelector(".scn").innerHTML=sceneSVG(g,0,{t:.1,ar:16/9});
+  el.querySelector(".baby-b").innerHTML=`<div class="baby-top"><b>${UI.first_day[LI]}</b><span>${REGIONS[c[3]][LI]}</span></div>
+    <div class="baby-name">${esc(g.name)}</div>
+    <div class="baby-meta">${place(c)} · ${UI.sex_child[LI][g.sex==="m"?0:1]} · ${UI.tiers[g.famTier][LI]} · ${UI.hh_place[LI][g.urban?0:1]}</div>
+    <div class="kv3"><div><small>${UI.share_l[LI]}</small><b>${shareOf(c)}%</b></div><div><small>${UI.le_s[LI]}</small><b>${ui("unit_yr",{n:c[6].toFixed(0)})}</b></div><div><small>${UI.gdp_s[LI]}</small><b>${c[8]==null?"—":"$"+Math.round(c[8]).toLocaleString()}</b></div></div>
+    <div class="baby-f"><div class="dots">${[0,1,2,3,4].map(i=>`<i class="${i===babyK%5?"on":""}"></i>`).join("")}</div><button class="ghost" id="nextBaby">${UI.next_baby[LI]} →</button></div>`;
+  el.querySelector(".baby-b").classList.remove("fade"); void el.offsetWidth; el.querySelector(".baby-b").classList.add("fade");
+  document.getElementById("nextBaby").onclick=()=>{babyK++;paintBaby();loopBaby()};
+}
+function loopBaby(){ clearInterval(babyT); babyT=setInterval(()=>{ if(!document.getElementById("baby")||document.hidden){ if(!document.getElementById("baby")) clearInterval(babyT); return;} babyK++; paintBaby(); },6000); }
+function bindTicker(){
+  clearInterval(tickT);
+  const run=()=>{const a=document.getElementById("tk1"); if(!a){clearInterval(tickT);return}
+    a.textContent=Math.floor((Date.now()-PAGE_T0)/1000*PER_SEC).toLocaleString()};
+  tickT=setInterval(run,250); run();
+}
+function topRows(){
+  const rows=COUNTRIES.slice().sort((a,b)=>b[5]-a[5]).slice(0,10), mx=rows[0][5];
+  const rest=1-rows.reduce((a,c)=>a+c[5],0)/totalBirths;
+  return rows.map(c=>`<div class="r"><span>${place(c)}</span><i><u style="width:${(c[5]/mx*100).toFixed(1)}%"></u></i><b>${(c[5]/totalBirths*100).toFixed(1)}%</b></div>`).join("")+
+    `<div class="r"><span>${ui("top_rest",{n:COUNTRIES.length-10})}</span><i><u class="rest" style="width:100%"></u></i><b>${(rest*100).toFixed(1)}%</b></div>`;
 }
 function renderStart(){
-  view=renderStart; G=null;
-  show(`
-    <h1>${UI.title[LI]}</h1>
-    <p class="sub">${UI.tagline[LI]}</p>
-    ${friendBox()}
-    <div class="card"><h2>${UI.how_h[LI]}</h2><p>${UI.how_p[LI]}</p>
-      <p style="color:var(--muted);font-size:14px;margin-bottom:0">${ui("how_n",{n:fmtN(totalBirths),k:COUNTRIES.length})}</p></div>
-    ${dailyBox()}
-    <button class="btn primary" id="go">${UI.random_go[LI]}</button>
-    ${srcHTML()}
-    <p class="note">${UI.note[LI]}</p>`,()=>{
-    document.getElementById("go").onclick=()=>{G=newLife();renderBirth()};
-    const dg=document.getElementById("daily"); if(dg) dg.onclick=()=>{G=newLife(dailySeed());renderBirth()};
-  },{type:"map",mode:"all",cap:UI.map_caption[LI]});
+  view=renderStart; G=null; MODE="start"; clearTimeout(autoT); cancelAnimationFrame(skyRaf);
+  topStart();
+  const prev=store.get("daily"), done=prev&&prev.date===todayStr();
+  app.innerHTML=`<div class="page">
+   <section class="hero">
+    <div>
+      <div class="eyebrow">${UI.trust[LI].map(t=>`<span>${t}</span>`).join("")}</div>
+      <h1 class="h-display">${UI.hero_h[LI]}</h1>
+      ${friend?`<div class="friend">${ui("friend",{place:place(friend.c),sex:UI.sex_adult[LI][friend.s==="m"?0:1],age:friend.a,title:UI.titles[friend.k][LI]})}</div>`:""}
+      <p class="lead">${UI.tagline[LI]} ${UI.hero_p[LI]}</p>
+      <div class="cta-row"><button class="cta" id="go">${UI.random_go[LI]} →</button>
+        <button class="cta2" id="daily">${ui(done?"daily_again":"daily_go")}<small>${done&&prev.text?esc(prev.text[LI]||""):ui("daily_h",{d:todayStr()})}</small></button></div>
+      <div class="counters">
+        <div><b>${fmtN(totalBirths)}</b><span>${UI.num_b[LI]}</span></div>
+        <div><b>${COUNTRIES.length}</b><span>${UI.num_c[LI]}</span></div>
+        <div class="live"><b id="tk1">0</b><span>${UI.live_b[LI]}</span></div>
+      </div>
+    </div>
+    <div><div class="baby" id="baby"><div class="scn"></div><div class="baby-b"></div></div><p class="cap">${UI.sm_p[LI]}</p></div>
+   </section>
+   <section class="sec">
+    <div class="sec-h"><h2>${UI.where_h[LI]}</h2><p>${UI.where_p[LI]}</p></div>
+    <div class="where">
+      <div class="box">${mapSVG("all")}<p class="cap">${UI.map_caption[LI]}</p></div>
+      <div class="box"><div class="box-h"><h3>${UI.top_h[LI]}</h3></div><div class="bars">${topRows()}</div><p class="cap">${UI.top_p[LI]}</p></div>
+    </div>
+    <div class="tiles"><div class="tile"><b>${Math.round(SHARE_LOW*100)}%</b><span>${UI.bs1[LI]}</span></div><div class="tile"><b>${Math.round(SHARE_SHORT*100)}%</b><span>${UI.bs2[LI]}</span></div><div class="tile"><b>${Math.round(IMR_SUM*1000)}</b><span>${UI.bs3[LI]}</span></div></div>
+   </section>
+   <section class="sec">
+    <div class="sec-h"><h2>${UI.diff_h[LI]}</h2></div>
+    <div class="feats">
+      <div class="box feat"><div class="vis"><div class="mock"><i>✓</i>${UI.f1_b[LI]}</div><div class="mock lk"><i>🔒</i>${UI.f1_a[LI]}</div><div class="mock tw"><i>🔀</i>${UI.tw_open[LI]}</div></div><h3>${UI.tw_feat_h[LI]}</h3><p>${UI.tw_feat_p[LI]}</p></div>
+      <div class="box feat"><div class="vis"><div class="suns"><span>🌅</span><span>☀️</span><span>🌇</span><span>🌙</span></div><div class="daybar"></div><div class="ages"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div></div><h3>${UI.f2_h[LI]}</h3><p>${UI.f2_p[LI]}</p></div>
+      <div class="box feat"><div class="vis"><div class="paper"><b>${UI.f3_t[LI]}</b>${UI.f3_l[LI].split("|").join("<br>")}</div></div><h3>${UI.f3_h[LI]}</h3><p>${UI.f3_p[LI]}</p></div>
+    </div>
+   </section>
+   <section class="sec info3">
+    <div><h3>${UI.how_h[LI]}</h3><p>${UI.how_p[LI]}</p><p>${UI.steps.map((s,i)=>`${i+1}. ${s[LI]}`).join("<br>")}</p></div>
+    <div class="faq"><h3>${UI.faq_h[LI]}</h3>${UI.faq.map(q=>`<details><summary>${q[0][LI]}</summary><p>${q[1][LI]}</p></details>`).join("")}</div>
+    <div><h3>${UI.src_h[LI]}</h3><p>${srcP()}</p></div>
+   </section>
+   <footer class="foot"><p>${UI.note[LI]}</p><span>© ${new Date().getFullYear()} ${UI.title[LI]}</span></footer>
+   <div class="dock m"><button class="cta" id="go2">${UI.random_go[LI]} →</button></div>
+  </div>`;
+  bindTicker(); paintBaby(); loopBaby();
+  const start=()=>{G=newLife();skyT=0;renderBirth()};
+  document.getElementById("go").onclick=start; document.getElementById("go2").onclick=start;
+  document.getElementById("daily").onclick=()=>{G=newLife(dailySeed());skyT=0;renderBirth()};
+  window.scrollTo(0,0);
 }
-const dailySeed=()=>Number(todayStr().replace(/-/g,""));
 
+/* ---------- 진행 화면 틀 ---------- */
+function buildDash(){
+  MODE="play";
+  app.innerHTML=`<div class="page"><div class="dash">
+    <div class="col ca"><div id="pReg"></div><div id="pStats"></div><div id="pTwin"></div><div id="pLock"></div></div>
+    <div class="col cb"><div class="scene-card"><div class="scn" id="pScene"></div><span class="scene-tag" id="pTag"></span></div><div class="evc" id="pEv"></div><div id="pLog"></div></div>
+    <div class="col cc"><div id="pCtry"></div><div id="pCurve"></div><div id="pMap"></div></div>
+  </div><div class="mset only-m">${styleBtn()}${langSel()}</div></div>`;
+  bindCtl(app.querySelector(".mset"));
+}
+const $=id=>document.getElementById(id);
+function regHTML(){
+  const c=G.c;
+  const rows=[[UI.f_sex,UI.sex_child[LI][G.sex==="m"?0:1]],[UI.f_country,place(c)],
+    [UI.f_area,UI.hh_place[LI][G.urban?0:1]],[UI.f_fam,UI.tiers[G.famTier][LI]],
+    [UI.f_par,ui("hh_par",{m:G.mAge,f:G.fAge})],[UI.f_pjob,G.pjob.n[LI]],
+    [UI.f_sib,G.sibs?ui("hh_sib",{n:G.sibs}):UI.hh_sib0[LI]]];
+  if(G.job) rows.push([UI.f_job,G.job.n[LI]]);
+  return `<div class="box reg"><div class="rh"><b>${UI.doc_h[LI]}</b><span>No. ${c[0]}-${String(G.seed||Math.abs(hashStr(G.name+c[0]))%1000000).padStart(6,"0")}</span></div>
+    <div class="who" id="regName">${esc(G.name)}</div>
+    <dl>${rows.map(([k,v])=>`<dt>${k[LI]}</dt><dd>${v}</dd>`).join("")}</dl>
+    <div class="stamp">${UI.stamp[LI].split("<br>")[0]}<br>${UI.stamp[LI].split("<br>")[1]}<small>${G.date||todayStr()}</small></div></div>`;
+}
+function statsBox(prev){
+  const names=ST();
+  return `<div class="box"><div class="box-h"><h3>${UI.stats_h[LI]}</h3><span>0–100</span></div><div class="stl">`+STATKEYS.map((k,i)=>{
+    const v=Math.round(G.s[k]), pv=prev?Math.round(prev[k]):v, d=v-pv;
+    return `<div class="r"><span class="ic">${STAT_ICON[i]}</span><span class="nm2">${names[i]}</span><span class="v">${d?`<span class="chip ${d>0?"up":"dn"}">${d>0?"+":""}${d}</span>`:""}<b data-to="${v}" data-from="${pv}">${pv}</b></span><div class="bar"><i data-w="${v}" style="width:${pv}%;background:${STAT_COL[i]}"></i></div></div>`;
+  }).join("")+`</div></div>`;
+}
+function animateStats(){
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    app.querySelectorAll(".stl .bar i[data-w]").forEach(i=>i.style.width=i.dataset.w+"%");
+    app.querySelectorAll(".stl b[data-to]").forEach(b=>{
+      const f=+b.dataset.from,t=+b.dataset.to; if(f===t) return;
+      const t0=performance.now(); const st=now=>{const u=clamp((now-t0)/700,0,1);b.textContent=Math.round(f+(t-f)*u);if(u<1)requestAnimationFrame(st)};requestAnimationFrame(st);
+    });
+  }));
+  const m=$("hMini"); if(m) m.innerHTML=miniStats();
+}
+function lockBox(full){
+  const L=G.locked;
+  if(!L.length) return `<div class="box"><div class="box-h"><h3>${sub(UI.locked_h[LI],{n:0})}</h3></div><p style="margin:0;font-size:13.5px;color:var(--ink2)">${full?UI.locked_none[LI]:UI.lock_yet[LI]}</p></div>`;
+  const list=full?L:L.slice(-3).reverse();
+  return `<div class="box"><div class="box-h"><h3>🔒 ${ui("locked_h",{n:L.length})}</h3></div><p style="margin:0 0 10px;font-size:12.5px;color:var(--mute)">${UI.locked_p[LI]}</p><ul class="lk-list">${list.map(x=>`<li><span class="a">${ui("age_n",{n:x.a})}</span><span>${tr(x.l,G)}<span class="w">${tr(x.why,G)}</span></span></li>`).join("")}</ul></div>`;
+}
+function ctryBox(){
+  return `<div class="box"><div class="box-h"><h3>${ui("ctry_h",{place:place(G.c)})}</h3></div>${indRows(G.c)}<p class="cap">${ui("born_share",{p:shareOf(G.c),le:G.c[6].toFixed(1)})}</p></div>`;
+}
+function curveSVG(mx,anim,compact){
+  const W=compact?340:600,H=compact?190:240,pad=compact?24:30; mx=Math.max(20,mx);
+  const X=a=>pad+(W-pad*2)*a/mx, Y=v=>H-pad-(H-pad*2)*v/100;
+  let g="";
+  [0,25,50,75,100].forEach(v=>{g+=`<line x1="${pad}" x2="${W-pad}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--rule)" ${v?'stroke-dasharray="3 5"':""}/><text x="${pad-6}" y="${Y(v)+4}" font-size="12" text-anchor="end" fill="var(--mute)">${v}</text>`});
+  STATKEYS.forEach((k,i)=>{
+    const pts=G.hist.map(h=>`${X(h.a).toFixed(1)},${Y(h[k]).toFixed(1)}`).join(" ");
+    g+=`<polyline ${anim?'class="cl" ':""}points="${pts}" fill="none" stroke="${STAT_COL[i]}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" style="animation-delay:${i*.15}s"/>`;
+    const l=G.hist[G.hist.length-1];g+=`<circle cx="${X(l.a).toFixed(1)}" cy="${Y(l[k]).toFixed(1)}" r="4.5" fill="${STAT_COL[i]}"/>`;
+  });
+  g+=`<text x="${pad}" y="${H-8}" font-size="12" fill="var(--mute)">0</text><text x="${W-pad}" y="${H-8}" font-size="12" text-anchor="end" fill="var(--mute)">${ui("age_n",{n:mx})}</text>`;
+  const names=ST();
+  return `<svg viewBox="0 0 ${W} ${H}" class="curve">${g}</svg><div class="legend">${STATKEYS.map((k,i)=>`<span><i style="background:${STAT_COL[i]}"></i>${names[i]}</span>`).join("")}</div>`;
+}
+const curveBox=()=>`<div class="box"><div class="box-h"><h3>${UI.curve_h[LI]}</h3></div>${curveSVG(Math.max(G.shownAge||0,20),false,true)}</div>`;
+const mapBox=()=>`<div class="box"><div class="box-h"><h3>${UI.map_h[LI]}</h3><span>${REGIONS[G.c[3]][LI]}</span></div>${mapSVG("hl",G.c[0])}</div>`;
+function logBox(full){
+  const items=G.log.slice().reverse();
+  return `<div class="box"><div class="box-h"><h3>${UI.log_h[LI]}</h3><span>${UI.log_new[LI]}</span></div><ul class="log${full?" full":""}">${items.map((x,i)=>`<li class="${i===0&&!full?"fresh":""}"><span class="a">${ui("age_n",{n:x.a})}</span><span>${x.f()}</span></li>`).join("")}</ul></div>`;
+}
+function fillSides(prev){
+  $("pReg").innerHTML=regHTML(); $("pStats").innerHTML=statsBox(prev); $("pLock").innerHTML=lockBox(); $("pTwin").innerHTML=twinBox();
+  $("pCtry").innerHTML=ctryBox(); $("pCurve").innerHTML=curveBox(); $("pMap").innerHTML=mapBox();
+  $("pLog").innerHTML=G.log.length?logBox():"";
+  $("pTag").textContent=`${STAGE_ICON[G.stageIdx]} ${UI.stages[G.stageIdx][LI]} · ${place(G.c)} · ${UI.hh_place[LI][G.urban?0:1]}`;
+}
+function ensureDash(force){
+  if(force||MODE!=="play"||!$("pEv")){ topPlay(); buildDash(); drawMain(G.shownAge||0); fillSides(); }
+}
+function setEv(html,anim=true){ const e=$("pEv"); e.innerHTML=html; if(anim){e.classList.remove("rise");void e.offsetWidth;e.classList.add("rise")} }
+
+/* ---------- 출생 화면 ---------- */
 let rollTimer=0;
+const hashStr=s=>{let h=7;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))|0;return h};
 function renderBirth(){
-  view=renderBirth;
+  view=renderBirth; MODE="play"; window.scrollTo(0,0);
   if(!G.rolled){
     clearInterval(rollTimer);
-    show(`<div class="card roll"><h2>${UI.rolling[LI]}</h2><div class="big" id="ticker">…</div></div>`,()=>{
-      const tk=document.getElementById("ticker");
-      rollTimer=setInterval(()=>{const c=COUNTRIES[Math.floor(Math.random()*COUNTRIES.length)];if(tk)tk.textContent=NAMES[c[0]][LI]},70);
-      setTimeout(()=>{clearInterval(rollTimer);G.rolled=true;renderBirth()},1500);
-    },{type:"map",mode:"all",cap:""});
+    topPlay(); buildDash();
+    $("pScene").innerHTML=sceneSVG(null,0,{t:.02,ar:$("pScene").clientWidth/$("pScene").clientHeight||2.3});
+    ["pReg","pStats","pCtry","pCurve"].forEach(id=>$(id).innerHTML=`<div class="box skel"></div>`);
+    setEv(`<div class="roll"><p class="kick" style="justify-content:center">🌍 ${UI.rolling[LI]}</p><div class="big" id="ticker">…</div></div>`);
+    $("pMap").innerHTML=`<div class="box">${mapSVG("all")}</div>`;
+    const tk=$("ticker");
+    rollTimer=setInterval(()=>{const c=COUNTRIES[Math.floor(Math.random()*COUNTRIES.length)];if(tk)tk.textContent=NAMES[c[0]][LI]},70);
+    setTimeout(()=>{clearInterval(rollTimer);G.rolled=true;if(view===renderBirth)renderBirth()},1500);
     return;
   }
-  const c=G.c, share=Math.round(c[5]/totalBirths*1000)/10;
-  show(`
-    <h1>${UI.born_h[LI]}</h1>
-    <div class="card"><h2>${UI.place_h[LI]}</h2>
-      <div class="big">${place(c)}</div>
-      <div><span class="tag">${REGIONS[c[3]][LI]}</span><span class="tag">${INCOMES[c[4]][LI]}</span></div>
-      <p style="margin-bottom:0;color:var(--soft)">${ui("born_share",{p:share,le:c[6].toFixed(1)})}</p></div>
-    <div class="card"><h2>${UI.who_h[LI]}</h2>
-      <div class="big">${UI.sex_child[LI][G.sex==="m"?0:1]} · ${UI.tiers[G.famTier][LI]}</div>
-      <p style="margin-bottom:0;color:var(--soft)">${ui("who_p",{job:G.pjob.n[LI]})}</p></div>
-    <div class="card"><h2>${UI.name_h[LI]}</h2>
-      <input id="nm" class="nm" maxlength="24" value="${G.name.replace(/"/g,"&quot;")}" aria-label="${UI.name_h[LI]}">
-      <p style="margin:6px 0 0;font-size:12px;color:var(--soft)">${UI.name_p[LI]}</p></div>
-    <div class="card"><h2>${UI.hh_h[LI]}</h2>
-      <p style="margin:0;color:var(--soft)">${UI.hh_place[LI][G.urban?0:1]} · ${G.sibs?ui("hh_sib",{n:G.sibs}):UI.hh_sib0[LI]}<br>${ui("hh_par",{m:G.mAge,f:G.fAge})}</p></div>
-    ${countryCard(c)}
-    ${statsHTML()}
-    <button class="btn primary" id="next">${UI.start_life[LI]}</button>`,()=>{
-    document.getElementById("next").onclick=()=>{
-      const nv=document.getElementById("nm").value.trim(); if(nv) G.name=nv.slice(0,24);
-      G.log.push({a:0,f:()=>ui("born_log",{place:place(G.c),sex:UI.sex_child[LI][G.sex==="m"?0:1]})});
-      startStage();
-    };
-  },{type:"map",mode:"hl",iso:c[0],cap:""});
+  if(!G.twin) G.twin=makeTwin(G);
+  G.shownAge=0; ensureDash(true);
+  setEv(`<p class="kick">👶 ${UI.born_kick[LI]}</p><h2 class="born-h">${UI.born_h[LI]}</h2>
+    <p class="born-p">${ui("born_share",{p:shareOf(G.c),le:G.c[6].toFixed(1)})}</p>
+    <div class="twin" style="margin:0 0 18px"><div class="tw-h"><span class="tw-badge">🔀</span><div><b>${UI.tw_h[LI]}</b><span>${ui("tw_born",{place:place(G.twin.c),tier:UI.tiers[G.twin.famTier][LI],name:esc(G.twin.name)})}</span></div></div></div>
+    <label class="flab" for="nm">${UI.name_h[LI]}</label>
+    <input id="nm" class="nm" maxlength="24" value="${esc(G.name)}">
+    <p class="fnote">${UI.name_p[LI]}</p>
+    <button class="cta" style="width:100%" id="next">${UI.start_life[LI]} →</button>`);
+  const nm=$("nm");
+  nm.oninput=()=>{const v=nm.value.trim()||G.name;$("regName").textContent=v;const hb=document.querySelector(".hud-who b");if(hb)hb.textContent=v};
+  $("next").onclick=()=>{
+    const nv=nm.value.trim(); if(nv) G.name=nv.slice(0,24);
+    G.log.push({a:0,f:()=>ui("born_log",{place:place(G.c),sex:UI.sex_child[LI][G.sex==="m"?0:1]})});
+    topPlay(); startStage();
+  };
 }
 
 /* ---------- 진행 ---------- */
@@ -916,46 +1386,53 @@ function pickFact(from,to){
 }
 function passYears(from,to,done){
   const yrs=to-from, fact=pickFact(from,to);
+  ensureDash();
   if(yrs<2&&!fact) return done();
-  view=()=>{};
+  view=()=>{topPlay()};
   let finished=false,timer=0;
   const go=()=>{if(finished)return;finished=true;clearInterval(timer);done()};
-  show(`<div class="card pass"><h2>${UI.pass_h[LI]}</h2>
-    <div class="pa"><span id="pa">${from}</span><small>${UI.age_n[LI].replace("{n}","").trim()||""}</small></div>
-    <div class="bar"><i id="pbar" style="width:0"></i></div>
-    <div id="pfact"></div><p class="mut" style="font-size:12px;margin:10px 0 0">${UI.tap_skip[LI]}</p></div>`,()=>{
-      document.querySelector(".pass").onclick=go;
-      const dur=sp(Math.min(1500,Math.max(500,yrs*70))), t0=performance.now();
-      timer=setInterval(()=>{
-        const u=clamp((performance.now()-t0)/dur,0,1);
-        document.getElementById("pa").textContent=Math.round(from+yrs*u);
-        document.getElementById("pbar").style.width=(u*100)+"%";
-        if(u>=1){clearInterval(timer);
-          if(fact){const txt=fact();G.log.push({a:to,f:()=>"📊 "+fact()});
-            document.getElementById("pfact").innerHTML=`<div class="fact"><span>${UI.fact_label[LI]}</span>${txt}</div>`;
-            setTimeout(go,sp(3200));
-          } else setTimeout(go,sp(250));
-        }
-      },60);
-    },{type:"sky",age:to});
+  const [pre,post]=UI.age_n[LI].split("{n}");
+  setEv(`<div class="pass"><p class="kick" style="justify-content:center">⏳ ${UI.pass_h[LI]}</p>
+    <div class="pa">${pre.trim()?`<small>${pre.trim()}</small> `:""}<span id="pa">${from}</span><small>${post.trim()}</small></div>
+    <div class="pbar"><i id="pbar" style="width:0"></i></div>
+    <div id="pfact"></div><p class="cap" style="text-align:center">${UI.tap_skip[LI]}</p></div>`);
+  $("pEv").onclick=go;
+  const dur=sp(Math.min(1500,Math.max(500,yrs*70))), t0=performance.now();
+  drawMain(to,Math.min(1500,Math.max(500,yrs*70)));
+  timer=setInterval(()=>{
+    const u=clamp((performance.now()-t0)/dur,0,1), a=Math.round(from+yrs*u);
+    const pa=$("pa"); if(!pa){clearInterval(timer);return}
+    pa.textContent=a; hudAge(a);
+    $("pbar").style.width=(u*100)+"%";
+    if(u>=1){clearInterval(timer);
+      if(fact){const txt=fact();G.log.push({a:to,f:()=>"📊 "+fact()});
+        $("pfact").innerHTML=`<div class="fact"><span>${UI.fact_label[LI]}</span>${txt}</div>`;
+        setTimeout(go,sp(3200));
+      } else setTimeout(go,sp(250));
+    }
+  },50);
 }
-const stageHead=()=>`<div class="age">${G.name?G.name+" · ":""}${UI.stages[G.stageIdx][LI]} · ${ui("age_n",{n:G.age})} · ${place(G.c)}${G.job?` · ${G.job.n[LI]}`:""}</div>`;
 function showEvent(){
-  view=showEvent;
+  view=()=>{ensureDash(true);evQuestion()};
+  ensureDash();
+  $("pEv").onclick=null;
+  topPlay(); hudAge(G.age); drawMain(G.age); fillSides();
+  evQuestion();
+}
+function evQuestion(){
   const e=cur.e;
-  show(`${stageHead()}${statsHTML()}
-    <div class="card ev"><div class="scene" style="background:${sceneBG(G.age)}"><span class="emo">${EVICON[EV.indexOf(e)]||"✨"}</span><span class="stg">${STAGE_ICON[G.stageIdx]} ${UI.stages[G.stageIdx][LI]}</span></div><div class="q">${tr(e.t,G)}</div>
-      ${cur.ch.map((c,i)=>{
-        if(c.req&&!c.req(G)){
-          if(!cur.logged) G.locked.push({a:G.age,l:c.l,why:c.why});
-          return `<button class="btn locked" disabled>🔒 ${tr(c.l,G)}<div class="fx">${tr(c.why,G)}</div></button>`;
-        }
-        return `<button class="btn" data-i="${i}">${tr(c.l,G)}</button>`;
-      }).join("")}
-    </div>`,()=>{
-      cur.logged=true;
-      app.querySelectorAll("button[data-i]").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
-    },{type:"sky",age:G.age});
+  setEv(`<p class="kick">${EVICON[EV.indexOf(e)]||"✨"} ${ui("age_n",{n:G.age})} · ${UI.stages[G.stageIdx][LI]}</p><div class="q">${tr(e.t,G)}</div>
+    <div class="choices">${cur.ch.map((c,i)=>{
+      if(c.req&&!c.req(G)){
+        if(!cur.logged) G.locked.push({a:G.age,l:c.l,why:c.why});
+        return `<button class="ch locked" disabled><span class="n">🔒</span><span>${tr(c.l,G)}<span class="why">${tr(c.why,G)}</span></span></button>`;
+      }
+      return `<button class="ch" data-i="${i}"><span class="n">${i+1}</span><span>${tr(c.l,G)}</span></button>`;
+    }).join("")}</div>${twinHTML()}`);
+  if(!cur.logged){cur.logged=true;$("pLock").innerHTML=lockBox()}
+  $("pTwin").innerHTML=twinBox();
+  app.querySelectorAll("button[data-i]").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
+  autoStep();
 }
 function choose(i){
   const e=cur.e, ch=cur.ch[i], prevS={...G.s};
@@ -967,19 +1444,25 @@ function choose(i){
     if(ch.risk.die){ G.lifespan=Math.min(G.lifespan,G.age+(rnd()<0.5?0:1)); G.cause=ch.risk.die; died=true; }
   }
   const age=G.age, q=e.t, lab=ch.l;
-  G.log.push({a:age,f:()=>`${tr(q,G)} → ${tr(lab,G)}`});
+  G.log.push({a:age,f:()=>`${tr(q,G)} → <b>${tr(lab,G)}</b>`});
   const sum=Object.values(ch.fx||{}).reduce((s,v)=>s+Math.abs(v),0)+(died?30:0)+(ch.job?25:0);
   G.bio.push({a:age,l:lab,imp:sum,job:!!ch.job});
   if(G.s.h<=10&&G.age>5){ G.lifespan=Math.min(G.lifespan,G.age+Math.floor(rnd()*6)); G.cause=G.cause||"health"; }
   G.hist.push({a:G.age,...G.s});
-  const dead=G.age>=G.lifespan, fx=ch.fx;
-  view=()=>{show(`${stageHead()}${statsHTML(prevS)}
-    <div class="card ev"><div class="res pop">${tr(res,G)}${fxText(fx)}</div>
-      <button class="btn primary" id="cont">${dead?"…":UI.cont[LI]}</button></div>`,()=>{
-        document.getElementById("cont").onclick=()=>dead?ending():nextEvent();
-        animateStats();
-      },{type:"sky",age:G.age}); };
-  view();
+  const dead=G.age>=G.lifespan, fx={};
+  for(const k of STATKEYS){const d=Math.round(G.s[k])-Math.round(prevS[k]); if(d) fx[k]=d;}
+  const evRes=()=>{
+    setEv(`<p class="kick">${UI.result_k[LI]} · ${tr(lab,G)}</p><div class="result">${tr(res,G)}</div>${fxDeltas(fx)}
+      <button class="go" id="cont">${dead?"…":UI.cont[LI]+" →"}</button>`);
+    $("cont").onclick=()=>dead?ending():nextEvent();
+    autoStep();
+  };
+  view=()=>{ensureDash(true);evRes()};
+  topPlay(); hudAge(G.age);
+  $("pStats").innerHTML=statsBox(prevS); animateStats();
+  $("pReg").innerHTML=regHTML(); $("pLog").innerHTML=logBox(); $("pCurve").innerHTML=curveBox(); $("pTwin").innerHTML=twinBox();
+  if(ch.job) drawMain(G.age);
+  evRes();
 }
 
 /* ---------- 결말 ---------- */
@@ -998,12 +1481,10 @@ function ending(){
     const text=UI.titles[k].map((t,i)=>sub(UI.share_text[i],{place:NAMES[G.c[0]][i],age,title:t}));
     G.ended.text=text;
     if(G.daily) store.set("daily",{date:G.date,text:UI.titles[k].map((t,i)=>`${NAMES[G.c[0]][i]} · ${sub(UI.age_n[i],{n:age})} · ${t}`)});
+    if(G.hist[G.hist.length-1].a!==age) G.hist.push({a:age,...G.s});
   }
+  AUTO=false; clearTimeout(autoT);
   view=renderEnding; renderEnding();
-}
-function lockedHTML(){
-  if(!G.locked.length) return `<div class="card"><h2>${sub(UI.locked_h[LI],{n:0})}</h2><p style="margin:0">${UI.locked_none[LI]}</p></div>`;
-  return `<div class="card"><h2>${ui("locked_h",{n:G.locked.length})}</h2><p style="margin-top:0;color:var(--soft)">${UI.locked_p[LI]}</p><ul class="log">${G.locked.map(x=>`<li><span>${ui("age_n",{n:x.a})}</span>${tr(x.l,G)} <span class="mut">— ${tr(x.why,G)}</span></li>`).join("")}</ul></div>`;
 }
 function endInfo(){
   const {age,k,cause,diff}=G.ended;
@@ -1011,14 +1492,22 @@ function endInfo(){
   const cmp=age<5?"":diff>=0?ui("cmp_more",{place:place(G.c),le:G.c[6].toFixed(1),n:Math.round(diff)}):ui("cmp_less",{place:place(G.c),le:G.c[6].toFixed(1),n:Math.round(-diff)});
   return {age,title,cmp,causeTxt:UI.causes[cause][LI]};
 }
+const SITE="https://randomlife-game.github.io/randomlife-game/";
 function shareURL(){
-  const base=location.origin&&location.origin!=="null"?location.origin+location.pathname:"https://gyeoltaro.github.io/gyeoltaro/";
+  const base=location.protocol.startsWith("http")?location.origin+location.pathname:SITE;
   const p=new URLSearchParams({c:G.c[0],s:G.sex,a:G.ended.age,k:G.ended.k,l:LANG});
   if(G.daily) p.set("d",G.date);
   return base+"?"+p.toString();
 }
 function shareText(){ return G.ended.text[LI]+" #"+UI.share_tags[LI]; }
+function topEnd(){
+  topEl.innerHTML=`<div class="top-in"><button class="brand" data-home>${LOGO}<span class="only-d">${UI.title[LI]}</span></button>
+    <div class="hud-age">${ageParts(G.ended.age)}</div><div class="hud-who"><b>${esc(G.name)}</b><span>${UI.end_doc[LI]} · ${place(G.c)}</span></div>
+    <span class="sp"></span><div class="ctrls"><span class="only-d" style="gap:6px">${styleBtn()}${langSeg()}</span><span class="only-m">${langSel()}</span></div></div>`;
+  bindCtl(topEl);
+}
 function renderEnding(){
+  MODE="end";
   const info=endInfo(), {age,title}=info, sex=UI.sex_adult[LI][G.sex==="m"?0:1];
   const url=shareURL(), txt=shareText(), enc=encodeURIComponent;
   const links=[
@@ -1028,33 +1517,54 @@ function renderEnding(){
     ["Threads","https://www.threads.net/intent/post?text="+enc(txt+" "+url)],
     ["Weibo","https://service.weibo.com/share/share.php?url="+enc(url)+"&title="+enc(txt)]
   ];
-  show(`
-    <h1>${UI.end_h[LI]}</h1>
-    <div class="card"><h2>${UI.end_s[LI]}</h2><div class="big">${title}</div>
-      <p style="color:var(--soft)">${ui("end_p",{place:place(G.c),sex,cause:info.causeTxt,age,cmp:info.cmp})}</p></div>
-    ${statsHTML()}
-    <div class="card"><h2>${UI.curve_h[LI]}</h2>${curveSVG()}</div>
-    <div class="card"><h2>${UI.card_h[LI]}</h2>
-      <canvas id="card" width="1080" height="1350"></canvas>
-      <div class="row" style="margin-top:10px"><button class="btn" id="savecard">${UI.save[LI]}</button><button class="btn" id="copy">${UI.copy[LI]}</button></div></div>
-    <div class="card"><h2>${UI.share_h[LI]}</h2><p style="margin-top:0;color:var(--soft)">${UI.share_p[LI]}</p>
-      ${navigator.share?`<button class="btn primary" id="native">${UI.share_native[LI]}</button>`:""}
-      <div class="sns">${links.map(([n,u])=>`<a class="btn" target="_blank" rel="noopener" href="${u}">${n}</a>`).join("")}</div></div>
-    ${lockedHTML()}
-    <div class="card"><h2>${UI.path_h[LI]}</h2><ul class="log">${G.log.map(x=>`<li><span>${ui("age_n",{n:x.a})}</span>${x.f()}</li>`).join("")}<li><span>${ui("age_n",{n:age})}</span>${UI.died[LI]}</li></ul></div>
-    ${srcHTML()}
-    <button class="btn primary" id="again">${UI.again[LI]}</button>
-    <p class="note">${UI.again_p[LI]}</p>`,()=>{
-    document.getElementById("again").onclick=()=>renderStart();
-    document.getElementById("savecard").onclick=saveCard;
-    const nb=document.getElementById("native");
-    if(nb) nb.onclick=()=>navigator.share({title:UI.title[LI],text:txt,url}).catch(()=>{});
-    document.getElementById("copy").onclick=async e=>{
-      const full=txt+"\n"+url;
-      try{await navigator.clipboard.writeText(full);e.target.textContent=UI.copied[LI]}catch(_){prompt(UI.copy[LI],full)}
-    };
-    drawCard(info);
-  },{type:"map",mode:"hl",iso:G.c[0],cap:""});
+  topEnd();
+  G.shownAge=age;
+  app.innerHTML=`<div class="page">
+   <section class="endhero">
+    <div>
+      <p class="kick">🕯️ ${UI.end_k[LI]} · ${G.daily?ui("card_daily",{d:G.date}):UI.end_s[LI]}</p>
+      <h1>${title}</h1>
+      <p class="sum">${ui("end_p",{place:place(G.c),sex,cause:info.causeTxt,age,cmp:info.cmp})}</p>
+      <div class="facts4">${[[UI.e_age,ui("unit_yr",{n:age})],[UI.e_le,ui("unit_yr",{n:G.c[6].toFixed(1)})],[UI.f_country,place(G.c)],[UI.e_job,G.job?G.job.n[LI]:"—"]]
+        .map(([k,v])=>`<div><small>${k[LI]}</small><b>${v}</b></div>`).join("")}</div>
+      <div class="cta-row only-d"><button class="cta" id="again">${UI.again[LI]} →</button>${navigator.share?`<button class="cta2" id="native">${UI.share_native[LI]}<small>${UI.share_h[LI]}</small></button>`:""}</div>
+    </div>
+    <div class="scene-card"><div class="scn" id="pScene"></div><span class="scene-tag">${STAGE_ICON[6]} ${UI.sun_note[LI]}</span></div>
+   </section>
+   <div class="dash">
+    <div class="col ca">
+      <div class="box"><div class="box-h"><h3>${UI.card_h[LI]}</h3></div><canvas id="card" width="1080" height="1350"></canvas>
+        <div class="row2"><button class="ghost" id="savecard">${UI.save[LI]}</button><button class="ghost" id="copy">${UI.copy[LI]}</button></div>
+        <div class="sns">${links.map(([n,u])=>`<a class="ghost" target="_blank" rel="noopener" href="${u}">${n}</a>`).join("")}</div>
+        <p class="cap">${UI.share_p[LI]}</p></div>
+    </div>
+    <div class="col cb">
+      <div class="box"><div class="box-h"><h3>${UI.curve_h[LI]}</h3><span>${STATKEYS.map((k,i)=>`${STAT_ICON[i]} ${Math.round(G.s[k])}`).join(" ")}</span></div>${curveSVG(age,true)}</div>
+      <div class="box"><div class="box-h"><h3>${UI.path_h[LI]}</h3><span>${ui("age_n",{n:0})} – ${ui("age_n",{n:age})}</span></div><ul class="log full">${G.log.map(x=>`<li><span class="a">${ui("age_n",{n:x.a})}</span><span>${x.f()}</span></li>`).join("")}<li><span class="a">${ui("age_n",{n:age})}</span><span><b>${UI.died[LI]}</b></span></li></ul></div>
+    </div>
+    <div class="col cc">
+      ${regHTML()}
+      ${G.twin?twinBox().replace('<p class="cap">',`<p style="margin:12px 0 0;font-size:14px;font-weight:600">${ui("tw_end",{name:esc(G.twin.name),m:G.twin.locked,n:G.locked.length})}</p><p class="cap">`):""}
+      ${lockBox(true)}
+      <div class="box"><div class="box-h"><h3>${ui("ctry_h",{place:place(G.c)})}</h3></div>${indRows(G.c)}</div>
+      <div class="box"><div class="box-h"><h3>${UI.src_h[LI]}</h3></div><p style="margin:0;font-size:13px;color:var(--ink2)">${srcP()}</p></div>
+    </div>
+   </div>
+   <p class="cap" style="text-align:center">${UI.again_p[LI]}</p>
+   <div class="dock m"><button class="cta" id="again2">${UI.again[LI]} →</button></div>
+  </div>`;
+  $("pScene").innerHTML=sceneSVG(G,age,{t:Math.max(.9,clamp(age/100,0,1)),ar:1.6});
+  const again=()=>renderStart();
+  $("again").onclick=again; $("again2").onclick=again;
+  $("savecard").onclick=saveCard;
+  const nb=$("native");
+  if(nb) nb.onclick=()=>navigator.share({title:UI.title[LI],text:txt,url}).catch(()=>{});
+  $("copy").onclick=async e=>{
+    const full=txt+"\n"+url;
+    try{await navigator.clipboard.writeText(full);e.target.textContent=UI.copied[LI]}catch(_){prompt(UI.copy[LI],full)}
+  };
+  drawCard(info);
+  window.scrollTo(0,0);
 }
 
 /* ---------- 자서전 카드 ---------- */
@@ -1081,9 +1591,9 @@ function drawCard(info){
   const cv=document.getElementById("card"); if(!cv) return;
   const W=1080,H=1350,ctx=cv.getContext("2d");
   const FF='"Noto Serif KR","Noto Serif JP","Noto Serif SC","Noto Sans KR","Hiragino Mincho ProN","Songti SC","Malgun Gothic",serif';
-  ctx.fillStyle="#f5f2ea";ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle="#a8742a";ctx.lineWidth=4;ctx.strokeRect(48,48,W-96,H-96);
-  ctx.fillStyle="#a8742a";ctx.font=`500 34px ${FF}`;
+  ctx.fillStyle="#f7f1e3";ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle="#c4572a";ctx.lineWidth=4;ctx.strokeRect(48,48,W-96,H-96);
+  ctx.fillStyle="#c4572a";ctx.font=`500 34px ${FF}`;
   ctx.fillText(G.daily?ui("card_daily",{d:G.date}):UI.title[LI],96,140);
   ctx.fillStyle="#1f1d19";ctx.font=`700 68px ${FF}`;
   let y=250; for(const l of wrapText(ctx,info.title,W-192)){ctx.fillText(l,96,y);y+=88}
@@ -1093,7 +1603,7 @@ function drawCard(info){
   ctx.fillStyle="#8c8578";ctx.font=`400 30px ${FF}`;
   ctx.fillText(ui("card_foot",{n:G.locked.length,age:info.age}),96,H-190);
   ctx.fillText(UI.card_sub[LI],96,H-140);
-  ctx.fillText((location.host||"gyeoltaro.github.io/gyeoltaro"),96,H-96);
+  ctx.fillText(location.protocol.startsWith("http")?location.host+location.pathname.replace(/\/index\.html$/,"/"):SITE.replace(/^https:\/\//,""),96,H-96);
 }
 function saveCard(){
   const cv=document.getElementById("card");
