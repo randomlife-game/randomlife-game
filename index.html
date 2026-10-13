@@ -1812,6 +1812,18 @@ function countPlay(){
   if(!COUNTER_URL.startsWith("http")) return;
   fetch(COUNTER_URL+"/done",{method:"POST",keepalive:true}).then(r=>r.ok?r.json():null).then(d=>{if(d)PLAYS=d}).catch(()=>{});
 }
+// 방문 통계: 어디서 왔는지(사이트 이름만)와 언어를 날짜별 숫자로만 보내요. 쿠키나 기기 저장은 쓰지 않아요.
+function sendHit(k){
+  if(!COUNTER_URL.startsWith("http")) return;
+  const body={k};
+  if(k==="visit"){
+    const qs=new URLSearchParams(location.search), q=qs.get("utm_source");
+    let ref=qs.get("c")?"share":"direct";
+    try{ if(document.referrer){ const h=new URL(document.referrer).hostname; if(h&&h!==location.hostname) ref=h; } }catch(e){}
+    body.ref=q||ref; body.lang=LANG;
+  }
+  fetch(COUNTER_URL+"/hit",{method:"POST",body:JSON.stringify(body),keepalive:true}).catch(()=>{});
+}
 function renderStart(){
   view=renderStart; G=null; MODE="start"; clearTimeout(autoT); cancelAnimationFrame(skyRaf);
   topStart();
@@ -1865,9 +1877,9 @@ function renderStart(){
   </div>`;
   loadPlays(); paintBaby(); loopBaby(); fillAds();
   app.querySelectorAll("[data-era]").forEach(b=>b.onclick=()=>{ERA=b.dataset.era;store.set("era",ERA);app.querySelectorAll("[data-era]").forEach(x=>x.classList.toggle("on",x===b))});
-  const start=()=>{G=newLife(null,{year:pickYear(ERA,Math.random)});skyT=0;renderBirth()};
+  const start=()=>{G=newLife(null,{year:pickYear(ERA,Math.random)});skyT=0;sendHit("start");renderBirth()};
   document.getElementById("go").onclick=start; document.getElementById("go2").onclick=start;
-  document.getElementById("daily").onclick=()=>{G=newLife(dailySeed());skyT=0;renderBirth()};
+  document.getElementById("daily").onclick=()=>{G=newLife(dailySeed());skyT=0;sendHit("start");renderBirth()};
   const rs=document.getElementById("resume"); if(rs) rs.onclick=resumeRun;
   const lc=document.getElementById("lvClear"); if(lc) lc.onclick=()=>{ if(confirm(UI.lv_sure[LI])){ try{localStorage.removeItem(LIVES_KEY);localStorage.removeItem(ATLAS_KEY)}catch(e){} renderStart(); } };
   window.scrollTo(0,0);
@@ -2750,6 +2762,7 @@ Object.assign(UI,{
   const nav=(navigator.language||"ko").toLowerCase();
   const guess=nav.startsWith("ko")?"ko":nav.startsWith("ja")?"ja":nav.startsWith("zh")?"zh":nav.startsWith("en")?"en":"ko";
   applyStyle(); view=renderStart; setLang(LANGS.some(x=>x[0]===q)?q:saved||guess,true);
+  sendHit("visit");
 })();
 </script>
 </body>

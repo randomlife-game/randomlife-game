@@ -39,7 +39,7 @@
 <h2>1. 내 기기에만 남는 정보</h2>
 <p>지난 삶 기록, 나라 도감과 배지, 이어하기, 고른 언어·시대·속도·화면 모양은 브라우저 저장소(localStorage)에만 저장돼요. 이 정보는 게임 운영자에게 전송되지 않으며, 게임 안 "기록 지우기"나 브라우저의 사이트 데이터 삭제로 언제든 지울 수 있어요.</p>
 <h2>2. 플레이 수 세기</h2>
-<p>한 판을 끝까지 하면 날짜별 숫자 하나만 1 올라가요(Cloudflare Workers 사용). 누가 했는지, IP 주소, 기기 정보는 저장하지 않아요. 요청을 처리하는 과정에서 Cloudflare가 자체 정책에 따라 접속 기록을 잠시 다룰 수 있어요.</p>
+<p>한 판을 끝까지 하면 날짜별 숫자 하나만 1 올라가요(Cloudflare Workers 사용). 첫 화면을 열거나 태어나기를 누를 때도 날짜별 숫자만 올라가요. 이때 어느 사이트에서 왔는지(사이트 이름만), 고른 언어, Cloudflare가 알려 주는 나라 이름을 함께 세요. 누가 했는지, IP 주소, 기기 정보는 저장하지 않고, 쿠키도 쓰지 않아요. 요청을 처리하는 과정에서 Cloudflare가 자체 정책에 따라 접속 기록을 잠시 다룰 수 있어요.</p>
 <h2>3. 광고</h2>
 <p>게임은 무료로 운영되며, 첫 화면과 결말 화면에 광고가 나올 수 있어요(일생을 사는 동안에는 나오지 않아요). 광고는 Google AdSense 또는 카카오 애드핏이 보여 주며, 이들은 쿠키나 기기 식별자를 써서 광고를 고르고 효과를 잴 수 있어요. Google을 포함한 제3자 광고 사업자는 이 사이트와 다른 사이트를 방문한 기록을 바탕으로 광고를 보여 줄 수 있어요.</p>
 <ul>
@@ -69,7 +69,7 @@
 <h2>1. Information kept only on your device</h2>
 <p>Lives you have lived, your atlas and badges, the run you can resume, and your chosen language, era, speed and style are saved only in your browser's storage (localStorage). They are never sent to us, and you can delete them with "Clear" in the game or by clearing site data in your browser.</p>
 <h2>2. Counting plays</h2>
-<p>When you finish a life, a single daily number goes up by one (via Cloudflare Workers). We do not store who played, IP addresses or device details. Cloudflare may briefly handle connection logs under its own policy while serving the request.</p>
+<p>When you finish a life, a single daily number goes up by one (via Cloudflare Workers). Opening the start page or starting a life also only adds to daily totals, counted by referring site (site name only), chosen language and the country Cloudflare reports. We do not store who played, IP addresses or device details, and we use no cookies for this. Cloudflare may briefly handle connection logs under its own policy while serving the request.</p>
 <h2>3. Advertising</h2>
 <p>The game is free and may show ads on the start and ending screens (never while you are living a life). Ads are served by Google AdSense or Kakao AdFit, which may use cookies or device identifiers to choose ads and measure them. Third-party vendors, including Google, may show ads based on your visits to this and other websites.</p>
 <ul>
@@ -99,7 +99,7 @@
 <h2>1. 端末にだけ残る情報</h2>
 <p>生きてみた人生の記録、国の図鑑とバッジ、続きから遊ぶためのデータ、選んだ言語・時代・速度・表示スタイルは、ブラウザの保存領域（localStorage）にのみ保存されます。運営者には送信されず、ゲーム内の「記録を消す」やブラウザのサイトデータ削除でいつでも消せます。</p>
 <h2>2. プレイ数の集計</h2>
-<p>最後まで遊ぶと、日付ごとの数字が1つ増えるだけです（Cloudflare Workers を使用）。誰が遊んだか、IPアドレス、端末情報は保存しません。リクエスト処理の過程で Cloudflare が自社の方針に従い接続記録を一時的に扱うことがあります。</p>
+<p>最後まで遊ぶと、日付ごとの数字が1つ増えるだけです（Cloudflare Workers を使用）。最初の画面を開いたときや、生まれるボタンを押したときも日付ごとの合計だけが増えます。その際、どのサイトから来たか（サイト名のみ）、選んだ言語、Cloudflare が示す国名を数えます。誰が遊んだか、IPアドレス、端末情報は保存せず、Cookie も使いません。リクエスト処理の過程で Cloudflare が自社の方針に従い接続記録を一時的に扱うことがあります。</p>
 <h2>3. 広告</h2>
 <p>本ゲームは無料で運営しており、最初の画面と結末の画面に広告が表示されることがあります（人生を生きている間は表示しません）。広告は Google AdSense またはカカオ AdFit が配信し、Cookie や端末識別子を使って広告を選び、効果を測定することがあります。Google を含む第三者配信事業者は、本サイトや他サイトへのアクセス情報に基づいて広告を表示することがあります。</p>
 <ul>
@@ -128,7 +128,7 @@
 <h2>1. 仅保存在您设备上的信息</h2>
 <p>活过的人生记录、国家图鉴与徽章、可继续的进度，以及所选语言、年代、速度和显示风格，只保存在浏览器存储（localStorage）中，不会发送给我们。您可以通过游戏内的“清除记录”或浏览器的清除网站数据随时删除。</p>
 <h2>2. 统计游玩次数</h2>
-<p>完整玩完一局时，当天的计数只加一（使用 Cloudflare Workers）。我们不保存是谁玩的、IP 地址或设备信息。处理请求时，Cloudflare 可能按其自身政策短暂处理连接日志。</p>
+<p>完整玩完一局时，当天的计数只加一（使用 Cloudflare Workers）。打开首页或开始人生时，也只会增加当天的合计，并按来源网站（仅网站名）、所选语言和 Cloudflare 提供的国家分别计数。我们不保存是谁玩的、IP 地址或设备信息，也不使用 Cookie。处理请求时，Cloudflare 可能按其自身政策短暂处理连接日志。</p>
 <h2>3. 广告</h2>
 <p>本游戏免费运营，开始页面和结局页面可能显示广告（游玩人生的过程中不会显示）。广告由 Google AdSense 或 Kakao AdFit 提供，它们可能使用 Cookie 或设备标识符来选择广告并衡量效果。包括 Google 在内的第三方供应商可能根据您访问本网站及其他网站的记录展示广告。</p>
 <ul>
